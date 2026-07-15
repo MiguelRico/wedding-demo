@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Sara y Fran">
+  <defs>
+    <linearGradient id="bg" x1="13" y1="8" x2="53" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f5f8f2"/>
+      <stop offset="1" stop-color="#dfe8d7"/>
+    </linearGradient>
+    <linearGradient id="ring" x1="13" y1="20" x2="51" y2="48" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8fa78b"/>
+      <stop offset="1" stop-color="#556b52"/>
+    </linearGradient>
+  </defs>
+
+  <circle cx="32" cy="32" r="30" fill="url(#bg)"/>
+  <circle cx="32" cy="32" r="28.5" fill="none" stroke="#bccdb5" stroke-width="1.5"/>
+
+  <path
+    fill="#6f8b6b"
+    d="M45.9 15.7c-4.1.3-7.2 1.6-9.2 3.8-1.9 2.1-2.5 4.9-1.6 8.2 3.5-.1 6.2-1.1 8.2-3.2 2-2.1 2.9-5 2.6-8.8Z"
+  />
+  <path
+    fill="none"
+    stroke="#f5f8f2"
+    stroke-linecap="round"
+    stroke-width="1.7"
+    d="M36.5 26.5c2.4-2.5 4.6-4.5 8-7"
+  />
+
+  <g fill="none" stroke="url(#ring)" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="25" cy="36" r="11.5" stroke-width="5"/>
+    <circle cx="39" cy="36" r="11.5" stroke-width="5"/>
+  </g>
+
+  <path
+    fill="none"
+    stroke="#f5f8f2"
+    stroke-linecap="round"
+    stroke-width="3.3"
+    d="M32 26.3c2.2 2.1 3.5 5 3.5 8.2 0 3.4-1.5 6.5-3.9 8.6"
+    opacity=".86"
+  />
+
+  <path
+    fill="#556b52"
+    d="M31.9 46.6c-.3 0-.6-.1-.8-.4l-1.8-2.2c-.4-.5-.3-1.3.2-1.7.5-.4 1.3-.3 1.7.2l.8 1 .8-1c.4-.5 1.2-.6 1.7-.2s.6 1.2.2 1.7l-1.8 2.2c-.3.3-.6.4-1 .4Z"
+  />
+</svg>
