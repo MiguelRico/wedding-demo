@@ -1,18 +1,6 @@
 import { useInView } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  Armchair,
-  Bell,
-  ChartColumn,
-  ClipboardCheck,
-  Info,
-  ListTodo,
-  ReceiptText,
-  Home,
-  LockKeyhole,
-  LogIn,
-  X,
-} from "lucide-react";
+import { Info, Home, LockKeyhole, LogIn, X } from "lucide-react";
 
 import { ADMIN_PASSWORD } from "../constants/admin";
 import AnimatedInfoCard from "../components/ui/AnimatedInfoCard";
@@ -31,6 +19,7 @@ import {
 import { siteContent } from "../config/siteContent";
 import { adminContent } from "../constants/adminContent";
 import { storageKeys } from "../config/storageKeys";
+import { getAdminModuleCards } from "../config/adminModules";
 import useIsMobileView from "../hooks/useIsMobileView";
 import { loadAdminDataOnce } from "../services/adminDataStore";
 import {
@@ -43,20 +32,11 @@ import {
   setLocalStorageValue,
 } from "../utils/browserStorage";
 
-const adminCardIcons = {
-  armchair: Armchair,
-  bell: Bell,
-  "chart-column": ChartColumn,
-  "clipboard-check": ClipboardCheck,
-  "list-todo": ListTodo,
-  "receipt-text": ReceiptText,
-};
-
 const ADMIN_MEMORY_NOTICE_DISMISSED_KEY =
   storageKeys.adminMemoryNoticeDismissed;
 
 const getAdminCard = (card) => {
-  const Icon = adminCardIcons[card.icon];
+  const Icon = card.moduleIcon;
 
   if (!Icon) return card;
 
@@ -237,7 +217,7 @@ function AdminDashboard() {
     <div className="mx-auto w-full max-w-none space-y-5">
       <AdminMemoryNotice />
       <div className={cardsGridClassName}>
-        {siteContent.admin.cards.map((card, index) => (
+        {getAdminModuleCards(siteContent.admin.cards).map((card, index) => (
           <AnimatedInfoCard
             key={card.title}
             card={{

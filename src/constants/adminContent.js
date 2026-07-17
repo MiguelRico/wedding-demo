@@ -1,4 +1,6 @@
-export const adminContent = {
+import { adminContentOverrides } from "../config/adminContentOverrides";
+
+const defaultAdminContent = {
   auth: {
     eyebrow: "Panel privado",
     headerText: "Acceso reservado para revisar y organizar las confirmaciones.",
@@ -723,3 +725,19 @@ export const adminContent = {
     emptySeatsLabel: (count) => `${count} asientos libres`,
   },
 };
+
+export const adminContent = mergeContent(defaultAdminContent, adminContentOverrides);
+
+function mergeContent(base, overrides) {
+  if (Array.isArray(base) || Array.isArray(overrides)) return overrides ?? base;
+  if (!isPlainObject(base) || !isPlainObject(overrides)) return overrides ?? base;
+
+  return Object.keys({ ...base, ...overrides }).reduce((result, key) => {
+    result[key] = mergeContent(base[key], overrides[key]);
+    return result;
+  }, {});
+}
+
+function isPlainObject(value) {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}

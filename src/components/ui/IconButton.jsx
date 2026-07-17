@@ -16,7 +16,7 @@ export default function IconButton({
   disabled = false,
   href,
   icon,
-  keepTextOnAdminSubpages = false,
+  keepTextOnAdminSubpages,
   label,
   onClick,
   showText = true,
@@ -26,10 +26,9 @@ export default function IconButton({
   type = "button",
   ...props
 }) {
-  const isAdminSubpage =
-    typeof window !== "undefined" && window.location.pathname.startsWith("/admin/");
-  const effectiveShowText =
-    isAdminSubpage && !keepTextOnAdminSubpages ? false : showText;
+  // Deprecated compatibility prop. Text density is now owned by the caller.
+  void keepTextOnAdminSubpages;
+  const effectiveShowText = showText;
   const accessibleLabel =
     label || (typeof children === "string" ? children : "");
   const hasText = Boolean(

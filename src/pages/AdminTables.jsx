@@ -4,9 +4,9 @@ import { Navigate } from "react-router-dom";
 
 import { ADMIN_PASSWORD } from "../constants/admin";
 import {
-  AdminEntityTabs,
   AdminPageShell,
   AdminPendingChangesActions,
+  AdminResponsivePanels,
   AdminTableSection,
   UnsavedChangesDialog,
 } from "../components/admin/common";
@@ -785,12 +785,12 @@ export default function AdminTables() {
         </CinematicStaggeredRevealItem>
 
         <CinematicStaggeredRevealItem index={4} isVisible={tablesInView}>
-          <AdminEntityTabs
-            tabs={SECTION_TABS}
-            activeTab={activeTab}
+          <AdminResponsivePanels
+            activePanel={activeTab}
             onChange={setActiveTab}
-          >
-            {activeTab === "tables" ? (
+            panels={SECTION_TABS}
+            renderPanel={(panelId) =>
+              panelId === "tables" ? (
               <AdminTableSection
                 actions={
                   <TableTabActions
@@ -848,7 +848,7 @@ export default function AdminTables() {
                   />
                 )}
               />
-            ) : (
+              ) : (
               <AdminTableSection
                 actions={
                   tables.length > 0 && filteredPendingGuests.length > 0 ? (
@@ -949,8 +949,9 @@ export default function AdminTables() {
                   />
                 )}
               />
-            )}
-          </AdminEntityTabs>
+              )
+            }
+          />
         </CinematicStaggeredRevealItem>
       </AdminPageShell>
 

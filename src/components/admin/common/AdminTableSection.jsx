@@ -3,6 +3,55 @@ import Pagination from "../../ui/Pagination";
 import TableSectionSkeleton from "../../ui/TableSectionSkeleton";
 import { getPaginationState } from "../../../utils/paginationState";
 
+function AdminTableSectionHeader({
+  actions,
+  actionsFullWidth,
+  count,
+  eyebrow,
+  headerActions,
+  headerPagination,
+  loading,
+  title,
+}) {
+  const hasInlineHeaderControls = Boolean(headerPagination || headerActions);
+  const hasHeaderContent = Boolean(eyebrow || title || count || actions);
+
+  if (!hasHeaderContent) return null;
+
+  return (
+    <div className="mb-4">
+      {eyebrow && <p className="section-eyebrow mb-2">{eyebrow}</p>}
+      {(title || hasInlineHeaderControls) && hasInlineHeaderControls && (
+        <div className="grid gap-3 md:grid-cols-[minmax(10rem,0.9fr)_minmax(16rem,1fr)_minmax(14rem,1fr)] md:items-center">
+          {title && (
+            <h2 className="font-serif text-3xl leading-none text-[var(--color-accent-dark)] md:min-w-0">
+              {title}
+            </h2>
+          )}
+          {headerPagination}
+          {headerActions}
+        </div>
+      )}
+      {title && !hasInlineHeaderControls && (
+        <h2 className="font-serif text-3xl leading-none text-[var(--color-accent-dark)]">
+          {title}
+        </h2>
+      )}
+      {!loading && (count || actions) && actions && (
+        <div className="mt-4 flex flex-col gap-3">
+          <div
+            className={`rounded-[1.5rem] border border-[var(--color-border)] bg-white/35 p-4 ${
+              actionsFullWidth ? "w-full" : ""
+            }`}
+          >
+            {actions}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function AdminTableSection({
   actions,
   actionsFullWidth = false,
@@ -54,7 +103,6 @@ export default function AdminTableSection({
       pageLabel || paginationLabel || mobilePageLabel || page || totalPages,
     );
   const contentSkeletonConfig = skeletonConfig.content || {};
-  const hasHeaderContent = Boolean(eyebrow || title || count || actions);
   const inlinePaginationPlaceholder =
     paginationInlineWithTitle && !hasPagination ? (
       <div
@@ -84,49 +132,22 @@ export default function AdminTableSection({
     ) : (
       inlinePaginationPlaceholder
     );
-  const hasInlineHeaderControls = Boolean(headerPagination || headerActions);
 
   return (
     <section
       className={`premium-card admin-table-section pt-4 ${className}`}
       ref={sectionRef}
     >
-      {hasHeaderContent && (
-        <div className="mb-4">
-          {eyebrow && <p className="section-eyebrow mb-2">{eyebrow}</p>}
-          {(title || hasInlineHeaderControls) && hasInlineHeaderControls && (
-            <div className="grid gap-3 md:grid-cols-[minmax(10rem,0.9fr)_minmax(16rem,1fr)_minmax(14rem,1fr)] md:items-center">
-              {title && (
-                <h2 className="font-serif text-3xl leading-none text-[var(--color-accent-dark)] md:min-w-0">
-                  {title}
-                </h2>
-              )}
-
-              {headerPagination}
-              {headerActions}
-            </div>
-          )}
-          {title && !hasInlineHeaderControls && (
-            <h2 className="font-serif text-3xl leading-none text-[var(--color-accent-dark)]">
-              {title}
-            </h2>
-          )}
-
-          {!loading && (count || actions) && (
-            <div className="mt-4 flex flex-col gap-3">
-              {actions && (
-                <div
-                  className={`rounded-[1.5rem] border border-[var(--color-border)] bg-white/35 p-4 ${
-                    actionsFullWidth ? "w-full" : ""
-                  }`}
-                >
-                  {actions}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
+      <AdminTableSectionHeader
+        actions={actions}
+        actionsFullWidth={actionsFullWidth}
+        count={count}
+        eyebrow={eyebrow}
+        headerActions={headerActions}
+        headerPagination={headerPagination}
+        loading={loading}
+        title={title}
+      />
 
       {loading ? (
         <TableSectionSkeleton

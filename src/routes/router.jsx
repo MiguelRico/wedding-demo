@@ -2,6 +2,8 @@ import { createBrowserRouter } from "react-router-dom";
 
 import MainLayout from "../layouts/MainLayout";
 import RouteErrorBoundary from "./RouteErrorBoundary";
+import { getEnabledAdminModules } from "../config/adminModules";
+import { AdminProtectedRoute } from "../components/admin/common";
 
 const lazyPage = (loader) => async () => ({
   Component: (await loader()).default,
@@ -38,28 +40,11 @@ export const router = createBrowserRouter([
         lazy: lazyPage(() => import("../pages/Admin")),
       },
       {
-        path: "admin/stats",
-        lazy: lazyPage(() => import("../pages/AdminStats")),
-      },
-      {
-        path: "admin/guests",
-        lazy: lazyPage(() => import("../pages/AdminGuests")),
-      },
-      {
-        path: "admin/tables",
-        lazy: lazyPage(() => import("../pages/AdminTables")),
-      },
-      {
-        path: "admin/providers",
-        lazy: lazyPage(() => import("../pages/AdminProviders")),
-      },
-      {
-        path: "admin/notifications",
-        lazy: lazyPage(() => import("../pages/AdminNotifications")),
-      },
-      {
-        path: "admin/tasks",
-        lazy: lazyPage(() => import("../pages/AdminTasks")),
+        element: <AdminProtectedRoute />,
+        children: getEnabledAdminModules().map((module) => ({
+          path: `admin/${module.path}`,
+          lazy: lazyPage(module.load),
+        })),
       },
     ],
   },

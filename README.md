@@ -20,6 +20,12 @@ VITE_ENABLE_MENU_MODULE=false
 
 En desarrollo, la app avisa por consola si falta configuracion critica. Las operaciones contra Apps Script fallan con un error explicito si la URL no esta configurada.
 
+## Adaptar un clon
+
+- `src/config/siteContentOverrides.js`: contenido y tarjetas visibles del evento.
+- `src/config/adminContentOverrides.js`: sustituciones parciales de textos del panel privado.
+- `src/config/adminModules.js`: módulos privados activos, sus rutas y carga diferida. El panel y el router se generan a partir de este registro.
+
 ## Comandos
 
 ```bash
