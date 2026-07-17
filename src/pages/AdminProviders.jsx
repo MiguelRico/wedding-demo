@@ -505,6 +505,7 @@ export default function AdminProviders() {
         <CinematicStaggeredRevealItem index={4} isVisible={providersInView}>
           <AdminResponsivePanels
             activePanel={activeTab}
+            className="md:grid-cols-2"
             onChange={setActiveTab}
             panels={adminContent.providers.tabs}
             renderPanel={(panelId) =>

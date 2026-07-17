@@ -540,6 +540,7 @@ export default function AdminGuests() {
         <CinematicStaggeredRevealItem index={4} isVisible={guestsInView}>
           <AdminResponsivePanels
             activePanel={activeTab}
+            className="md:grid-cols-2"
             onChange={setActiveTab}
             panels={adminContent.guests.tabs}
             renderPanel={(panelId) =>
