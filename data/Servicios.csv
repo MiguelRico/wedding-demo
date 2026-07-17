@@ -1,1 +1,9 @@
-serviceId,providerId,nombre,precio,numeroPlazos,notas,activo,createdAt,updatedAt
+serviceId,providerId,name,price,paymentCount,notes,active,createdAt,updatedAt
+serv-001,prov-001,Alquiler de finca y ceremonia,4200,3,Incluye mobiliario base y coordinación,TRUE,2026-01-10T10:00:00Z,2026-07-01T10:00:00Z
+serv-002,prov-002,Cóctel cena y barra libre 80 pax,6800,3,Incluye 6 menús adaptados y 8 infantiles,TRUE,2026-01-12T10:00:00Z,2026-07-12T10:00:00Z
+serv-003,prov-003,Reportaje completo y álbum,1850,2,Entrega digital en seis semanas,TRUE,2026-01-14T10:00:00Z,2026-07-05T10:00:00Z
+serv-004,prov-004,DJ sonido e iluminación,1250,2,Montaje desde las 17:00,TRUE,2026-01-18T10:00:00Z,2026-07-15T10:00:00Z
+serv-005,prov-005,Decoración floral y ramo,980,2,Flor de temporada en tonos crema y verde,TRUE,2026-01-20T10:00:00Z,2026-07-08T10:00:00Z
+serv-006,prov-006,Autobús Huelva y Corrales,950,1,52 plazas con segundo viaje de vuelta,TRUE,2026-02-01T10:00:00Z,2026-07-16T10:00:00Z
+serv-007,prov-007,Tarta de dos pisos y mesa dulce,540,2,Degustación cerrada; falta diseño final,TRUE,2026-02-04T10:00:00Z,2026-07-10T10:00:00Z
+serv-008,prov-008,Carpa de reserva por lluvia,1100,1,Presupuesto descartado por ahora,FALSE,2026-02-08T10:00:00Z,2026-06-20T10:00:00Z

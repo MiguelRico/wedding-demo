@@ -15,7 +15,7 @@ confirmationId,confirmationName,email,phone,guestCount,createdAt,updatedAt
 ## Invitados
 
 ```csv
-guestId,confirmationId,confirmationName,name,lastname,allergies,otherAllergies,comments,outboundBus,returnBus,menu,createdAt,updatedAt
+guestId,confirmationId,confirmationName,name,lastName,allergies,otherAllergies,comments,outboundBus,returnBus,menu,createdAt,updatedAt
 ```
 
 - `guestId`: texto, ID estable del invitado.
@@ -65,39 +65,39 @@ La busqueda publica se realiza por `email` o `phone`, pero cualquier edicion pos
 ## Proveedores
 
 ```csv
-providerId,nombre,categoria,telefono,email,direccion,web,numeroCuenta,activo,createdAt,updatedAt
+providerId,name,category,phone,email,address,web,accountNumber,active,createdAt,updatedAt
 ```
 
 - `providerId`: texto, ID estable del proveedor.
-- `categoria`: texto, una categoria configurada en la app.
-- `activo`: texto booleano recomendado `TRUE`/`FALSE`.
+- `category`: texto, una categoria configurada en la app.
+- `active`: texto booleano recomendado `TRUE`/`FALSE`.
 - `createdAt`, `updatedAt`: texto ISO 8601.
 
 ## Servicios
 
 ```csv
-serviceId,providerId,nombre,precio,numeroPlazos,notas,activo,createdAt,updatedAt
+serviceId,providerId,name,price,paymentCount,notes,active,createdAt,updatedAt
 ```
 
 - `serviceId`: texto, ID estable del servicio.
 - `providerId`: texto, referencia a `Proveedores.providerId`.
-- `precio`: texto numerico.
-- `numeroPlazos`: texto numerico, de `1` a `3`.
-- `activo`: texto booleano recomendado `TRUE`/`FALSE`.
+- `price`: texto numerico.
+- `paymentCount`: texto numerico, de `1` a `3`.
+- `active`: texto booleano recomendado `TRUE`/`FALSE`.
 - `createdAt`, `updatedAt`: texto ISO 8601.
 
 ## PagosServicios
 
 ```csv
-paymentId,serviceId,numeroPlazo,importe,fechaPrevista,fechaPago,pagado,notas,createdAt,updatedAt
+paymentId,serviceId,paymentNumber,amount,dueDate,paidDate,paid,notes,createdAt,updatedAt
 ```
 
 - `paymentId`: texto, ID estable del pago/plazo.
 - `serviceId`: texto, referencia a `Servicios.serviceId`.
-- `numeroPlazo`: texto numerico, de `1` a `3`.
-- `importe`: texto numerico.
-- `fechaPrevista`, `fechaPago`: texto en formato `YYYY-MM-DD` o vacio.
-- `pagado`: texto booleano recomendado `TRUE`/`FALSE`.
+- `paymentNumber`: texto numerico, de `1` a `3`.
+- `amount`: texto numerico.
+- `dueDate`, `paidDate`: texto en formato `YYYY-MM-DD` o vacio.
+- `paid`: texto booleano recomendado `TRUE`/`FALSE`.
 - `createdAt`, `updatedAt`: texto ISO 8601.
 
 ## Notificaciones

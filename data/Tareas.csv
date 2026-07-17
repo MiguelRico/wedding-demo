@@ -1,1 +1,6 @@
 taskId,title,description,category,maxDate,priority,responsible,status,createdAt,updatedAt
+task-001,Cerrar distribución de mesas,Asignar las familias Vega y Ríos,mesas,2026-07-24,alta,Sara,pending,2026-07-15T10:00:00Z,2026-07-17T10:00:00Z
+task-002,Enviar menús especiales,Compartir alergias con catering,invitados,2026-07-20,alta,Fran,pending,2026-07-14T10:00:00Z,2026-07-17T10:00:00Z
+task-003,Confirmar segundo autobús,Revisar horarios de vuelta,transporte,2026-07-21,media,Sara,pending,2026-07-12T10:00:00Z,2026-07-16T10:00:00Z
+task-004,Revisar contrato DJ,Comprobar duración de barra libre,fiesta,2026-07-19,media,Fran,completed,2026-07-10T10:00:00Z,2026-07-15T10:00:00Z
+task-005,Elegir diseño de tarta,Enviar referencia floral a pastelería,decoracion,2026-07-20,baja,Sara,pending,2026-07-11T10:00:00Z,2026-07-17T10:00:00Z

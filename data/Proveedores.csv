@@ -1,1 +1,9 @@
-providerId,nombre,categoria,telefono,email,direccion,web,numeroCuenta,activo,createdAt,updatedAt
+providerId,name,category,phone,email,address,web,accountNumber,active,createdAt,updatedAt
+prov-001,Finca Aguas del Pino,Espacio,959001101,reservas@aguasdelpino.example,Carretera de la Ribera km 4,https://aguasdelpino.example,ES910001000100000001,TRUE,2026-01-10T10:00:00Z,2026-07-01T10:00:00Z
+prov-002,Catering Sal y Olivo,Catering,959001102,events@salyolivo.example,Calle Mirto 12 Huelva,https://salyolivo.example,ES910001000100000002,TRUE,2026-01-12T10:00:00Z,2026-07-12T10:00:00Z
+prov-003,Luz de Sur Fotografía,Fotografía,600001103,hola@luzdesur.example,Calle Concepción 8 Huelva,https://luzdesur.example,ES910001000100000003,TRUE,2026-01-14T10:00:00Z,2026-07-05T10:00:00Z
+prov-004,Sonora Eventos,Música,600001104,booking@sonora.example,Avenida Andalucía 44 Huelva,https://sonora.example,ES910001000100000004,TRUE,2026-01-18T10:00:00Z,2026-07-15T10:00:00Z
+prov-005,Flor de Azahar,Flores,600001105,estudio@flordeazahar.example,Calle Palos 21 Huelva,https://flordeazahar.example,ES910001000100000005,TRUE,2026-01-20T10:00:00Z,2026-07-08T10:00:00Z
+prov-006,Autocares Costa Luz,Transporte,959001106,grupos@costaluz.example,Polígono Tartessos 3 Huelva,https://costaluz.example,ES910001000100000006,TRUE,2026-02-01T10:00:00Z,2026-07-16T10:00:00Z
+prov-007,Dulce Nube,Tarta y dulces,600001107,pedidos@dulcenube.example,Calle Marina 18 Huelva,https://dulcenube.example,ES910001000100000007,TRUE,2026-02-04T10:00:00Z,2026-07-10T10:00:00Z
+prov-008,Carpa Atlántica,Alquiler,600001108,ventas@carpaatlantica.example,Polígono La Paz 7 Huelva,https://carpaatlantica.example,ES910001000100000008,FALSE,2026-02-08T10:00:00Z,2026-06-20T10:00:00Z

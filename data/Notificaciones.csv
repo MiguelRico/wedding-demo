@@ -1,1 +1,6 @@
 notificationId,title,detail,date,type,read,createdAt,updatedAt
+notif-001,Confirmaciones tardías,La familia Ríos necesita asignación de mesa,2026-07-15,Invitados,FALSE,2026-07-15T16:45:00Z,2026-07-15T16:45:00Z
+notif-002,Pendientes de mesa,Hay 56 invitados confirmados sin asiento en esta fase de distribución,2026-07-16,Invitados,FALSE,2026-07-16T19:00:00Z,2026-07-16T19:00:00Z
+notif-003,Pago catering pendiente,Segundo plazo previsto antes del 22 de julio,2026-07-17,Pago,FALSE,2026-07-17T09:00:00Z,2026-07-17T09:00:00Z
+notif-004,Degustación de tarta,Confirmar diseño final con Dulce Nube,2026-07-20,Aviso,FALSE,2026-07-12T10:00:00Z,2026-07-12T10:00:00Z
+notif-005,Autobús completo,Revisar lista de viajeros y segundo regreso,2026-07-18,Aviso,TRUE,2026-07-14T12:00:00Z,2026-07-16T08:00:00Z

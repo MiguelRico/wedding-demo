@@ -251,17 +251,17 @@ function listProviders(e) {
     const row = providerRows[i];
     const providerId = String(row[PROVIDERS_COLUMNS.providerId] || "").trim();
 
-    if (!providerId || !isActiveSheetValue(row[PROVIDERS_COLUMNS.activo])) continue;
+    if (!providerId || !isActiveSheetValue(row[PROVIDERS_COLUMNS.active])) continue;
 
     const provider = {
       id: providerId,
       providerId,
-      accountNumber: row[PROVIDERS_COLUMNS.numeroCuenta] || "",
-      address: row[PROVIDERS_COLUMNS.direccion] || "",
-      category: row[PROVIDERS_COLUMNS.categoria] || "",
+      accountNumber: row[PROVIDERS_COLUMNS.accountNumber] || "",
+      address: row[PROVIDERS_COLUMNS.address] || "",
+      category: row[PROVIDERS_COLUMNS.category] || "",
       email: row[PROVIDERS_COLUMNS.email] || "",
-      name: row[PROVIDERS_COLUMNS.nombre] || "",
-      phone: row[PROVIDERS_COLUMNS.telefono] || "",
+      name: row[PROVIDERS_COLUMNS.name] || "",
+      phone: row[PROVIDERS_COLUMNS.phone] || "",
       services: [],
       web: row[PROVIDERS_COLUMNS.web] || "",
     };
@@ -279,7 +279,7 @@ function listProviders(e) {
     if (
       !serviceId ||
       !provider ||
-      !isActiveSheetValue(row[PROVIDER_SERVICES_COLUMNS.activo])
+      !isActiveSheetValue(row[PROVIDER_SERVICES_COLUMNS.active])
     ) {
       continue;
     }
@@ -288,13 +288,13 @@ function listProviders(e) {
       id: serviceId,
       serviceId,
       providerId,
-      name: row[PROVIDER_SERVICES_COLUMNS.nombre] || "",
+      name: row[PROVIDER_SERVICES_COLUMNS.name] || "",
       paymentCount: Math.min(
-        Math.max(Number(row[PROVIDER_SERVICES_COLUMNS.numeroPlazos]) || 1, 1),
+        Math.max(Number(row[PROVIDER_SERVICES_COLUMNS.paymentCount]) || 1, 1),
         3,
       ),
       payments: [],
-      price: row[PROVIDER_SERVICES_COLUMNS.precio] || "",
+      price: row[PROVIDER_SERVICES_COLUMNS.price] || "",
     };
 
     provider.services.push(service);
@@ -311,9 +311,9 @@ function listProviders(e) {
     service.payments.push({
       id: row[PROVIDER_PAYMENTS_COLUMNS.paymentId] || "",
       paymentId: row[PROVIDER_PAYMENTS_COLUMNS.paymentId] || "",
-      amount: row[PROVIDER_PAYMENTS_COLUMNS.importe] || "",
-      date: row[PROVIDER_PAYMENTS_COLUMNS.fechaPrevista] || "",
-      paid: isTruthySheetValue(row[PROVIDER_PAYMENTS_COLUMNS.pagado]),
+      amount: row[PROVIDER_PAYMENTS_COLUMNS.amount] || "",
+      date: row[PROVIDER_PAYMENTS_COLUMNS.dueDate] || "",
+      paid: isTruthySheetValue(row[PROVIDER_PAYMENTS_COLUMNS.paid]),
     });
   }
 

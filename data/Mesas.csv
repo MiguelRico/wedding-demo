@@ -1,1 +1,11 @@
 tableId,name,group,tag,shape,seatCount,notes,createdAt,updatedAt
+table-01,Mesa Olivo,Amistades de Sara,amigos-sara,round,8,Cerca de la pista de baile,2026-06-15T10:00:00Z,2026-07-15T12:00:00Z
+table-02,Mesa Jazmín,Familia Sara,familia-sara,round,8,Junto a la ventana,2026-06-15T10:00:00Z,2026-07-15T12:00:00Z
+table-03,Mesa Azahar,Familia Fran,familia-fran,round,8,Zona tranquila,2026-06-15T10:00:00Z,2026-07-15T12:00:00Z
+table-04,Mesa Romero,Universidad,amigos-fran,round,8,Evitar sol directo,2026-06-15T10:00:00Z,2026-07-15T12:00:00Z
+table-05,Mesa Lavanda,Trabajo,companeros,round,8,Acceso cómodo para carrito,2026-06-15T10:00:00Z,2026-07-15T12:00:00Z
+table-06,Mesa Buganvilla,Vecindario,vecinos,round,8,Junto al jardín,2026-06-15T10:00:00Z,2026-07-15T12:00:00Z
+table-07,Mesa Encina,Primos Sara,primos-sara,rectangular,8,Extremo reservado para niños,2026-06-15T10:00:00Z,2026-07-15T12:00:00Z
+table-08,Mesa Amapola,Primos Fran,primos-fran,rectangular,8,Próxima al baño accesible,2026-06-15T10:00:00Z,2026-07-15T12:00:00Z
+table-09,Mesa Magnolia,Amistades mixtas,amigos-mixtos,round,8,Sin restricciones,2026-06-15T10:00:00Z,2026-07-15T12:00:00Z
+table-10,Mesa Higuera,Por asignar,pendientes,round,8,Reservada para confirmaciones tardías,2026-06-15T10:00:00Z,2026-07-15T12:00:00Z

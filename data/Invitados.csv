@@ -1,1 +1,81 @@
-guestId,confirmationId,confirmationName,name,lastname,allergies,otherAllergies,comments,outboundBus,returnBus,menu,createdAt,updatedAt
+guestId,confirmationId,confirmationName,name,lastName,allergies,otherAllergies,comments,outboundBus,returnBus,menu,createdAt,updatedAt
+guest-001,conf-001,Familia García,Laura,García,, ,Sin observaciones,18:00,3:00,Carne,2026-04-12T10:15:00Z,2026-07-10T18:20:00Z
+guest-002,conf-001,Familia García,Andrés,García,, ,Sin observaciones,18:00,3:00,Pescado,2026-04-12T10:15:00Z,2026-07-10T18:20:00Z
+guest-003,conf-001,Familia García,Lucía,García,Gluten,,Pan sin gluten,No,No,Carne,2026-04-12T10:15:00Z,2026-07-10T18:20:00Z
+guest-004,conf-001,Familia García,Martín,García,, ,Menú infantil,No,No,Carne,2026-04-12T10:15:00Z,2026-07-10T18:20:00Z
+guest-005,conf-002,Familia Martín,Diego,Martín,, ,Sin observaciones,18:20,6:00,Carne,2026-04-13T11:30:00Z,2026-07-08T09:15:00Z
+guest-006,conf-002,Familia Martín,Celia,Martín,Lactosa,,Postre sin lactosa,18:20,6:00,Pescado,2026-04-13T11:30:00Z,2026-07-08T09:15:00Z
+guest-007,conf-002,Familia Martín,Hugo,Martín,, ,Menú infantil,No,No,Carne,2026-04-13T11:30:00Z,2026-07-08T09:15:00Z
+guest-008,conf-002,Familia Martín,Emma,Martín,Huevo,,Sin salsas,No,No,Pescado,2026-04-13T11:30:00Z,2026-07-08T09:15:00Z
+guest-009,conf-003,Familia López,Elena,López,, ,Sin observaciones,No,No,Pescado,2026-04-15T16:45:00Z,2026-07-12T12:00:00Z
+guest-010,conf-003,Familia López,Raúl,López,, ,Sin observaciones,No,No,Carne,2026-04-15T16:45:00Z,2026-07-12T12:00:00Z
+guest-011,conf-003,Familia López,Nora,López,Frutos secos,,Evitar contaminación cruzada,18:00,3:00,Carne,2026-04-15T16:45:00Z,2026-07-12T12:00:00Z
+guest-012,conf-003,Familia López,Álex,López,, ,Menú infantil,18:00,3:00,Pescado,2026-04-15T16:45:00Z,2026-07-12T12:00:00Z
+guest-013,conf-004,Familia Sánchez,Pablo,Sánchez,, ,Sin observaciones,18:20,6:00,Carne,2026-04-18T09:20:00Z,2026-07-03T17:40:00Z
+guest-014,conf-004,Familia Sánchez,Inma,Sánchez,Marisco,,Sin marisco ni caldo,18:20,6:00,Pescado,2026-04-18T09:20:00Z,2026-07-03T17:40:00Z
+guest-015,conf-004,Familia Sánchez,Leo,Sánchez,, ,Menú infantil,No,No,Carne,2026-04-18T09:20:00Z,2026-07-03T17:40:00Z
+guest-016,conf-004,Familia Sánchez,Alba,Sánchez,, ,Trona solicitada,No,No,Carne,2026-04-18T09:20:00Z,2026-07-03T17:40:00Z
+guest-017,conf-005,Familia Ruiz,Marta,Ruiz,, ,Sin observaciones,No,3:00,Pescado,2026-04-20T14:10:00Z,2026-07-11T08:30:00Z
+guest-018,conf-005,Familia Ruiz,Óscar,Ruiz,, ,Sin observaciones,No,3:00,Carne,2026-04-20T14:10:00Z,2026-07-11T08:30:00Z
+guest-019,conf-005,Familia Ruiz,Paula,Ruiz,Gluten|Lactosa,,Menú adaptado,18:00,3:00,Pescado,2026-04-20T14:10:00Z,2026-07-11T08:30:00Z
+guest-020,conf-005,Familia Ruiz,Bruno,Ruiz,, ,Menú infantil,18:00,3:00,Carne,2026-04-20T14:10:00Z,2026-07-11T08:30:00Z
+guest-021,conf-006,Familia Torres,Álvaro,Torres,, ,Sin observaciones,18:20,6:00,Carne,2026-04-22T18:00:00Z,2026-07-09T19:10:00Z
+guest-022,conf-006,Familia Torres,Julia,Torres,, ,Sin observaciones,18:20,6:00,Pescado,2026-04-22T18:00:00Z,2026-07-09T19:10:00Z
+guest-023,conf-006,Familia Torres,Samuel,Torres,, ,Menú infantil,No,No,Carne,2026-04-22T18:00:00Z,2026-07-09T19:10:00Z
+guest-024,conf-006,Familia Torres,Vera,Torres,,Sésamo,Pan sin semillas,No,No,Pescado,2026-04-22T18:00:00Z,2026-07-09T19:10:00Z
+guest-025,conf-007,Familia Navarro,Inés,Navarro,, ,Sin observaciones,No,No,Pescado,2026-04-24T12:15:00Z,2026-07-07T13:50:00Z
+guest-026,conf-007,Familia Navarro,Tomás,Navarro,, ,Sin observaciones,No,No,Carne,2026-04-24T12:15:00Z,2026-07-07T13:50:00Z
+guest-027,conf-007,Familia Navarro,Daniel,Navarro,Frutos secos,,Evitar frutos secos,18:00,6:00,Carne,2026-04-24T12:15:00Z,2026-07-07T13:50:00Z
+guest-028,conf-007,Familia Navarro,Ana,Navarro,, ,Menú infantil,18:00,6:00,Pescado,2026-04-24T12:15:00Z,2026-07-07T13:50:00Z
+guest-029,conf-008,Familia Romero,Sergio,Romero,, ,Sin observaciones,18:20,3:00,Carne,2026-04-26T10:45:00Z,2026-07-13T10:25:00Z
+guest-030,conf-008,Familia Romero,Teresa,Romero,, ,Sin observaciones,18:20,3:00,Pescado,2026-04-26T10:45:00Z,2026-07-13T10:25:00Z
+guest-031,conf-008,Familia Romero,Dani,Romero,, ,Menú infantil,No,No,Carne,2026-04-26T10:45:00Z,2026-07-13T10:25:00Z
+guest-032,conf-008,Familia Romero,Irene,Romero,Legumbres,,Sin guarnición de legumbres,No,No,Pescado,2026-04-26T10:45:00Z,2026-07-13T10:25:00Z
+guest-033,conf-009,Familia Medina,Paula,Medina,, ,Sin observaciones,No,No,Pescado,2026-04-29T17:30:00Z,2026-07-06T16:05:00Z
+guest-034,conf-009,Familia Medina,Nacho,Medina,, ,Sin observaciones,No,No,Carne,2026-04-29T17:30:00Z,2026-07-06T16:05:00Z
+guest-035,conf-009,Familia Medina,Carmen,Medina,, ,Movilidad reducida; dejar pasillo libre,18:00,3:00,Carne,2026-04-29T17:30:00Z,2026-07-06T16:05:00Z
+guest-036,conf-009,Familia Medina,David,Medina,, ,Sin observaciones,18:00,3:00,Pescado,2026-04-29T17:30:00Z,2026-07-06T16:05:00Z
+guest-037,conf-010,Familia Vidal,Jaime,Vidal,, ,Sin observaciones,18:20,6:00,Carne,2026-05-02T09:55:00Z,2026-07-14T11:45:00Z
+guest-038,conf-010,Familia Vidal,Lola,Vidal,Lactosa,,Café con leche vegetal,18:20,6:00,Pescado,2026-05-02T09:55:00Z,2026-07-14T11:45:00Z
+guest-039,conf-010,Familia Vidal,Héctor,Vidal,, ,Menú infantil,No,No,Carne,2026-05-02T09:55:00Z,2026-07-14T11:45:00Z
+guest-040,conf-010,Familia Vidal,Alicia,Vidal,, ,Menú infantil,No,No,Pescado,2026-05-02T09:55:00Z,2026-07-14T11:45:00Z
+guest-041,conf-011,Familia Herrera,Clara,Herrera,, ,Sin observaciones,No,No,Pescado,2026-05-04T15:15:00Z,2026-07-05T14:20:00Z
+guest-042,conf-011,Familia Herrera,Miguel,Herrera,, ,Sin observaciones,No,No,Carne,2026-05-04T15:15:00Z,2026-07-05T14:20:00Z
+guest-043,conf-011,Familia Herrera,Elisa,Herrera,Gluten,,Aperitivo sin gluten,18:00,3:00,Carne,2026-05-04T15:15:00Z,2026-07-05T14:20:00Z
+guest-044,conf-011,Familia Herrera,Joel,Herrera,, ,Menú infantil,18:00,3:00,Pescado,2026-05-04T15:15:00Z,2026-07-05T14:20:00Z
+guest-045,conf-012,Familia Prieto,Marcos,Prieto,, ,Sin observaciones,18:20,6:00,Carne,2026-05-07T11:05:00Z,2026-07-15T09:30:00Z
+guest-046,conf-012,Familia Prieto,Sara,Prieto,, ,Sin observaciones,18:20,6:00,Pescado,2026-05-07T11:05:00Z,2026-07-15T09:30:00Z
+guest-047,conf-012,Familia Prieto,Noa,Prieto,Huevo,,Sin mayonesa,No,No,Carne,2026-05-07T11:05:00Z,2026-07-15T09:30:00Z
+guest-048,conf-012,Familia Prieto,Iván,Prieto,, ,Menú infantil,No,No,Pescado,2026-05-07T11:05:00Z,2026-07-15T09:30:00Z
+guest-049,conf-013,Familia Campos,Noelia,Campos,, ,Sin observaciones,No,No,Pescado,2026-05-10T13:40:00Z,2026-07-02T18:00:00Z
+guest-050,conf-013,Familia Campos,Fernando,Campos,, ,Sin observaciones,No,No,Carne,2026-05-10T13:40:00Z,2026-07-02T18:00:00Z
+guest-051,conf-013,Familia Campos,María,Campos,Marisco,,Sin marisco,18:00,3:00,Carne,2026-05-10T13:40:00Z,2026-07-02T18:00:00Z
+guest-052,conf-013,Familia Campos,Lucas,Campos,, ,Menú infantil,18:00,3:00,Pescado,2026-05-10T13:40:00Z,2026-07-02T18:00:00Z
+guest-053,conf-014,Familia León,Adrián,León,, ,Sin observaciones,18:20,6:00,Carne,2026-05-13T10:10:00Z,2026-07-16T12:10:00Z
+guest-054,conf-014,Familia León,Rocío,León,, ,Sin observaciones,18:20,6:00,Pescado,2026-05-13T10:10:00Z,2026-07-16T12:10:00Z
+guest-055,conf-014,Familia León,Diego,León,, ,Menú infantil,No,No,Carne,2026-05-13T10:10:00Z,2026-07-16T12:10:00Z
+guest-056,conf-014,Familia León,Celia,León,Gluten,,Pan y postre sin gluten,No,No,Pescado,2026-05-13T10:10:00Z,2026-07-16T12:10:00Z
+guest-057,conf-015,Familia Domínguez,Bea,Domínguez,, ,Sin observaciones,No,3:00,Pescado,2026-05-16T16:20:00Z,2026-07-04T10:00:00Z
+guest-058,conf-015,Familia Domínguez,Gonzalo,Domínguez,, ,Sin observaciones,No,3:00,Carne,2026-05-16T16:20:00Z,2026-07-04T10:00:00Z
+guest-059,conf-015,Familia Domínguez,Olivia,Domínguez,Lactosa,,Helado sin lactosa,18:00,3:00,Carne,2026-05-16T16:20:00Z,2026-07-04T10:00:00Z
+guest-060,conf-015,Familia Domínguez,Bruno,Domínguez,, ,Menú infantil,18:00,3:00,Pescado,2026-05-16T16:20:00Z,2026-07-04T10:00:00Z
+guest-061,conf-016,Familia Pastor,Roberto,Pastor,, ,Sin observaciones,No,No,Carne,2026-05-19T12:35:00Z,2026-07-17T08:55:00Z
+guest-062,conf-016,Familia Pastor,Amalia,Pastor,, ,Sin observaciones,No,No,Pescado,2026-05-19T12:35:00Z,2026-07-17T08:55:00Z
+guest-063,conf-016,Familia Pastor,Gabriel,Pastor,Frutos secos,,Evitar frutos secos,18:20,6:00,Carne,2026-05-19T12:35:00Z,2026-07-17T08:55:00Z
+guest-064,conf-016,Familia Pastor,Julia,Pastor,, ,Menú infantil,18:20,6:00,Pescado,2026-05-19T12:35:00Z,2026-07-17T08:55:00Z
+guest-065,conf-017,Familia Moya,Cristina,Moya,, ,Sin observaciones,18:00,3:00,Pescado,2026-05-22T18:50:00Z,2026-07-01T15:25:00Z
+guest-066,conf-017,Familia Moya,Alberto,Moya,, ,Sin observaciones,18:00,3:00,Carne,2026-05-22T18:50:00Z,2026-07-01T15:25:00Z
+guest-067,conf-017,Familia Moya,Daniela,Moya,, ,Menú infantil,No,No,Carne,2026-05-22T18:50:00Z,2026-07-01T15:25:00Z
+guest-068,conf-017,Familia Moya,Nico,Moya,Legumbres,,Sin legumbres,No,No,Pescado,2026-05-22T18:50:00Z,2026-07-01T15:25:00Z
+guest-069,conf-018,Familia Fuentes,Daniel,Fuentes,, ,Sin observaciones,18:20,6:00,Carne,2026-05-25T09:40:00Z,2026-07-12T17:15:00Z
+guest-070,conf-018,Familia Fuentes,Verónica,Fuentes,, ,Sin observaciones,18:20,6:00,Pescado,2026-05-25T09:40:00Z,2026-07-12T17:15:00Z
+guest-071,conf-018,Familia Fuentes,Sofía,Fuentes,Huevo,,Sin huevo,No,No,Carne,2026-05-25T09:40:00Z,2026-07-12T17:15:00Z
+guest-072,conf-018,Familia Fuentes,Álvaro,Fuentes,, ,Menú infantil,No,No,Pescado,2026-05-25T09:40:00Z,2026-07-12T17:15:00Z
+guest-073,conf-019,Familia Vega,Sofía,Vega,, ,Pendiente de mesa con abuelos,18:00,3:00,Pescado,2026-06-01T11:10:00Z,2026-07-16T19:00:00Z
+guest-074,conf-019,Familia Vega,Manuel,Vega,, ,Pendiente de mesa con abuelos,18:00,3:00,Carne,2026-06-01T11:10:00Z,2026-07-16T19:00:00Z
+guest-075,conf-019,Familia Vega,Elena,Vega,Gluten,,Pendiente de asignación,No,No,Carne,2026-06-01T11:10:00Z,2026-07-16T19:00:00Z
+guest-076,conf-019,Familia Vega,Pedro,Vega,, ,Pendiente de asignación,No,No,Pescado,2026-06-01T11:10:00Z,2026-07-16T19:00:00Z
+guest-077,conf-020,Familia Ríos,Antonio,Ríos,, ,Confirmación tardía; pendiente de mesa,18:20,6:00,Carne,2026-06-05T14:30:00Z,2026-07-15T16:45:00Z
+guest-078,conf-020,Familia Ríos,Patricia,Ríos,Lactosa,,Confirmación tardía; pendiente de mesa,18:20,6:00,Pescado,2026-06-05T14:30:00Z,2026-07-15T16:45:00Z
+guest-079,conf-020,Familia Ríos,Marina,Ríos,, ,Menú infantil; pendiente de mesa,No,No,Carne,2026-06-05T14:30:00Z,2026-07-15T16:45:00Z
+guest-080,conf-020,Familia Ríos,Tomás,Ríos,Frutos secos,,Pendiente de mesa,No,No,Pescado,2026-06-05T14:30:00Z,2026-07-15T16:45:00Z

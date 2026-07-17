@@ -1,1 +1,10 @@
-paymentId,serviceId,numeroPlazo,importe,fechaPrevista,fechaPago,pagado,notas,createdAt,updatedAt
+paymentId,serviceId,paymentNumber,amount,dueDate,paidDate,paid,notes,createdAt,updatedAt
+pay-001,serv-001,1,1400,2026-01-15,2026-01-14,TRUE,Señal de reserva,2026-01-14T10:00:00Z,2026-01-14T10:00:00Z
+pay-002,serv-001,2,1400,2026-05-15,2026-05-14,TRUE,Segundo plazo,2026-05-14T10:00:00Z,2026-05-14T10:00:00Z
+pay-003,serv-001,3,1400,2026-08-15,,FALSE,Saldo antes del evento,2026-06-15T10:00:00Z,2026-07-01T10:00:00Z
+pay-004,serv-002,1,2266.67,2026-02-01,2026-01-30,TRUE,Reserva catering,2026-01-30T10:00:00Z,2026-01-30T10:00:00Z
+pay-005,serv-002,2,2266.67,2026-07-22,,FALSE,Pendiente de transferencia,2026-06-20T10:00:00Z,2026-07-17T09:00:00Z
+pay-006,serv-002,3,2266.66,2026-08-22,,FALSE,Saldo día de la boda,2026-06-20T10:00:00Z,2026-07-12T10:00:00Z
+pay-007,serv-003,1,925,2026-03-01,2026-02-28,TRUE,Reserva fotografía,2026-02-28T10:00:00Z,2026-02-28T10:00:00Z
+pay-008,serv-003,2,925,2026-08-22,,FALSE,Entrega del álbum,2026-06-15T10:00:00Z,2026-07-05T10:00:00Z
+pay-009,serv-006,1,950,2026-08-10,,FALSE,Factura pendiente,2026-06-20T10:00:00Z,2026-07-16T10:00:00Z
