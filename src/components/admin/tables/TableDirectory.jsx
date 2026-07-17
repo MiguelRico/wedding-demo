@@ -36,9 +36,9 @@ export function PendingGuestAssignmentActions({
   disabled,
   onAssign,
   onSeatChange,
-  onTableChange,
   selectedSeat,
   selectedTable,
+  tableLocked = false,
   tables,
 }) {
   const canAssign = Boolean(!disabled && selectedTable && selectedSeat);
@@ -49,8 +49,7 @@ export function PendingGuestAssignmentActions({
         <Label>{adminContent.pendingGuests.tableLabel}</Label>
         <select
           className={`${selectClassName} text-sm`}
-          disabled={disabled || assigning}
-          onChange={(event) => onTableChange(event.target.value)}
+          disabled={tableLocked || disabled || assigning}
           value={selectedTable}
         >
           <option value="">

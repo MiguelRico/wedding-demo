@@ -221,6 +221,7 @@ export default function AdminTables() {
   });
   const {
     effectiveSelectedId: effectiveSelectedTableKey,
+    selectedItem: selectedTable,
   } = useEffectiveSelection({
     allItems: tables,
     currentPage,
@@ -311,16 +312,12 @@ export default function AdminTables() {
     pageSize: pendingGuestsPageSize,
     selectedId: selectedPendingGuestKey,
   });
-  const pendingGuestTablesWithSeats = useMemo(
-    () => tables.filter((table) => Table.getEmptySeats(table).length > 0),
-    [tables],
-  );
   const pendingGuestsSelectedTableObj = useMemo(
     () =>
-      pendingGuestTablesWithSeats.find(
+      tables.find(
         (table) => table.name === pendingGuestsSelectedTable,
       ) || null,
-    [pendingGuestTablesWithSeats, pendingGuestsSelectedTable],
+    [pendingGuestsSelectedTable, tables],
   );
   const pendingGuestsAvailableSeats = useMemo(() => {
     if (!pendingGuestsSelectedTableObj) return [];
@@ -329,6 +326,10 @@ export default function AdminTables() {
       (seat) => seat.seat,
     );
   }, [pendingGuestsSelectedTableObj]);
+  useEffect(() => {
+    setPendingGuestsSelectedTable(selectedTable?.name || "");
+    setPendingGuestsSelectedSeat("");
+  }, [selectedTable?.name]);
   const pendingGuestsEmptyState = getPendingGuestsEmptyState({
     pendingCount: guestsPending.length,
     tableCount: tables.length,
@@ -868,13 +869,10 @@ export default function AdminTables() {
                         )
                       }
                       onSeatChange={setPendingGuestsSelectedSeat}
-                      onTableChange={(value) => {
-                        setPendingGuestsSelectedTable(value);
-                        setPendingGuestsSelectedSeat("");
-                      }}
                       selectedSeat={pendingGuestsSelectedSeat}
                       selectedTable={pendingGuestsSelectedTable}
-                      tables={pendingGuestTablesWithSeats}
+                      tableLocked
+                      tables={tables}
                     />
                   ) : null
                 }

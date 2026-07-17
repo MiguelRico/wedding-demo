@@ -10,9 +10,9 @@ import DeleteDialog from "../components/ui/DeleteDialog";
 import StatusDialog from "../components/ui/StatusDialog";
 import Spinner from "../components/ui/Spinner";
 import {
-  AdminEntityTabs,
   AdminPageShell,
   AdminPendingChangesActions,
+  AdminResponsivePanels,
   AdminTableSection,
   UnsavedChangesDialog,
 } from "../components/admin/common";
@@ -538,12 +538,12 @@ export default function AdminGuests() {
         </CinematicStaggeredRevealItem>
 
         <CinematicStaggeredRevealItem index={4} isVisible={guestsInView}>
-          <AdminEntityTabs
-            activeTab={activeTab}
+          <AdminResponsivePanels
+            activePanel={activeTab}
             onChange={setActiveTab}
-            tabs={adminContent.guests.tabs}
-          >
-            {activeTab === "confirmations" ? (
+            panels={adminContent.guests.tabs}
+            renderPanel={(panelId) =>
+              panelId === "confirmations" ? (
               <AdminTableSection
                 actions={
                   <GuestTableActions
@@ -625,7 +625,7 @@ export default function AdminGuests() {
                 title={adminContent.guests.list.title}
                 totalPages={totalPages}
               />
-            ) : (
+              ) : (
               <AdminTableSection
                 actions={
                   selectedGuestGroup ? (
@@ -732,8 +732,9 @@ export default function AdminGuests() {
                 title={adminContent.guests.guestList.title}
                 totalPages={guestTotalPages}
               />
-            )}
-          </AdminEntityTabs>
+              )
+            }
+          />
         </CinematicStaggeredRevealItem>
       </AdminPageShell>
 

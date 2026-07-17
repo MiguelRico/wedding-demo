@@ -24,9 +24,9 @@ import {
   setAdminProviders,
 } from "../services/adminDataStore";
 import {
-  AdminEntityTabs,
   AdminPageShell,
   AdminPendingChangesActions,
+  AdminResponsivePanels,
   AdminTableSection,
   EditorDialog as AdminEditorDialog,
   UnsavedChangesDialog,
@@ -503,12 +503,12 @@ export default function AdminProviders() {
         </CinematicStaggeredRevealItem>
 
         <CinematicStaggeredRevealItem index={4} isVisible={providersInView}>
-          <AdminEntityTabs
-            activeTab={activeTab}
+          <AdminResponsivePanels
+            activePanel={activeTab}
             onChange={setActiveTab}
-            tabs={adminContent.providers.tabs}
-          >
-            {activeTab === "providers" ? (
+            panels={adminContent.providers.tabs}
+            renderPanel={(panelId) =>
+              panelId === "providers" ? (
               <AdminTableSection
                 actions={
                   <ProviderTableActions
@@ -584,7 +584,7 @@ export default function AdminProviders() {
                 title={adminContent.providers.list.title}
                 totalPages={loadingProviders ? undefined : totalPages}
               />
-            ) : (
+              ) : (
               <AdminTableSection
                 actions={
                   selectedProvider ? (
@@ -691,8 +691,9 @@ export default function AdminProviders() {
                 title={adminContent.providers.services.title}
                 totalPages={loadingProviders ? undefined : servicesTotalPages}
               />
-            )}
-          </AdminEntityTabs>
+              )
+            }
+          />
         </CinematicStaggeredRevealItem>
       </AdminPageShell>
 
