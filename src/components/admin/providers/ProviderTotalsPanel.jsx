@@ -25,13 +25,13 @@ export default function ProviderTotalsPanel({ loading, stats }) {
         {adminContent.providers.overview.title}
       </h2>
       {loading ? (
-        <div className="space-y-3">
+        <div className="grid gap-3 md:grid-cols-3">
           <ProviderGroupedSummarySkeleton />
           <ProviderGroupedSummarySkeleton />
           <ProviderNextServiceSummarySkeleton />
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="grid gap-3 md:grid-cols-3">
           <ProviderOperationsSummary metrics={metrics} stats={stats} />
           <ProviderFinanceSummary metrics={metrics} stats={stats} />
           <ProviderNextServiceSummary metrics={metrics} stats={stats} />
@@ -43,8 +43,8 @@ export default function ProviderTotalsPanel({ loading, stats }) {
 
 function ProviderGroupedSummarySkeleton() {
   return (
-    <article className="rounded-[1.5rem] border border-[var(--color-border)] bg-white/45 p-3">
-      <div className="grid grid-cols-3 gap-2">
+    <article className="rounded-[1.5rem] border border-[var(--color-border)] bg-white/45 p-3 md:flex md:h-full md:items-center">
+      <div className="grid w-full grid-cols-3 gap-2">
         {Array.from({ length: 3 }).map((_, index) => (
           <div className="min-w-0 text-center" key={index}>
             <SkeletonBlock className="mx-auto h-8 w-8 rounded-full" />
@@ -114,8 +114,8 @@ function ProviderFinanceSummary({ metrics, stats }) {
 
 function ProviderGroupedSummary({ items }) {
   return (
-    <article className="rounded-[1.5rem] border border-[var(--color-border)] bg-white/45 p-3">
-      <div className="grid grid-cols-3 gap-2">
+    <article className="rounded-[1.5rem] border border-[var(--color-border)] bg-white/45 p-3 md:flex md:h-full md:items-center">
+      <div className="grid w-full grid-cols-3 gap-2">
         {items.map((item) => (
           <div className="min-w-0 text-center" key={item.label}>
             <div className="mx-auto flex h-8 w-8 items-center justify-center rounded-full border border-[var(--color-border-strong)] bg-white/60 text-[var(--color-accent-dark)]">
@@ -146,16 +146,25 @@ function ProviderNextServiceSummary({ metrics, stats }) {
 
   return (
     <article className="rounded-[1.5rem] border border-[var(--color-border)] bg-white/45 p-3 text-center">
-      <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-border-strong)] bg-white/60 text-[var(--color-accent-dark)]">
-        <CalendarDays size={22} strokeWidth={1.8} />
+      <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-border-strong)] bg-white/60 text-[var(--color-accent-dark)] md:h-8 md:w-8">
+        <CalendarDays className="md:h-[18px] md:w-[18px]" size={22} strokeWidth={1.8} />
       </div>
-      <p className="mt-3 text-xs leading-snug text-[var(--color-muted)]">
+      <p
+        className="mt-3 truncate text-xs leading-snug text-[var(--color-muted)] md:mt-2 md:text-[0.66rem]"
+        title={`${metrics.nextService} (${formatDate(stats.nextPaymentDate)})`}
+      >
         {metrics.nextService} ({formatDate(stats.nextPaymentDate)})
       </p>
-      <p className="mt-2 break-words font-serif text-2xl leading-none text-[var(--color-accent-dark)]">
+      <p
+        className="mt-2 truncate font-serif text-2xl leading-none text-[var(--color-accent-dark)] md:text-lg"
+        title={serviceName}
+      >
         {serviceName}
       </p>
-      <p className="mt-2 text-sm leading-snug text-[var(--color-muted)]">
+      <p
+        className="mt-2 truncate text-sm leading-snug text-[var(--color-muted)] md:mt-1 md:text-[0.66rem]"
+        title={`${category} Â· ${amount}`}
+      >
         {category} · {amount}
       </p>
     </article>

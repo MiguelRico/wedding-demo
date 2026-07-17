@@ -15,7 +15,7 @@ import {
 } from "../common";
 
 const NOTIFICATION_METRIC_GRID_CLASS =
-  "grid grid-cols-3 gap-2";
+  "grid grid-cols-3 gap-2 md:grid-cols-2";
 
 export default function NotificationTotalsPanel({ loading, stats }) {
   const metrics = adminContent.notifications.overview.metrics;
@@ -31,18 +31,18 @@ export default function NotificationTotalsPanel({ loading, stats }) {
       {loading ? (
         <div className={NOTIFICATION_METRIC_GRID_CLASS}>
           <AdminMetricGroupCardSkeleton
-            className="col-span-3"
+            className="col-span-3 md:col-span-1"
             showHeader={false}
           />
           <AdminMetricGroupCardSkeleton
-            className="col-span-3"
+            className="col-span-3 md:col-span-1"
             showHeader={false}
           />
         </div>
       ) : (
         <div className={NOTIFICATION_METRIC_GRID_CLASS}>
           <AdminMetricGroupCard
-            className="col-span-3"
+            className="col-span-3 md:col-span-1"
             icon={<Inbox size={22} strokeWidth={1.8} />}
             items={[
               {
@@ -66,7 +66,7 @@ export default function NotificationTotalsPanel({ loading, stats }) {
             title={metrics.total}
           />
           <AdminMetricGroupCard
-            className="col-span-3"
+            className="col-span-3 md:col-span-1"
             icon={<CircleAlert size={22} strokeWidth={1.8} />}
             items={[
               {
