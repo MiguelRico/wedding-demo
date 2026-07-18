@@ -803,6 +803,14 @@ export default function AdminTables() {
                 contentRef={tablesStartRef}
                 eyebrow={adminContent.tables.header.eyebrow}
                 getKey={getTableRenderKey}
+                headerActions={
+                  <TableTabActions
+                    compact
+                    loading={state.loading}
+                    onCreate={handleCreateTable}
+                    showText={false}
+                  />
+                }
                 isMobileView={isMobileView}
                 items={tables}
                 loading={state.loading}

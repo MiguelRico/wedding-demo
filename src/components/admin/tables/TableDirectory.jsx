@@ -9,13 +9,18 @@ import { getTableKey } from "../../../services/tablesService";
 import { getTableRenderKey } from "../../../utils/renderKeys";
 import TableAnimatedInfoCard from "./TableAnimatedInfoCard";
 
-export function TableTabActions({ loading, onCreate, showText = true }) {
+export function TableTabActions({
+  compact = false,
+  loading,
+  onCreate,
+  showText = true,
+}) {
   if (!onCreate) return null;
 
   return (
-    <div className="grid w-full gap-3">
+    <div className={compact ? "" : "grid w-full gap-3"}>
       <IconButton
-        className="w-full"
+        className={compact ? "h-10 w-10 !px-0" : "w-full"}
         disabled={loading}
         icon={<Plus size={18} strokeWidth={2.4} />}
         label={adminContent.tables.actions.addTable}

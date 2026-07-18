@@ -82,15 +82,21 @@ export function FiltersCard({ filter, onFilterChange, onQueryChange, query }) {
   );
 }
 
-export function GuestTableActions({ loading, onCreate, rows, showText = true }) {
+export function GuestTableActions({
+  compact = false,
+  loading,
+  onCreate,
+  rows,
+  showText = true,
+}) {
   void rows;
 
   if (!onCreate) return null;
 
   return (
-    <div className="grid w-full gap-3">
+    <div className={compact ? "" : "grid w-full gap-3"}>
       <IconButton
-        className="w-full"
+        className={compact ? "h-10 w-10 !px-0" : "w-full"}
         disabled={loading}
         icon={<Plus size={18} strokeWidth={2.4} />}
         label={adminContent.guests.actions.create}

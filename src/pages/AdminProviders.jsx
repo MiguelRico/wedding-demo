@@ -534,6 +534,14 @@ export default function AdminProviders() {
                   />
                 }
                 getKey={(provider) => provider.id}
+                headerActions={
+                  <ProviderTableActions
+                    compact
+                    loading={loadingProviders}
+                    onCreate={handleCreateProvider}
+                    showText={false}
+                  />
+                }
                 isMobileView={isMobileView}
                 items={filteredProviders}
                 loading={loadingProviders}
@@ -619,6 +627,16 @@ export default function AdminProviders() {
                   />
                 }
                 getKey={(service) => service.id}
+                headerActions={
+                  selectedProvider ? (
+                    <ProviderTableActions
+                      compact
+                      loading={loadingProviders}
+                      onCreate={handleCreateService}
+                      showText={false}
+                    />
+                  ) : null
+                }
                 isMobileView={isMobileView}
                 items={filteredServices}
                 loading={loadingProviders}

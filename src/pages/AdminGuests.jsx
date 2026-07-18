@@ -571,6 +571,15 @@ export default function AdminGuests() {
                   />
                 }
                 getKey={(row) => row.rowId}
+                headerActions={
+                  <GuestTableActions
+                    compact
+                    loading={state.loading}
+                    onCreate={() => openGroupEditor(undefined, "group")}
+                    rows={rows}
+                    showText={false}
+                  />
+                }
                 isMobileView={isMobileView}
                 items={visibleRows}
                 loading={state.loading}
@@ -668,6 +677,17 @@ export default function AdminGuests() {
                   />
                 }
                 getKey={(guest) => guest.rowId}
+                headerActions={
+                  selectedGuestGroup ? (
+                    <GuestTableActions
+                      compact
+                      loading={state.loading}
+                      onCreate={() => openNewGuestEditor(selectedGuestGroup)}
+                      rows={visibleGuestItems}
+                      showText={false}
+                    />
+                  ) : null
+                }
                 isMobileView={isMobileView}
                 items={visibleGuestItems}
                 loading={state.loading}

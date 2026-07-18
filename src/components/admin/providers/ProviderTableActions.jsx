@@ -4,6 +4,7 @@ import IconButton from "../../ui/IconButton";
 import { adminContent } from "../../../constants/adminContent";
 
 export default function ProviderTableActions({
+  compact = false,
   loading,
   onCreate,
   showText,
@@ -11,9 +12,9 @@ export default function ProviderTableActions({
   if (!onCreate) return null;
 
   return (
-    <div className="grid w-full gap-3">
+    <div className={compact ? "" : "grid w-full gap-3"}>
       <IconButton
-        className="w-full"
+        className={compact ? "h-10 w-10 !px-0" : "w-full"}
         disabled={loading}
         icon={<Plus size={18} strokeWidth={2.4} />}
         label={adminContent.providers.actions.add}

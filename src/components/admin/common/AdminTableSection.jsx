@@ -9,36 +9,28 @@ function AdminTableSectionHeader({
   count,
   eyebrow,
   headerActions,
-  headerPagination,
   loading,
   title,
 }) {
-  const hasInlineHeaderControls = Boolean(headerPagination || headerActions);
   const hasHeaderContent = Boolean(eyebrow || title || count || actions);
 
   if (!hasHeaderContent) return null;
 
   return (
     <div className="mb-4">
-      {eyebrow && <p className="section-eyebrow mb-2">{eyebrow}</p>}
-      {(title || hasInlineHeaderControls) && hasInlineHeaderControls && (
-        <div className="grid gap-3 md:grid-cols-[minmax(10rem,0.9fr)_minmax(16rem,1fr)_minmax(14rem,1fr)] md:items-center">
+      {eyebrow && <p className="section-eyebrow mb-2 md:hidden">{eyebrow}</p>}
+      {(title || headerActions) && (
+        <div className="flex items-center justify-between gap-3">
           {title && (
-            <h2 className="font-serif text-3xl leading-none text-[var(--color-accent-dark)] md:min-w-0">
+            <h2 className="hidden min-w-0 font-serif text-3xl leading-none text-[var(--color-accent-dark)] md:block">
               {title}
             </h2>
           )}
-          {headerPagination}
-          {headerActions}
+          {headerActions && <div className="hidden shrink-0 md:block">{headerActions}</div>}
         </div>
       )}
-      {title && !hasInlineHeaderControls && (
-        <h2 className="font-serif text-3xl leading-none text-[var(--color-accent-dark)]">
-          {title}
-        </h2>
-      )}
       {!loading && (count || actions) && actions && (
-        <div className="mt-4 flex flex-col gap-3">
+        <div className="mt-4 flex flex-col gap-3 md:hidden">
           <div
             className={`rounded-[1.5rem] border border-[var(--color-border)] bg-white/35 p-4 ${
               actionsFullWidth ? "w-full" : ""
@@ -103,35 +95,7 @@ export default function AdminTableSection({
       pageLabel || paginationLabel || mobilePageLabel || page || totalPages,
     );
   const contentSkeletonConfig = skeletonConfig.content || {};
-  const inlinePaginationPlaceholder =
-    paginationInlineWithTitle && !hasPagination ? (
-      <div
-        aria-hidden="true"
-        className="invisible mt-0 w-full rounded-[1.5rem] border border-[var(--color-border)] bg-white/35 p-2"
-      >
-        <div className="grid w-full grid-cols-3 items-center gap-2 text-xs text-[var(--color-muted)]">
-          <span className="h-8 rounded-full" />
-          <span className="text-center">1 / 1</span>
-          <span className="h-8 rounded-full" />
-        </div>
-      </div>
-    ) : null;
-  const headerPagination =
-    hasPagination && paginationInlineWithTitle ? (
-      <Pagination
-        className="mt-0 w-full"
-        compact
-        currentLabel={pageLabel}
-        label={paginationLabel}
-        mobileLabel={mobilePageLabel}
-        onNext={onNextPage}
-        onPrev={onPrevPage}
-        page={pagination.page}
-        totalPages={pagination.totalPages}
-      />
-    ) : (
-      inlinePaginationPlaceholder
-    );
+  void paginationInlineWithTitle;
 
   return (
     <section
@@ -144,7 +108,6 @@ export default function AdminTableSection({
         count={count}
         eyebrow={eyebrow}
         headerActions={headerActions}
-        headerPagination={headerPagination}
         loading={loading}
         title={title}
       />
@@ -167,7 +130,7 @@ export default function AdminTableSection({
 
           {filters && hasFilterSlot && <div className="mb-4">{filters}</div>}
 
-          {hasPagination && !paginationInlineWithTitle && (
+          {hasPagination && (
             <Pagination
               className="mb-4"
               currentLabel={pageLabel}
@@ -197,6 +160,7 @@ export default function AdminTableSection({
               children
             )}
           </div>
+
         </>
       )}
     </section>

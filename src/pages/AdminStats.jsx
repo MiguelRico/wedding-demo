@@ -210,8 +210,8 @@ function StatsGuestTotalsPanel({ chartStats, loading, stats }) {
 
   return (
     <section className="premium-card">
-      <p className="section-eyebrow mb-2">{content.eyebrow}</p>
-      <h2 className="mb-5 font-serif text-3xl leading-none text-[var(--color-accent-dark)]">
+      <p className="section-eyebrow mb-2 md:hidden">{content.eyebrow}</p>
+      <h2 className="mb-5 hidden font-serif text-3xl leading-none text-[var(--color-accent-dark)] md:block">
         {content.title}
       </h2>
       {loading ? (

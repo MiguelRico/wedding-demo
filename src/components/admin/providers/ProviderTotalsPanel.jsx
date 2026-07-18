@@ -18,10 +18,10 @@ export default function ProviderTotalsPanel({ loading, stats }) {
 
   return (
     <section className="premium-card">
-      <p className="section-eyebrow mb-2">
+      <p className="section-eyebrow mb-2 md:hidden">
         {adminContent.providers.overview.eyebrow}
       </p>
-      <h2 className="mb-5 font-serif text-3xl leading-none text-[var(--color-accent-dark)]">
+      <h2 className="mb-5 hidden font-serif text-3xl leading-none text-[var(--color-accent-dark)] md:block">
         {adminContent.providers.overview.title}
       </h2>
       {loading ? (
