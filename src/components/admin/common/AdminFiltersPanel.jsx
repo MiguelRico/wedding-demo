@@ -4,6 +4,7 @@ export default function AdminFiltersPanel({
   activeFilters = [],
   children,
   className = "",
+  fieldsClassName = "grid gap-4 md:grid-cols-2",
   title,
 }) {
   return (
@@ -12,7 +13,7 @@ export default function AdminFiltersPanel({
       className={className}
       title={title}
     >
-      <div className="grid gap-4 md:grid-cols-2">{children}</div>
+      <div className={fieldsClassName}>{children}</div>
     </CollapsiblePanel>
   );
 }

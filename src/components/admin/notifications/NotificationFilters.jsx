@@ -50,7 +50,11 @@ export default function NotificationFilters({
   ].filter(Boolean);
 
   return (
-    <AdminFiltersPanel activeFilters={activeFilters} title={content.eyebrow}>
+    <AdminFiltersPanel
+      activeFilters={activeFilters}
+      fieldsClassName="grid gap-4 md:grid-cols-3"
+      title={content.eyebrow}
+    >
         <div>
           <Label>{content.searchLabel}</Label>
           <label className="relative block">

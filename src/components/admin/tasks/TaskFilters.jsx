@@ -58,8 +58,12 @@ export default function TaskFilters({
   ].filter(Boolean);
 
   return (
-    <AdminFiltersPanel activeFilters={activeFilters} title={content.eyebrow}>
-      <div>
+    <AdminFiltersPanel
+      activeFilters={activeFilters}
+      fieldsClassName="grid gap-4 md:grid-cols-6"
+      title={content.eyebrow}
+    >
+      <div className="md:col-span-2">
         <Label>{content.searchLabel}</Label>
         <label className="relative block">
           <Search
@@ -77,7 +81,7 @@ export default function TaskFilters({
         </label>
       </div>
 
-      <div>
+      <div className="md:col-span-2">
         <Label>{content.statusLabel}</Label>
         <select
           className={selectClassName}
@@ -90,7 +94,7 @@ export default function TaskFilters({
         </select>
       </div>
 
-      <div>
+      <div className="md:col-span-2">
         <Label>{content.priorityLabel}</Label>
         <select
           className={selectClassName}
@@ -107,11 +111,13 @@ export default function TaskFilters({
       </div>
 
       <DateFilter
+        className="md:col-span-3"
         label={content.dateFromLabel}
         onChange={onDateFromChange}
         value={dateFrom}
       />
       <DateFilter
+        className="md:col-span-3"
         label={content.dateToLabel}
         onChange={onDateToChange}
         value={dateTo}
@@ -120,8 +126,10 @@ export default function TaskFilters({
   );
 }
 
-function DateFilter({ label, onChange, value }) {
+function DateFilter({ className = "", label, onChange, value }) {
   return (
-    <TextField label={label} onChange={onChange} type="date" value={value} />
+    <div className={className}>
+      <TextField label={label} onChange={onChange} type="date" value={value} />
+    </div>
   );
 }
