@@ -28,11 +28,11 @@ export default function SearchInvitationCard({
     <FormCard>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <p className="section-eyebrow mb-0 md:hidden">
+          <p className="section-eyebrow mb-3">
             {rsvpContent.searchInvitation.eyebrow}
           </p>
 
-          <h2 className="hidden font-serif text-3xl md:block">
+          <h2 className="font-serif text-3xl">
             {rsvpContent.searchInvitation.title}
           </h2>
 
@@ -88,11 +88,11 @@ export default function SearchInvitationCard({
       <div className="my-5 border-t border-[var(--color-border)]" />
 
       <div>
-        <p className="section-eyebrow mb-0 md:hidden">
+        <p className="section-eyebrow mb-3">
           {rsvpContent.createInvitation.eyebrow}
         </p>
 
-        <h2 className="hidden font-serif text-3xl md:block">
+        <h2 className="font-serif text-3xl">
           {rsvpContent.createInvitation.title}
         </h2>
 

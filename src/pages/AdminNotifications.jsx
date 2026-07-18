@@ -337,12 +337,20 @@ export default function AdminNotifications() {
               <NotificationTableActions
                 loading={state.loading}
                 onCreate={openCreateEditor}
-                showText={!isMobileView}
+                showText
               />
             }
             actionsFullWidth
             contentRef={tableStartRef}
             eyebrow={adminContent.notifications.list.eyebrow}
+            headerActions={
+              <NotificationTableActions
+                compact
+                loading={state.loading}
+                onCreate={openCreateEditor}
+                showText={false}
+              />
+            }
             filters={
               <NotificationFilters
                 onQueryChange={(value) => {

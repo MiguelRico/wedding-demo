@@ -551,7 +551,7 @@ export default function AdminGuests() {
                     loading={state.loading}
                     onCreate={() => openGroupEditor(undefined, "group")}
                     rows={rows}
-                    showText={!isMobileView}
+                    showText
                   />
                 }
                 contentRef={tableStartRef}
@@ -647,7 +647,7 @@ export default function AdminGuests() {
                           : null
                       }
                       rows={visibleGuestItems}
-                      showText={!isMobileView}
+                      showText
                     />
                   ) : null
                 }

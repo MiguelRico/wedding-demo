@@ -20,7 +20,7 @@ export default function HeaderSection({
     <div className={`mx-auto max-w-3xl text-center ${className}`}>
       {eyebrow && <p className="section-eyebrow">{eyebrow}</p>}
 
-      {shouldShowTitleAndText && title && (
+      {title && (
         <Title className="section-title">{title}</Title>
       )}
 

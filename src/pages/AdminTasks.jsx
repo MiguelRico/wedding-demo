@@ -307,11 +307,19 @@ export default function AdminTasks() {
               <TaskTableActions
                 loading={loading}
                 onCreate={handleCreateTask}
-                showText={!isMobileView}
+                showText
               />
             }
             actionsFullWidth
             eyebrow={adminContent.tasks.list.eyebrow}
+            headerActions={
+              <TaskTableActions
+                compact
+                loading={loading}
+                onCreate={handleCreateTask}
+                showText={false}
+              />
+            }
             filters={
               <TaskFilters
                 dateFrom={dateFrom}

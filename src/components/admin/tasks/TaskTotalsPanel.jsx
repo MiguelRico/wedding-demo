@@ -24,10 +24,10 @@ export default function TaskTotalsPanel({ loading, stats }) {
 
   return (
     <section className="premium-card">
-      <p className="section-eyebrow mb-2 md:hidden">
+      <p className="section-eyebrow mb-2">
         {adminContent.tasks.overview.eyebrow}
       </p>
-      <h2 className="mb-5 hidden font-serif text-3xl leading-none text-[var(--color-accent-dark)] md:block">
+      <h2 className="mb-5 font-serif text-3xl leading-none text-[var(--color-accent-dark)]">
         {adminContent.tasks.overview.title}
       </h2>
       {loading ? (

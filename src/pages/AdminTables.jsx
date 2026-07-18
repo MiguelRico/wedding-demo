@@ -820,7 +820,7 @@ export default function AdminTables() {
                   <TableTabActions
                     loading={state.loading}
                     onCreate={handleCreateTable}
-                    showText={!isMobileView}
+                    showText
                   />
                 }
                 contentRef={tablesStartRef}

@@ -18,18 +18,18 @@ function AdminTableSectionHeader({
 
   return (
     <div className="mb-4">
-      {eyebrow && <p className="section-eyebrow mb-2 md:hidden">{eyebrow}</p>}
+      {eyebrow && <p className="section-eyebrow mb-2">{eyebrow}</p>}
       {(title || headerActions) && (
         <div className="flex items-center justify-between gap-3 md:min-h-10">
           {title && (
-            <h2 className="hidden min-w-0 font-serif text-3xl leading-none text-[var(--color-accent-dark)] md:block">
+            <h2 className="min-w-0 font-serif text-3xl leading-none text-[var(--color-accent-dark)]">
               {title}
             </h2>
           )}
-          {headerActions && <div className="hidden shrink-0 md:block">{headerActions}</div>}
+          {headerActions && <div className="shrink-0">{headerActions}</div>}
         </div>
       )}
-      {!loading && (count || actions) && actions && (
+      {!loading && (count || actions) && actions && !headerActions && (
         <div className="mt-4 flex flex-col gap-3 md:hidden">
           <div
             className={`rounded-[1.5rem] border border-[var(--color-border)] bg-white/35 p-4 ${

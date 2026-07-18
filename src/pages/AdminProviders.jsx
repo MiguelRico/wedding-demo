@@ -516,7 +516,7 @@ export default function AdminProviders() {
                     loading={loadingProviders}
                     onCreate={handleCreateProvider}
                     providers={providers}
-                    showText={!isMobileView}
+                    showText
                   />
                 }
                 contentRef={tableStartRef}
@@ -601,7 +601,7 @@ export default function AdminProviders() {
                       loading={loadingProviders}
                       onCreate={selectedProvider ? handleCreateService : null}
                       providers={filteredServices}
-                      showText={!isMobileView}
+                      showText
                     />
                   ) : null
                 }
