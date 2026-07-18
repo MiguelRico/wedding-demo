@@ -1,4 +1,13 @@
 providerId,name,category,phone,email,address,web,accountNumber,active,createdAt,updatedAt
+prov-009,Enlace Sereno,wedding-planner,600001109,hola@enlacesereno.example,Calle Vazquez Lopez 14 Huelva,https://enlacesereno.example,ES910001000100000009,TRUE,2025-11-10T10:00:00Z,2026-07-10T10:00:00Z
+prov-010,Plano Secuencia Sur,video,600001110,produccion@planosecuencia.example,Calle Berdigon 6 Huelva,https://planosecuencia.example,ES910001000100000010,TRUE,2026-01-16T10:00:00Z,2026-07-06T10:00:00Z
+prov-011,Cuerda y Sal,musica,600001111,contratacion@cuerdaysal.example,Calle Rabida 31 Huelva,https://cuerdaysal.example,ES910001000100000011,TRUE,2026-02-10T10:00:00Z,2026-07-14T10:00:00Z
+prov-012,Lumen Escenica,iluminacion,600001112,produccion@lumenescenica.example,Poligono Industrial 22 Huelva,https://lumenescenica.example,ES910001000100000012,TRUE,2026-02-14T10:00:00Z,2026-07-11T10:00:00Z
+prov-013,Atrezzo Blanco,decoracion,600001113,reservas@atrezzoblanco.example,Calle Puerto 17 Huelva,https://atrezzoblanco.example,ES910001000100000013,TRUE,2026-02-18T10:00:00Z,2026-07-09T10:00:00Z
+prov-014,Hotel Mar de Luz,alojamiento,959001114,eventos@hotelmar.example,Paseo Maritimo 3 Punta Umbria,https://hotelmar.example,ES910001000100000014,TRUE,2026-03-01T10:00:00Z,2026-07-08T10:00:00Z
+prov-015,La Coctelera,barra-libre,600001115,hola@lacoctelera.example,Calle San Sebastian 10 Huelva,https://lacoctelera.example,ES910001000100000015,TRUE,2026-03-04T10:00:00Z,2026-07-16T10:00:00Z
+prov-016,Detalle Vivo,regalos,600001116,pedidos@detallevivo.example,Calle Arquitecto Perez Carasa 5 Huelva,https://detallevivo.example,ES910001000100000016,TRUE,2026-03-08T10:00:00Z,2026-07-04T10:00:00Z
+prov-017,Estudio Aura,otros,600001117,reservas@estudioaura.example,Calle Plus Ultra 9 Huelva,https://estudioaura.example,ES910001000100000017,TRUE,2026-03-12T10:00:00Z,2026-07-13T10:00:00Z
 prov-001,Finca Aguas del Pino,Espacio,959001101,reservas@aguasdelpino.example,Carretera de la Ribera km 4,https://aguasdelpino.example,ES910001000100000001,TRUE,2026-01-10T10:00:00Z,2026-07-01T10:00:00Z
 prov-002,Catering Sal y Olivo,Catering,959001102,events@salyolivo.example,Calle Mirto 12 Huelva,https://salyolivo.example,ES910001000100000002,TRUE,2026-01-12T10:00:00Z,2026-07-12T10:00:00Z
 prov-003,Luz de Sur Fotografía,Fotografía,600001103,hola@luzdesur.example,Calle Concepción 8 Huelva,https://luzdesur.example,ES910001000100000003,TRUE,2026-01-14T10:00:00Z,2026-07-05T10:00:00Z

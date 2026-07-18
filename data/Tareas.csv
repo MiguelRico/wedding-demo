@@ -1,4 +1,28 @@
 taskId,title,description,category,maxDate,priority,responsible,status,createdAt,updatedAt
+task-006,Definir presupuesto global,Validar partidas y margen de imprevistos,pagos,2025-11-20,alta,Sara,completed,2025-10-15T10:00:00Z,2025-11-18T10:00:00Z
+task-007,Reservar finca,Confirmar fecha y condiciones de cancelacion,ceremonia,2025-12-01,alta,Fran,completed,2025-10-20T10:00:00Z,2025-11-25T10:00:00Z
+task-008,Contratar wedding planner,Cerrar alcance de coordinacion,otros,2025-12-15,media,Sara,completed,2025-11-01T10:00:00Z,2025-12-10T10:00:00Z
+task-009,Crear lista inicial de invitados,Separar familias amistades y compañeros,invitados,2026-01-10,alta,Sara,completed,2025-12-10T10:00:00Z,2026-01-08T10:00:00Z
+task-010,Elegir fotografo y videografo,Revisar contratos y calendario,fotografia,2026-01-25,alta,Fran,completed,2025-12-15T10:00:00Z,2026-01-20T10:00:00Z
+task-011,Seleccionar musica ceremonia,Enviar canciones de entrada y firmas,ceremonia,2026-02-15,media,Sara,completed,2026-01-15T10:00:00Z,2026-02-12T10:00:00Z
+task-012,Probar menu de banquete,Confirmar entrantes principal y postre,banquete,2026-03-05,alta,Fran,completed,2026-02-01T10:00:00Z,2026-03-04T10:00:00Z
+task-013,Enviar save the date,Compartir fecha y ciudad con invitados,invitados,2026-03-15,baja,Sara,completed,2026-02-20T10:00:00Z,2026-03-10T10:00:00Z
+task-014,Definir estilo decoracion,Crear tablero de referencias y paleta,decoracion,2026-03-25,media,Sara,completed,2026-02-28T10:00:00Z,2026-03-22T10:00:00Z
+task-015,Reservar alojamiento familia,Enviar codigo de reserva y fechas,otros,2026-04-10,media,Fran,completed,2026-03-12T10:00:00Z,2026-04-05T10:00:00Z
+task-016,Encargar invitaciones,Revisar textos direcciones y sobres,invitados,2026-04-20,media,Sara,completed,2026-03-25T10:00:00Z,2026-04-18T10:00:00Z
+task-017,Planificar transporte,Calcular plazas y paradas de autobus,transporte,2026-05-01,media,Fran,completed,2026-04-05T10:00:00Z,2026-04-29T10:00:00Z
+task-018,Realizar prueba de maquillaje,Confirmar horario y acompañantes,novios,2026-05-15,baja,Sara,completed,2026-04-10T10:00:00Z,2026-05-12T10:00:00Z
+task-019,Revisar respuestas RSVP,Llamar a grupos sin confirmar,invitados,2026-06-15,alta,Fran,completed,2026-05-20T10:00:00Z,2026-06-14T10:00:00Z
+task-020,Encargar detalles de invitados,Validar cantidad y diseño final,otros,2026-06-25,media,Sara,completed,2026-05-28T10:00:00Z,2026-06-22T10:00:00Z
+task-021,Cerrar plan de lluvia,Confirmar decisiones con finca y coordinacion,ceremonia,2026-07-18,alta,Fran,pending,2026-06-25T10:00:00Z,2026-07-15T10:00:00Z
+task-022,Preparar listado de proveedores,Compartir telefonos y horarios de montaje,otros,2026-07-25,alta,Sara,pending,2026-07-01T10:00:00Z,2026-07-17T10:00:00Z
+task-023,Confirmar playlist de fiesta,Enviar ultimas peticiones al DJ,fiesta,2026-08-01,media,Fran,pending,2026-07-10T10:00:00Z,2026-07-17T10:00:00Z
+task-024,Imprimir minutas y carteleria,Comprobar nombres de mesas y alergias,decoracion,2026-08-05,alta,Sara,pending,2026-07-12T10:00:00Z,2026-07-17T10:00:00Z
+task-025,Preparar sobres de pagos,Organizar importes pendientes por proveedor,pagos,2026-08-18,alta,Fran,pending,2026-07-15T10:00:00Z,2026-07-17T10:00:00Z
+task-026,Hacer maleta de emergencia,Incluir costurero medicamentos y cargadores,novios,2026-08-20,media,Sara,pending,2026-07-16T10:00:00Z,2026-07-17T10:00:00Z
+task-027,Entregar agradecimientos,Distribuir detalles tras el banquete,fiesta,2026-08-22,baja,Fran,pending,2026-07-16T10:00:00Z,2026-07-17T10:00:00Z
+task-028,Devolver material alquilado,Comprobar inventario con la finca,otros,2026-08-24,media,Fran,pending,2026-07-17T10:00:00Z,2026-07-17T10:00:00Z
+task-029,Enviar agradecimientos finales,Compartir galeria y mensajes con invitados,invitados,2026-09-10,baja,Sara,pending,2026-07-17T10:00:00Z,2026-07-17T10:00:00Z
 task-001,Cerrar distribución de mesas,Asignar las familias Vega y Ríos,mesas,2026-07-24,alta,Sara,pending,2026-07-15T10:00:00Z,2026-07-17T10:00:00Z
 task-002,Enviar menús especiales,Compartir alergias con catering,invitados,2026-07-20,alta,Fran,pending,2026-07-14T10:00:00Z,2026-07-17T10:00:00Z
 task-003,Confirmar segundo autobús,Revisar horarios de vuelta,transporte,2026-07-21,media,Sara,pending,2026-07-12T10:00:00Z,2026-07-16T10:00:00Z

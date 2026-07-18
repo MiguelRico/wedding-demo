@@ -1,4 +1,14 @@
 notificationId,title,detail,date,type,read,createdAt,updatedAt
+notif-006,Saldo wedding planner pendiente,Queda por abonar el último plazo de coordinación del día B,2026-08-15,Pago,FALSE,2026-07-18T09:00:00Z,2026-07-18T09:00:00Z
+notif-007,Confirmar repertorio ceremonia,El cuarteto necesita las canciones definitivas para entrada y firmas,2026-07-25,Aviso,FALSE,2026-07-18T09:05:00Z,2026-07-18T09:05:00Z
+notif-008,Cartelería pendiente,No enviar a imprenta hasta cerrar la distribución de mesas,2026-07-24,Aviso,FALSE,2026-07-18T09:10:00Z,2026-07-18T09:10:00Z
+notif-009,Alergia sin revisar,Elena Vega requiere menú sin gluten; confirmar con catering,2026-07-20,Invitados,FALSE,2026-07-18T09:15:00Z,2026-07-18T09:15:00Z
+notif-010,Próximo pago de catering,El segundo plazo del catering vence en cuatro días,2026-07-22,Pago,FALSE,2026-07-18T09:20:00Z,2026-07-18T09:20:00Z
+notif-011,Lista de autobús actualizada,Se ha registrado una nueva solicitud de vuelta a las 06:00,2026-07-18,Invitados,TRUE,2026-07-17T18:30:00Z,2026-07-18T08:10:00Z
+notif-012,Revisión de habitaciones,El hotel solicita el listado definitivo de huéspedes alojados,2026-08-01,Aviso,FALSE,2026-07-18T09:25:00Z,2026-07-18T09:25:00Z
+notif-013,Entrega de detalles,Detalle Vivo confirma entrega de las etiquetas personalizadas,2026-07-30,Aviso,TRUE,2026-07-16T11:00:00Z,2026-07-17T16:20:00Z
+notif-014,Plan B por lluvia,Revisar previsión meteorológica con la finca y el wedding planner,2026-08-18,Aviso,FALSE,2026-07-18T09:30:00Z,2026-07-18T09:30:00Z
+notif-015,Saldo de vídeo pendiente,El pago final se realizará tras la entrega del material,2026-08-22,Pago,TRUE,2026-07-12T12:00:00Z,2026-07-15T10:30:00Z
 notif-001,Confirmaciones tardías,La familia Ríos necesita asignación de mesa,2026-07-15,Invitados,FALSE,2026-07-15T16:45:00Z,2026-07-15T16:45:00Z
 notif-002,Pendientes de mesa,Hay 56 invitados confirmados sin asiento en esta fase de distribución,2026-07-16,Invitados,FALSE,2026-07-16T19:00:00Z,2026-07-16T19:00:00Z
 notif-003,Pago catering pendiente,Segundo plazo previsto antes del 22 de julio,2026-07-17,Pago,FALSE,2026-07-17T09:00:00Z,2026-07-17T09:00:00Z

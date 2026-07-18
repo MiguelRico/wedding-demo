@@ -1,4 +1,17 @@
 serviceId,providerId,name,price,paymentCount,notes,active,createdAt,updatedAt
+serv-009,prov-009,Coordinacion integral del dia B,1600,3,Incluye cronograma proveedores y coordinacion de montaje,TRUE,2025-11-10T10:00:00Z,2026-07-10T10:00:00Z
+serv-010,prov-009,Asesoria de protocolo y ceremonia,450,1,Reunion final con oficiantes y familiares,TRUE,2026-03-20T10:00:00Z,2026-07-10T10:00:00Z
+serv-011,prov-010,Video cinematografico de boda,2100,3,Trailer de tres minutos y pelicula larga,TRUE,2026-01-16T10:00:00Z,2026-07-06T10:00:00Z
+serv-012,prov-011,Cuarteto acustico para ceremonia,780,2,Repertorio elegido con los novios,TRUE,2026-02-10T10:00:00Z,2026-07-14T10:00:00Z
+serv-013,prov-012,Iluminacion ambiental de jardin,890,2,Guirnaldas y puntos de luz calida,TRUE,2026-02-14T10:00:00Z,2026-07-11T10:00:00Z
+serv-014,prov-012,Iluminacion de pista de baile,620,1,Incluye focos moviles para fiesta,TRUE,2026-04-15T10:00:00Z,2026-07-11T10:00:00Z
+serv-015,prov-013,Seating plan y carteleria,360,1,Impresion final pendiente de mesas,TRUE,2026-02-18T10:00:00Z,2026-07-09T10:00:00Z
+serv-016,prov-013,Rincon de bienvenida y photocall,540,2,Montaje a primera hora de la tarde,TRUE,2026-04-05T10:00:00Z,2026-07-09T10:00:00Z
+serv-017,prov-014,Bloque de habitaciones invitados,1240,2,Diez habitaciones con desayuno,TRUE,2026-03-01T10:00:00Z,2026-07-08T10:00:00Z
+serv-018,prov-015,Barra de cocteles premium,1180,2,Cuatro cocteles y opciones sin alcohol,TRUE,2026-03-04T10:00:00Z,2026-07-16T10:00:00Z
+serv-019,prov-016,Detalles personalizados para invitados,640,2,Pedido de ochenta unidades y etiquetas pendientes,TRUE,2026-03-08T10:00:00Z,2026-07-04T10:00:00Z
+serv-020,prov-017,Maquillaje y peinado novia,520,1,Prueba realizada y acompañantes opcionales,TRUE,2026-03-12T10:00:00Z,2026-07-13T10:00:00Z
+serv-021,prov-017,Kit de emergencia y plan B lluvia,180,1,Material para baño y ceremonia exterior,TRUE,2026-05-20T10:00:00Z,2026-07-13T10:00:00Z
 serv-001,prov-001,Alquiler de finca y ceremonia,4200,3,Incluye mobiliario base y coordinación,TRUE,2026-01-10T10:00:00Z,2026-07-01T10:00:00Z
 serv-002,prov-002,Cóctel cena y barra libre 80 pax,6800,3,Incluye 6 menús adaptados y 8 infantiles,TRUE,2026-01-12T10:00:00Z,2026-07-12T10:00:00Z
 serv-003,prov-003,Reportaje completo y álbum,1850,2,Entrega digital en seis semanas,TRUE,2026-01-14T10:00:00Z,2026-07-05T10:00:00Z
