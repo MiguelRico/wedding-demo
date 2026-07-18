@@ -104,7 +104,7 @@ export default function Admin() {
       {loading && <Spinner text={adminContent.auth.loading} />}
       <CinematicSection
         className="surface-soft admin-section"
-        innerClassName="max-w-md md:max-w-none py-6"
+        innerClassName="max-w-md md:max-w-6xl py-6"
         reveal={false}
       >
         <div ref={adminRef}>
@@ -211,7 +211,7 @@ function AdminDashboard() {
   const isMobileView = useIsMobileView();
   const cardsGridClassName = isMobileView
     ? "grid gap-4"
-    : "grid grid-cols-3 gap-5";
+    : "grid grid-cols-2 gap-5";
 
   return (
     <div className="mx-auto w-full max-w-none space-y-5">
