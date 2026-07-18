@@ -1,6 +1,6 @@
 import { Search } from "lucide-react";
 
-import CollapsiblePanel from "../../ui/CollapsiblePanel";
+import { AdminFiltersPanel } from "../common";
 import {
   inputClassName,
   Label,
@@ -46,11 +46,10 @@ export default function ProviderFilters({
   ].filter(Boolean);
 
   return (
-    <CollapsiblePanel
+    <AdminFiltersPanel
       activeFilters={activeFilters}
       title={adminContent.providers.filters.eyebrow}
     >
-      <div className="grid gap-4">
         <div>
           <Label>{adminContent.providers.filters.searchLabel}</Label>
           <label className="relative block">
@@ -108,7 +107,6 @@ export default function ProviderFilters({
             </select>
           </div>
         )}
-      </div>
-    </CollapsiblePanel>
+    </AdminFiltersPanel>
   );
 }

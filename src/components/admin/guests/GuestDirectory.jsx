@@ -1,13 +1,13 @@
 import { Pencil, Plus, Search, Trash2, UsersRound } from "lucide-react";
 
 import {
+  AdminFiltersPanel,
   Card,
   SelectableCardFrame,
   SelectableCardPage,
   TableGuestCard,
 } from "../common";
 import Chip from "../../ui/Chip";
-import CollapsiblePanel from "../../ui/CollapsiblePanel";
 import IconButton from "../../ui/IconButton";
 import {
   inputClassName,
@@ -39,12 +39,11 @@ export function FiltersCard({ filter, onFilterChange, onQueryChange, query }) {
   ].filter(Boolean);
 
   return (
-    <CollapsiblePanel
+    <AdminFiltersPanel
       activeFilters={activeFilters}
       className="mb-4"
       title={adminContent.guests.filters.eyebrow}
     >
-      <div className="grid gap-4">
         <div>
           <Label>{adminContent.guests.filters.searchLabel}</Label>
           <label className="relative block">
@@ -77,8 +76,7 @@ export function FiltersCard({ filter, onFilterChange, onQueryChange, query }) {
             ))}
           </select>
         </div>
-      </div>
-    </CollapsiblePanel>
+    </AdminFiltersPanel>
   );
 }
 

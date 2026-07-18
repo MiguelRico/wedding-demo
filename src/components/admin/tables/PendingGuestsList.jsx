@@ -3,8 +3,8 @@ import { AlertCircle } from "lucide-react";
 import { adminContent } from "../../../constants/adminContent";
 import { isMenuModuleEnabled } from "../../../config/features";
 import { Guest } from "../../../models";
-import CollapsiblePanel from "../../ui/CollapsiblePanel";
 import {
+  AdminFiltersPanel,
   AdminEmptyState,
   SelectableCardFrame,
   TableGuestCard,
@@ -68,11 +68,10 @@ export function PendingGuestsFilters({
   ].filter(Boolean);
 
   return (
-    <CollapsiblePanel
+    <AdminFiltersPanel
       activeFilters={activeFilters}
       title={adminContent.pendingGuests.filtersEyebrow}
     >
-      <div className="grid gap-4">
         <div>
           <Label>{adminContent.pendingGuests.confirmationLabel}</Label>
           <select
@@ -108,8 +107,7 @@ export function PendingGuestsFilters({
             </select>
           </div>
         )}
-      </div>
-    </CollapsiblePanel>
+    </AdminFiltersPanel>
   );
 }
 

@@ -1,6 +1,7 @@
 export { default as AdminEmptyState } from "./AdminEmptyState";
 export { default as AdminEntityActions } from "./AdminEntityActions";
 export { default as AdminEntityTabs } from "./AdminEntityTabs";
+export { default as AdminFiltersPanel } from "./AdminFiltersPanel";
 export { default as AdminProtectedRoute } from "./AdminProtectedRoute";
 export { default as AdminResponsivePanels } from "./AdminResponsivePanels";
 export {

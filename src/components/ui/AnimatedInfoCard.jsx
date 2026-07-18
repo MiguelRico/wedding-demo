@@ -30,7 +30,7 @@ function InfoCard({
         rounded-[2rem] border border-[var(--color-border-strong)]
         bg-white/55 p-7 shadow-[0_24px_70px_rgba(77,56,40,0.08)]
         backdrop-blur-sm transition-all duration-700
-        hover:-translate-y-1 hover:border-[var(--color-border)] hover:bg-white/80
+        hover:border-[var(--color-border)] hover:bg-white/80
         ${to ? "cursor-pointer" : ""}
         ${className}
       `}
