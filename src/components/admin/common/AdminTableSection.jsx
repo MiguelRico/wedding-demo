@@ -20,7 +20,7 @@ function AdminTableSectionHeader({
     <div className="mb-4">
       {eyebrow && <p className="section-eyebrow mb-2 md:hidden">{eyebrow}</p>}
       {(title || headerActions) && (
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex min-h-10 items-center justify-between gap-3">
           {title && (
             <h2 className="hidden min-w-0 font-serif text-3xl leading-none text-[var(--color-accent-dark)] md:block">
               {title}

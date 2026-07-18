@@ -17,6 +17,7 @@ import {
   SeatAssignmentDialog,
   TableCardsPage,
   TableEditorDialog,
+  TableFilters,
   TableTabActions,
   TableTotalsPanel,
 } from "../components/admin/tables";
@@ -102,6 +103,12 @@ export default function AdminTables() {
   const [seatAssignmentTarget, setSeatAssignmentTarget] = useState(null);
   const [assigningSeat, setAssigningSeat] = useState(false);
   const [page, setPage] = useState(1);
+  const [tableFilters, setTableFilters] = useState({
+    group: "",
+    occupancy: "",
+    query: "",
+    seatCount: "",
+  });
   const [pendingGuestsPage, setPendingGuestsPage] = useState(1);
   const [pendingGuestsFilters, setPendingGuestsFilters] = useState({
     group: "",
@@ -203,6 +210,24 @@ export default function AdminTables() {
     }),
     [guestsAssigned.length, guestsPending.length, tables],
   );
+  const tableGroups = useMemo(
+    () =>
+      Array.from(
+        new Set(tables.map((table) => table.group).filter(Boolean)),
+      ).sort((left, right) => left.localeCompare(right, "es")),
+    [tables],
+  );
+  const tableSeatCounts = useMemo(
+    () =>
+      Array.from(new Set(tables.map((table) => table.seats.length))).sort(
+        (left, right) => left - right,
+      ),
+    [tables],
+  );
+  const filteredTables = useMemo(
+    () => filterTables(tables, tableFilters),
+    [tableFilters, tables],
+  );
   const {
     currentPage,
     isMobileView,
@@ -210,7 +235,7 @@ export default function AdminTables() {
     pagedItems: pagedTables,
     totalPages,
   } = usePagedData({
-    items: tables,
+    items: filteredTables,
     page,
     pageSize: DEFAULT_TABLE_PAGE_SIZE,
   });
@@ -223,7 +248,7 @@ export default function AdminTables() {
     effectiveSelectedId: effectiveSelectedTableKey,
     selectedItem: selectedTable,
   } = useEffectiveSelection({
-    allItems: tables,
+    allItems: filteredTables,
     currentPage,
     getId: getTableKey,
     items: pagedTables,
@@ -504,18 +529,8 @@ export default function AdminTables() {
     setSeatAssignmentTarget(null);
     handleCloseTableForm();
 
-    const restoredTables = buildTables({
-      confirmations: restoredConfirmations,
-      manualTables: restoredManualTables,
-    });
-    const restoredTotalPages = Math.max(
-      Math.ceil(restoredTables.length / pageSize),
-      1,
-    );
-
-    setPage((current) => Math.min(current, restoredTotalPages));
+    setPage(1);
   }, [
-    pageSize,
     savedSnapshot.confirmations,
     savedSnapshot.manualTables,
   ]);
@@ -565,6 +580,14 @@ export default function AdminTables() {
       ...current,
       [filterKey]: value,
     }));
+  };
+  const handleTableFilterChange = (filterKey, value) => {
+    setTableFilters((current) => ({
+      ...current,
+      [filterKey]: value,
+    }));
+    setPage(1);
+    setSelectedTableKey("");
   };
 
   const handleAssignPendingGuest = useCallback(
@@ -812,7 +835,17 @@ export default function AdminTables() {
                   />
                 }
                 isMobileView={isMobileView}
-                items={tables}
+                filters={
+                  tables.length > 0 ? (
+                    <TableFilters
+                      availableGroups={tableGroups}
+                      availableSeatCounts={tableSeatCounts}
+                      filters={tableFilters}
+                      onFilterChange={handleTableFilterChange}
+                    />
+                  ) : null
+                }
+                items={filteredTables}
                 loading={state.loading}
                 lockPageHeight={false}
                 mobilePageLabel={adminContent.tables.header.mobilePageLabel}
@@ -829,11 +862,17 @@ export default function AdminTables() {
                     itemClassName: "min-h-40",
                     lines: 2,
                   },
+                  filters: true,
                 }}
+                sourceItemsCount={tables.length}
                 title={adminContent.tables.header.sectionTitle}
                 totalPages={state.loading ? undefined : totalPages}
                 renderMeasurePage={(items) => (
                   <TableCardsPage
+                    emptyState={getTablesEmptyState(
+                      tables.length,
+                      filteredTables.length,
+                    )}
                     items={items}
                     onDelete={handleRequestDeleteTable}
                     onEdit={handleEditTable}
@@ -845,6 +884,10 @@ export default function AdminTables() {
                 )}
                 renderPage={(items) => (
                   <TableCardsPage
+                    emptyState={getTablesEmptyState(
+                      tables.length,
+                      filteredTables.length,
+                    )}
                     items={items}
                     onDelete={handleRequestDeleteTable}
                     onEdit={handleEditTable}
@@ -1041,4 +1084,64 @@ function getPendingGuestsEmptyState({ pendingCount, tableCount }) {
     text: adminContent.pendingGuests.emptyText,
     title: adminContent.pendingGuests.emptyTitle,
   };
+}
+
+function getTablesEmptyState(tableCount, filteredTableCount) {
+  if (tableCount > 0 && filteredTableCount === 0) {
+    return {
+      text: adminContent.tables.filters.emptyText,
+      title: adminContent.tables.filters.emptyTitle,
+    };
+  }
+
+  return adminContent.tables.empty;
+}
+
+function filterTables(tables, filters) {
+  const query = normalizeSearchText(filters.query);
+
+  return tables.filter((table) => {
+    if (filters.group && table.group !== filters.group) return false;
+
+    if (
+      filters.seatCount &&
+      table.seats.length !== Number(filters.seatCount)
+    ) {
+      return false;
+    }
+
+    const assignedSeats = Table.getAssignedGuests(table).length;
+    const availableSeats = Table.getEmptySeats(table).length;
+
+    if (filters.occupancy === "assigned" && assignedSeats === 0) {
+      return false;
+    }
+
+    if (filters.occupancy === "available" && availableSeats === 0) {
+      return false;
+    }
+
+    if (
+      filters.occupancy === "full" &&
+      (table.seats.length === 0 || availableSeats > 0)
+    ) {
+      return false;
+    }
+
+    if (!query) return true;
+
+    return normalizeSearchText(
+      [table.name, table.group, table.notes, Table.getShapeLabel(table)].join(
+        " ",
+      ),
+    ).includes(query);
+  });
+}
+
+function normalizeSearchText(value) {
+  return String(value || "")
+    .toLocaleLowerCase("es")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
 }

@@ -152,6 +152,7 @@ function TableCardWithActions({
 }
 
 export function TableCardsPage({
+  emptyState = adminContent.tables.empty,
   items,
   onDelete,
   onEdit,
@@ -163,7 +164,7 @@ export function TableCardsPage({
   return (
     <SelectableCardPage
       emptyIcon={Grid2X2}
-      emptyState={adminContent.tables.empty}
+      emptyState={emptyState}
       getKey={getTableRenderKey}
       items={items}
       renderCard={(table, index) => (

@@ -288,6 +288,26 @@ const defaultAdminContent = {
       pendingGuestCountLabel: (count) =>
         `${count} ${count === 1 ? "invitado pendiente" : "invitados pendientes"}`,
     },
+    filters: {
+      eyebrow: "Filtros",
+      searchLabel: "Buscar mesa",
+      searchPlaceholder: "Nombre, grupo o notas",
+      groupLabel: "Grupo",
+      allGroups: "Todos los grupos",
+      occupancyLabel: "Ocupación",
+      occupancyOptions: [
+        { value: "", label: "Todas las mesas" },
+        { value: "assigned", label: "Con invitados asignados" },
+        { value: "available", label: "Con asientos libres" },
+        { value: "full", label: "Completas" },
+      ],
+      seatCountLabel: "Cantidad de asientos",
+      allSeatCounts: "Cualquier cantidad",
+      seatCountOption: (count) =>
+        `${count} ${count === 1 ? "asiento" : "asientos"}`,
+      emptyTitle: "Sin resultados",
+      emptyText: "No hay mesas que coincidan con los filtros seleccionados.",
+    },
     actions: {
       sectionEyebrow: "Acciones",
       addTable: "Agregar mesa",

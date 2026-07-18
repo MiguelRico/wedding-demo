@@ -9,4 +9,5 @@ export {
 export { default as SeatAssignmentDialog } from "./SeatAssignmentDialog";
 export { default as TableEditorDialog } from "./TableEditorDialog";
 export { default as TableForm } from "./TableForm";
+export { default as TableFilters } from "./TableFilters";
 export { default as TableTotalsPanel } from "./TableTotalsPanel";
