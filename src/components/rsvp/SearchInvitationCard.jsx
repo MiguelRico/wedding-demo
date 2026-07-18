@@ -1,9 +1,8 @@
-import { Home, Search } from "lucide-react";
+import { Home, Plus, Search } from "lucide-react";
 
 import IconButton from "../ui/IconButton";
 import { FieldError, FormCard, inputClassName, Label } from "./FormPrimitives";
 import { rsvpContent } from "../../constants/rsvpContent";
-import useIsMobileView from "../../hooks/useIsMobileView";
 
 const onlyDigits = (value) => String(value || "").replace(/\D/g, "");
 
@@ -16,21 +15,9 @@ export default function SearchInvitationCard({
   phone = "",
   phoneError,
   onSearchInvitation,
-  hideTextOnMobile = false,
-  hideTextOnDesktop = false,
+  onCreateNew,
 }) {
-  const isMobileView = useIsMobileView();
-  const textClassName =
-    (hideTextOnMobile && isMobileView) || (hideTextOnDesktop && !isMobileView)
-      ? "sr-only"
-      : "mt-3 text-sm leading-relaxed";
-  const eyebrowText =
-    hideTextOnDesktop && !isMobileView
-      ? rsvpContent.searchInvitation.text
-      : rsvpContent.searchInvitation.eyebrow;
-  const fieldsGridClassName = isMobileView
-    ? "mb-4 grid gap-4"
-    : "mb-4 grid grid-cols-2 gap-4";
+  const fieldsGridClassName = "mb-4 grid gap-4 md:grid-cols-2";
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -41,15 +28,14 @@ export default function SearchInvitationCard({
     <FormCard>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <p className="section-eyebrow mb-3">
-            {eyebrowText}
+          <p className="section-eyebrow mb-0 md:hidden">
+            {rsvpContent.searchInvitation.eyebrow}
           </p>
 
-          <h2 className="font-serif text-3xl">
+          <h2 className="hidden font-serif text-3xl md:block">
             {rsvpContent.searchInvitation.title}
           </h2>
 
-          <p className={textClassName}>{rsvpContent.searchInvitation.text}</p>
         </div>
 
         <div className={fieldsGridClassName}>
@@ -87,31 +73,52 @@ export default function SearchInvitationCard({
           </div>
         </div>
 
-        <div className="flex flex-col gap-4">
+        <IconButton
+          className="w-full"
+          disabled={loading}
+          icon={<Search size={16} strokeWidth={1.8} />}
+          showText="always"
+          tone="primary"
+          type="submit"
+        >
+          {rsvpContent.searchInvitation.searchAction}
+        </IconButton>
+      </form>
+
+      <div className="my-5 border-t border-[var(--color-border)]" />
+
+      <div>
+        <p className="section-eyebrow mb-0 md:hidden">
+          {rsvpContent.createInvitation.eyebrow}
+        </p>
+
+        <h2 className="hidden font-serif text-3xl md:block">
+          {rsvpContent.createInvitation.title}
+        </h2>
+
+        <div className="mt-4 flex flex-col gap-4">
           <IconButton
-            className="flex-1"
-            disabled={loading}
-            icon={<Search size={16} strokeWidth={1.8} />}
+            className="w-full"
+            icon={<Plus size={16} strokeWidth={1.8} />}
+            onClick={onCreateNew}
             showText="always"
             tone="primary"
-            type="submit"
+            type="button"
           >
-            {rsvpContent.searchInvitation.searchAction}
+            {rsvpContent.createInvitation.action}
           </IconButton>
 
-          {isMobileView && (
-            <IconButton
-              className="flex-1"
-              icon={<Home size={16} strokeWidth={1.8} />}
-              showText="always"
-              to="/"
-              tone="terciary"
-            >
-              {rsvpContent.searchInvitation.backHome}
-            </IconButton>
-          )}
+          <IconButton
+            className="w-full"
+            icon={<Home size={16} strokeWidth={1.8} />}
+            showText="always"
+            to="/"
+            tone="terciary"
+          >
+            {rsvpContent.searchInvitation.backHome}
+          </IconButton>
         </div>
-      </form>
+      </div>
     </FormCard>
   );
 }

@@ -5,7 +5,6 @@ import CinematicPage from "../components/cinematic/CinematicPage";
 import CinematicSection from "../components/cinematic/CinematicSection";
 import CinematicStaggeredRevealItem from "../components/cinematic/CinematicStaggeredRevealItem";
 import HeaderSection from "../components/ui/HeaderSection";
-import CreateInvitationCard from "../components/rsvp/CreateInvitationCard";
 import IconButton from "../components/ui/IconButton";
 import StatusDialog from "../components/ui/StatusDialog";
 import SearchInvitationCard from "../components/rsvp/SearchInvitationCard";
@@ -19,19 +18,15 @@ import useSpinner from "../hooks/useSpinner.js";
 export default function Rsvp() {
   const spinner = useSpinner();
   const rsvp = useRsvp(spinner, { mode: "search" });
-  const isMobileView = useIsMobileView();
   const rsvpRef = useRef(null);
   const rsvpInView = useInView(rsvpRef, {
     once: true,
     amount: 0.35,
   });
-  const cardsGridClassName = isMobileView
-    ? "mt-4 grid grid-cols-1 gap-5"
-    : "mt-4 grid grid-cols-4 gap-5";
-  const cardSlotClassName = isMobileView ? "" : "col-span-2";
 
   return (
     <RsvpPageShell
+      desktopInnerClassName="max-w-6xl py-6"
       innerClassName="max-w-md py-6"
       spinner={spinner}
       wrapperRef={rsvpRef}
@@ -47,33 +42,18 @@ export default function Rsvp() {
       </CinematicStaggeredRevealItem>
 
       <CinematicStaggeredRevealItem index={1} isVisible={rsvpInView}>
-        <div className={cardsGridClassName}>
-          <div className={cardSlotClassName}>
-            <SearchInvitationCard
-              hideTextOnMobile={true}
-              hideTextOnDesktop={true}
-              email={rsvp.contact.email}
-              emailError={rsvp.errors.email}
-              loading={spinner.loading}
-              onEmailChange={(value) =>
-                rsvp.handleContactChange("email", value)
-              }
-              onPhoneChange={(value) =>
-                rsvp.handleContactChange("phone", value)
-              }
-              onSearchInvitation={rsvp.handleSearchInvitation}
-              phone={rsvp.contact.phone}
-              phoneError={rsvp.errors.phone}
-            />
-          </div>
-
-          <div className={cardSlotClassName}>
-            <CreateInvitationCard
-              hideTextOnMobile={true}
-              hideTextOnDesktop={true}
-              onCreateNew={rsvp.handleCreateNew}
-            />
-          </div>
+        <div className="mt-4">
+          <SearchInvitationCard
+            email={rsvp.contact.email}
+            emailError={rsvp.errors.email}
+            loading={spinner.loading}
+            onCreateNew={rsvp.handleCreateNew}
+            onEmailChange={(value) => rsvp.handleContactChange("email", value)}
+            onPhoneChange={(value) => rsvp.handleContactChange("phone", value)}
+            onSearchInvitation={rsvp.handleSearchInvitation}
+            phone={rsvp.contact.phone}
+            phoneError={rsvp.errors.phone}
+          />
         </div>
       </CinematicStaggeredRevealItem>
 
@@ -84,6 +64,7 @@ export default function Rsvp() {
 
 export function RsvpPageShell({
   children,
+  desktopInnerClassName = "max-w-none py-6",
   forceMobileInner = false,
   innerClassName = "max-w-4xl py-6",
   spinner,
@@ -91,7 +72,7 @@ export function RsvpPageShell({
 }) {
   const isMobileView = useIsMobileView();
   const effectiveInnerClassName =
-    isMobileView || forceMobileInner ? innerClassName : "max-w-none py-6";
+    isMobileView || forceMobileInner ? innerClassName : desktopInnerClassName;
 
   return (
     <CinematicPage>
