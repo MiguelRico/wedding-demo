@@ -30,18 +30,25 @@ export default function GuestCard({
   variant = "public",
 }) {
   const isMobileView = useIsMobileView();
-  const isAdmin = variant === "admin";
+  const isAdminDesktop = variant === "admin" && !isMobileView;
   const isPublicDesktop = variant === "public" && !isMobileView;
   const nameError = errors[`guest_name_${index}`];
   const lastnameError = errors[`guest_lastname_${index}`];
   const menuError = errors[`guest_menu_${index}`];
   const commentsError = errors[`guest_comments_${index}`];
-  const nameGridClassName = isPublicDesktop ? "grid grid-cols-2 gap-5" : "grid gap-5";
+  const nameGridClassName =
+    isPublicDesktop || isAdminDesktop
+      ? "grid grid-cols-2 gap-5"
+      : "grid gap-5";
   const detailsGridClassName = isPublicDesktop
     ? "mt-4 grid grid-cols-2 items-start gap-5"
     : "";
   const commentsClassName = isPublicDesktop ? "" : "mt-4";
-  const guestOptionsClassName = isPublicDesktop ? "pt-7" : "";
+  const guestOptionsClassName = isAdminDesktop
+    ? "mt-4 grid grid-cols-2 items-start gap-5"
+    : isPublicDesktop
+      ? "pt-7"
+      : "";
   const content = (
     <>
       {showHeader && (
@@ -151,7 +158,10 @@ export default function GuestCard({
         </div>
 
         <div className={guestOptionsClassName}>
-          <CollapsiblePanel className={isPublicDesktop ? "" : "mt-2"} title="Intolerancias">
+          <CollapsiblePanel
+            className={isPublicDesktop || isAdminDesktop ? "" : "mt-2"}
+            title="Intolerancias"
+          >
             <p className="text-xs leading-relaxed text-[var(--color-accent)]">
               {rsvpContent.guest.panels.allergies.text}
             </p>
@@ -197,7 +207,10 @@ export default function GuestCard({
             </div>
           </CollapsiblePanel>
 
-          <CollapsiblePanel className="mt-3" title="Transporte">
+          <CollapsiblePanel
+            className={isAdminDesktop ? "" : "mt-3"}
+            title="Transporte"
+          >
             <p className="text-xs leading-relaxed text-[var(--color-accent)]">
               {rsvpContent.guest.panels.bus.text}
             </p>
@@ -220,42 +233,6 @@ export default function GuestCard({
         </div>
       </div>
 
-      {isAdmin && (
-        <CollapsiblePanel className="mt-3" title="Mesa y asiento">
-          <p className="text-xs leading-relaxed text-[var(--color-accent)]">
-            {rsvpContent.guest.panels.seating.text}
-          </p>
-          <div className="mt-3 grid gap-3">
-            <div>
-              <Label>{rsvpContent.guest.fields.table.label}</Label>
-
-              <input
-                className={inputClassName}
-                onChange={(event) =>
-                  onGuestChange(index, "table", event.target.value)
-                }
-                placeholder={rsvpContent.guest.fields.table.placeholder}
-                type="text"
-                value={guest.table}
-              />
-            </div>
-
-            <div>
-              <Label>{rsvpContent.guest.fields.seat.label}</Label>
-
-              <input
-                className={inputClassName}
-                onChange={(event) =>
-                  onGuestChange(index, "seat", event.target.value)
-                }
-                placeholder={rsvpContent.guest.fields.seat.placeholder}
-                type="text"
-                value={guest.seat}
-              />
-            </div>
-          </div>
-        </CollapsiblePanel>
-      )}
     </>
   );
 

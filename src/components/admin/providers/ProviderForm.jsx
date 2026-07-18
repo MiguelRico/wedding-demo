@@ -2,6 +2,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
 import {
   CheckCircle2,
+  CalendarDays,
   ChevronDown,
   Clock3,
   Euro,
@@ -12,7 +13,8 @@ import {
 
 import { adminContent } from "../../../constants/adminContent";
 import { PROVIDER_CATEGORIES } from "../../../constants/providers";
-import { FieldError, FormCard } from "../../rsvp/FormPrimitives";
+import { formatDate } from "../../../utils/formatters";
+import { FieldError, FormCard, Label } from "../../rsvp/FormPrimitives";
 import CollapsiblePanel from "../../ui/CollapsiblePanel";
 import { SelectField, TextField } from "../../ui/FormFields";
 import IconButton from "../../ui/IconButton";
@@ -67,7 +69,7 @@ export default function ProviderForm({
       {showProviderFields && (
         <>
           <FormCard>
-            <div className="grid gap-5">
+            <div className="grid gap-5 md:grid-cols-2">
               <TextField
                 error={errors.name}
                 label={adminContent.providers.form.fields.name}
@@ -97,7 +99,7 @@ export default function ProviderForm({
             </div>
 
             <CollapsiblePanel className="mt-5" title="Datos opcionales">
-              <div className="grid gap-5">
+              <div className="grid gap-5 md:grid-cols-3">
                 <TextField
                   label={adminContent.providers.form.fields.address}
                   onChange={(value) => onChange("address", value)}
@@ -144,15 +146,17 @@ export default function ProviderForm({
               className="border border-[var(--color-border)]"
               key={service.id}
             >
-              <div className="grid gap-4">
-                <TextField
-                  error={errors[`service_${serviceIndex}_name`]}
-                  label={adminContent.providers.form.fields.serviceName}
-                  onChange={(value) =>
-                    onServiceChange(serviceIndex, "name", value)
-                  }
-                  value={service.name}
-                />
+              <div className="grid gap-4 md:grid-cols-4">
+                <div className="md:col-span-2">
+                  <TextField
+                    error={errors[`service_${serviceIndex}_name`]}
+                    label={adminContent.providers.form.fields.serviceName}
+                    onChange={(value) =>
+                      onServiceChange(serviceIndex, "name", value)
+                    }
+                    value={service.name}
+                  />
+                </div>
                 <TextField
                   disabled
                   error={errors[`service_${serviceIndex}_price`]}
@@ -292,7 +296,7 @@ function PaymentSummary({ payment }) {
     : "border-amber-200 bg-amber-100 text-amber-700";
 
   return (
-    <div className="grid min-w-0 grid-cols-2 gap-1">
+    <div className="grid min-w-0 grid-cols-3 gap-1">
       <SummaryPill
         icon={
           payment.paid ? (
@@ -310,6 +314,12 @@ function PaymentSummary({ payment }) {
         label={adminContent.providers.form.fields.paymentAmount}
         toneClassName="border-[var(--color-border-strong)] bg-white/45 text-[var(--color-muted)]"
         value={formatPaymentCurrency(payment.amount)}
+      />
+      <SummaryPill
+        icon={<CalendarDays size={12} strokeWidth={2} />}
+        label={adminContent.providers.form.fields.paymentDate}
+        toneClassName="border-[var(--color-border-strong)] bg-white/45 text-[var(--color-muted)]"
+        value={formatDate(payment.date)}
       />
     </div>
   );
@@ -360,24 +370,32 @@ function ProviderPaymentFields({
   serviceIndex,
 }) {
   return (
-    <div className="grid gap-3">
-      <label className="mt-2 flex cursor-pointer items-center justify-between gap-3 rounded-2xl border border-[var(--color-border-strong)] bg-[var(--color-bg-soft)]/70 px-4 py-3 text-sm text-[var(--color-accent-dark)] transition hover:bg-white">
-        <span>{adminContent.providers.form.fields.paymentPaid}</span>
-        <input
-          checked={payment.paid}
-          className="peer sr-only"
-          onChange={(event) =>
-            onPaymentChange(
-              serviceIndex,
-              paymentIndex,
-              "paid",
-              event.target.checked,
-            )
-          }
-          type="checkbox"
-        />
-        <span className="relative h-6 w-11 rounded-full bg-[var(--color-border-strong)] transition after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-[var(--color-accent-dark)] peer-checked:after:translate-x-full" />
-      </label>
+    <div className="grid gap-3 md:grid-cols-3">
+      <div>
+        <div className="hidden md:block">
+          <Label>{adminContent.providers.form.fields.paymentPaid}</Label>
+        </div>
+        <label className="mt-2 flex cursor-pointer items-center justify-between gap-3 rounded-2xl border border-[var(--color-border-strong)] bg-[var(--color-bg-soft)]/70 px-4 py-3 text-sm text-[var(--color-accent-dark)] transition hover:bg-white md:mt-0 md:h-12 md:justify-center md:py-0">
+          <input
+            aria-label={adminContent.providers.form.fields.paymentPaid}
+            checked={payment.paid}
+            className="peer sr-only"
+            onChange={(event) =>
+              onPaymentChange(
+                serviceIndex,
+                paymentIndex,
+                "paid",
+                event.target.checked,
+              )
+            }
+            type="checkbox"
+          />
+          <span className="md:hidden">
+            {adminContent.providers.form.fields.paymentPaid}
+          </span>
+          <span className="relative h-6 w-11 rounded-full bg-[var(--color-border-strong)] transition after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-[var(--color-accent-dark)] peer-checked:after:translate-x-full" />
+        </label>
+      </div>
       <TextField
         inputMode="decimal"
         label={adminContent.providers.form.fields.paymentAmount}

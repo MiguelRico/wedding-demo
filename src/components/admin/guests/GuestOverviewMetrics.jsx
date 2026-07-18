@@ -10,15 +10,13 @@ import {
 
 import { isMenuModuleEnabled } from "../../../config/features";
 import {
-  AdminMetricGrid,
-  AdminMetricGridSkeleton,
   AdminMetricGroupCard,
   AdminMetricGroupCardSkeleton,
 } from "../common";
 
 export function GuestOverviewMetricGrid({ metrics, stats }) {
   return (
-    <div className={getGuestMetricGridClass()}>
+    <div className={getGuestMetricGridClass(isMenuModuleEnabled)}>
       <AdminMetricGroupCard
         className="col-span-4 md:col-span-1"
         icon={<MailCheck size={22} strokeWidth={1.8} />}
@@ -45,9 +43,12 @@ export function GuestOverviewMetricGrid({ metrics, stats }) {
       />
 
       {isMenuModuleEnabled && (
-        <AdminMetricGrid
-          className="col-span-4 grid grid-cols-2 gap-2 md:col-span-1"
+        <AdminMetricGroupCard
+          className="col-span-4 md:col-span-1"
           items={getMenuMetricItems(metrics, stats)}
+          showHeaderIcon={false}
+          showHeaderTitle={false}
+          title={metrics.meat}
         />
       )}
 
@@ -96,15 +97,16 @@ export function GuestOverviewMetricGrid({ metrics, stats }) {
 
 export function GuestOverviewMetricGridSkeleton() {
   return (
-    <div className={getGuestMetricGridClass()}>
+    <div className={getGuestMetricGridClass(isMenuModuleEnabled)}>
       <AdminMetricGroupCardSkeleton
         className="col-span-4 md:col-span-1"
         showHeader={false}
       />
       {isMenuModuleEnabled && (
-        <AdminMetricGridSkeleton
-          className="col-span-4 grid grid-cols-2 gap-2 md:col-span-1"
-          count={2}
+        <AdminMetricGroupCardSkeleton
+          className="col-span-4 md:col-span-1"
+          itemCount={2}
+          showHeader={false}
         />
       )}
       <AdminMetricGroupCardSkeleton
@@ -121,8 +123,10 @@ export function GuestOverviewMetricGridSkeleton() {
   );
 }
 
-function getGuestMetricGridClass() {
-  return "grid grid-cols-4 gap-2 md:grid-cols-3";
+function getGuestMetricGridClass(hasMenuModule) {
+  return `grid grid-cols-4 gap-2 ${
+    hasMenuModule ? "md:grid-cols-4" : "md:grid-cols-3"
+  }`;
 }
 
 function getMenuMetricItems(metrics, stats) {

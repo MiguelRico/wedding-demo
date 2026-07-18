@@ -51,8 +51,6 @@ export const rsvpContent = {
       otherAllergies: { placeholder: "Otras notas alimentarias" },
       outboundBus: { label: "Autobús de ida" },
       returnBus: { label: "Autobús de vuelta" },
-      table: { label: "Mesa", placeholder: "Ej: 4" },
-      seat: { label: "Asiento", placeholder: "Ej: 7" },
     },
     panels: {
       allergies: {
@@ -62,10 +60,6 @@ export const rsvpContent = {
       bus: {
         title: "Transporte",
         text: "Tendremos autobús para facilitar el desplazamiento de ida y vuelta.",
-      },
-      seating: {
-        title: "Mesa y asiento",
-        text: "Datos internos para organizar la disposición de invitados.",
       },
     },
     chipLabels: {
