@@ -63,11 +63,11 @@ export function TableFiltersSkeleton() {
 
 export function TablePaginationSkeleton() {
   return (
-    <div className="mb-4 rounded-[1.5rem] border border-[var(--color-border)] bg-white/35 p-4">
-      <div className="grid grid-cols-3 items-center gap-3">
-        <SkeletonBlock className="h-11 rounded-full" />
-        <SkeletonBlock className="h-5 rounded-full" />
-        <SkeletonBlock className="h-11 rounded-full" />
+    <div className="mb-4 rounded-[1rem] border border-[var(--color-border)] bg-white/35 p-2">
+      <div className="flex items-center justify-between gap-2">
+        <SkeletonBlock className="h-7 w-7 rounded-full" />
+        <SkeletonBlock className="h-5 w-14 rounded-full" />
+        <SkeletonBlock className="h-7 w-7 rounded-full" />
       </div>
     </div>
   );

@@ -14,44 +14,39 @@ export default function Pagination({
 }) {
   const pageLabel = `${page} / ${totalPages}`;
   const containerClassName = "p-2";
-  const contentClassName = "flex flex-col gap-2 text-xs text-[var(--color-muted)]";
-  const gridClassName = "grid w-full grid-cols-3 items-center gap-2";
-  const buttonClassName = "h-8 w-full min-h-8 px-3 py-1";
+  const contentClassName = "flex items-center justify-between gap-2";
+  const buttonClassName = "h-7 w-7 min-h-7 p-0";
 
   return (
     <div
       className={`${className} rounded-[1rem] border border-[var(--color-border)] bg-white/35 ${containerClassName}`}
     >
       <div className={contentClassName}>
-        <div className={gridClassName}>
-          <IconButton
-            className={buttonClassName}
-            disabled={page === 1}
-            icon={<ChevronLeft size={16} strokeWidth={1.8} />}
-            label={previousLabel}
-            onClick={onPrev}
-            tabIndex={-1}
-            tone="secondary"
-            type="button"
-          >
-            {previousLabel}
-          </IconButton>
+        <IconButton
+          className={buttonClassName}
+          disabled={page === 1}
+          icon={<ChevronLeft size={15} strokeWidth={1.8} />}
+          label={previousLabel}
+          onClick={onPrev}
+          tabIndex={-1}
+          tone="terciary"
+          type="button"
+        />
 
-          <p className="text-center">{pageLabel}</p>
+        <p className="font-serif text-lg leading-none text-[var(--color-accent-dark)]">
+          {pageLabel}
+        </p>
 
-          <IconButton
-            className={buttonClassName}
-            disabled={page === totalPages}
-            icon={<ChevronRight size={16} strokeWidth={1.8} />}
-            label={nextLabel}
-            onClick={onNext}
-            tabIndex={-1}
-            tone="secondary"
-            type="button"
-          >
-            {nextLabel}
-          </IconButton>
-        </div>
+        <IconButton
+          className={buttonClassName}
+          disabled={page === totalPages}
+          icon={<ChevronRight size={15} strokeWidth={1.8} />}
+          label={nextLabel}
+          onClick={onNext}
+          tabIndex={-1}
+          tone="terciary"
+          type="button"
+        />
       </div>
     </div>
   );
