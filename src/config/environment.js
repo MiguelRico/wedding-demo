@@ -29,7 +29,6 @@ function isValidUrl(value) {
 }
 
 export const appEnvironment = {
-  adminPassword: readStringEnv("VITE_ADMIN_PASSWORD", "sara-fran-admin"),
   isDevelopment: Boolean(import.meta.env.DEV),
   rsvpApiUrl: readStringEnv("VITE_RSVP_API_URL"),
   storagePrefix: readStringEnv("VITE_APP_STORAGE_PREFIX", "wedding-template"),
@@ -40,10 +39,6 @@ export const appEnvironment = {
 
 export function validateAppEnvironment() {
   const errors = [];
-
-  if (!appEnvironment.adminPassword) {
-    errors.push("Falta VITE_ADMIN_PASSWORD.");
-  }
 
   if (!appEnvironment.storagePrefix) {
     errors.push("Falta VITE_APP_STORAGE_PREFIX.");

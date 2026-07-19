@@ -4,6 +4,7 @@ import {
   sendToRsvpApi,
   verifyWrite,
 } from "./appScriptClient";
+import { requestAdminApi } from "./adminApiClient";
 import {
   getConfirmationComparable,
   getNotificationsComparable,
@@ -101,7 +102,7 @@ export const findConfirmationByPhone = async (phone) => {
 
 export const findAllConfirmations = async ({ password } = {}) => {
   return decodeApiResponse(
-    await requestJsonp({
+    await requestAdminApi({
       entity: "confirmations",
       method: "GET",
       password,
@@ -110,7 +111,7 @@ export const findAllConfirmations = async ({ password } = {}) => {
 };
 
 export const findAllTables = async ({ password } = {}) => {
-  return await requestJsonp({
+  return await requestAdminApi({
     entity: "tables",
     method: "GET",
     password,
@@ -118,7 +119,7 @@ export const findAllTables = async ({ password } = {}) => {
 };
 
 export const findAllProviders = async ({ password } = {}) => {
-  return await requestJsonp({
+  return await requestAdminApi({
     entity: "providers",
     method: "GET",
     password,
@@ -126,7 +127,7 @@ export const findAllProviders = async ({ password } = {}) => {
 };
 
 export const findAllNotifications = async ({ password } = {}) => {
-  return await requestJsonp({
+  return await requestAdminApi({
     entity: "notifications",
     method: "GET",
     password,
@@ -134,7 +135,7 @@ export const findAllNotifications = async ({ password } = {}) => {
 };
 
 export const findAllTasks = async ({ password } = {}) => {
-  return await requestJsonp({
+  return await requestAdminApi({
     entity: "tasks",
     method: "GET",
     password,
@@ -199,7 +200,7 @@ export const saveAdminConfirmation = async ({
     password,
   };
 
-  await sendToRsvpApi(payload);
+  await requestAdminApi(payload);
 
   const verifiedResponse = await verifyWrite({
     errorMessage: "No se pudo verificar el guardado de la confirmacion.",
@@ -238,7 +239,7 @@ export const saveAdminConfirmation = async ({
 export const saveAdminTables = async ({ password, tables }) => {
   const expectedTables = getTablesComparable(tables);
 
-  await sendToRsvpApi({
+  await requestAdminApi({
     entity: "tables",
     method: "PUT",
     password,
@@ -259,7 +260,7 @@ export const saveAdminTables = async ({ password, tables }) => {
 };
 
 export const deleteAdminConfirmation = async ({ confirmationId, password }) => {
-  await sendToRsvpApi({
+  await requestAdminApi({
     entity: "confirmations",
     confirmationId,
     method: "DELETE",
@@ -284,7 +285,7 @@ const responsePlaceholderConfirmationId = (confirmationInput) =>
 export const saveAdminProviders = async ({ password, providers }) => {
   const expectedProviders = getProvidersComparable(providers);
 
-  await sendToRsvpApi({
+  await requestAdminApi({
     entity: "providers",
     method: "PUT",
     password,
@@ -310,7 +311,7 @@ export const saveAdminProviders = async ({ password, providers }) => {
 export const saveAdminNotifications = async ({ notifications, password }) => {
   const expectedNotifications = getNotificationsComparable(notifications);
 
-  await sendToRsvpApi({
+  await requestAdminApi({
     entity: "notifications",
     method: "PUT",
     notifications,
@@ -336,7 +337,7 @@ export const saveAdminNotifications = async ({ notifications, password }) => {
 export const saveAdminTasks = async ({ password, tasks }) => {
   const expectedTasks = getTasksComparable(tasks);
 
-  await sendToRsvpApi({
+  await requestAdminApi({
     entity: "tasks",
     method: "PUT",
     password,
@@ -361,7 +362,7 @@ export const updateAdminNotificationRead = async ({
   password,
   read,
 }) => {
-  await sendToRsvpApi({
+  await requestAdminApi({
     entity: "notificationRead",
     method: "PUT",
     notificationId,

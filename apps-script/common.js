@@ -343,14 +343,8 @@ function normalizeAdminPassword(value) {
 function getAdminPassword() {
   const configuredPassword =
     PropertiesService.getScriptProperties().getProperty("ADMIN_PASSWORD");
-  const normalizedConfiguredPassword =
-    normalizeAdminPassword(configuredPassword);
 
-  if (normalizedConfiguredPassword) {
-    return normalizedConfiguredPassword;
-  }
-
-  return normalizeAdminPassword(ADMIN_PASSWORD);
+  return normalizeAdminPassword(configuredPassword);
 }
 
 function createEntityId(prefix) {
@@ -427,7 +421,7 @@ function validateAdmin(e) {
     readParam(e.parameter.password || ""),
   );
 
-  if (password !== getAdminPassword()) {
+  if (!password || password !== getAdminPassword()) {
     return jsonResponse(
       {
         success: false,
@@ -442,7 +436,9 @@ function validateAdmin(e) {
 }
 
 function isAdminPayload(data) {
-  return normalizeAdminPassword(data.password) === getAdminPassword();
+  const password = normalizeAdminPassword(data.password);
+
+  return Boolean(password) && password === getAdminPassword();
 }
 
 function normalizeAllergies(allergies) {

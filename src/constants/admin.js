@@ -1,3 +1,3 @@
-import { appEnvironment } from "../config/environment";
-
-export const ADMIN_PASSWORD = appEnvironment.adminPassword;
+// Compatibility value for callers that still accept a password argument.
+// Authentication is performed by the server-side admin API.
+export const ADMIN_PASSWORD = undefined;

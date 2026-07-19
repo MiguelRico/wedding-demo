@@ -100,7 +100,7 @@ function saveConfirmation(data) {
 }
 
 function saveTables(data) {
-  if (normalizeAdminPassword(data.password) !== getAdminPassword()) {
+  if (!normalizeAdminPassword(data.password) || normalizeAdminPassword(data.password) !== getAdminPassword()) {
     throw new Error("Unauthorized");
   }
 
@@ -181,7 +181,7 @@ function saveTables(data) {
 }
 
 function saveProviders(data) {
-  if (normalizeAdminPassword(data.password) !== getAdminPassword()) {
+  if (!normalizeAdminPassword(data.password) || normalizeAdminPassword(data.password) !== getAdminPassword()) {
     throw new Error("Unauthorized");
   }
 
@@ -300,7 +300,7 @@ function saveProviders(data) {
 }
 
 function saveNotifications(data) {
-  if (normalizeAdminPassword(data.password) !== getAdminPassword()) {
+  if (!normalizeAdminPassword(data.password) || normalizeAdminPassword(data.password) !== getAdminPassword()) {
     throw new Error("Unauthorized");
   }
 
@@ -325,7 +325,7 @@ function saveNotifications(data) {
 }
 
 function saveTasks(data) {
-  if (normalizeAdminPassword(data.password) !== getAdminPassword()) {
+  if (!normalizeAdminPassword(data.password) || normalizeAdminPassword(data.password) !== getAdminPassword()) {
     throw new Error("Unauthorized");
   }
 
@@ -346,7 +346,7 @@ function saveTasks(data) {
 }
 
 function updateNotificationRead(data) {
-  if (normalizeAdminPassword(data.password) !== getAdminPassword()) {
+  if (!normalizeAdminPassword(data.password) || normalizeAdminPassword(data.password) !== getAdminPassword()) {
     throw new Error("Unauthorized");
   }
 

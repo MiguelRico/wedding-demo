@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import IconButton from "../ui/IconButton";
 import { UnsavedChangesDialog } from "./common";
 import { ADMIN_PASSWORD } from "../../constants/admin";
+import { logoutAdmin } from "../../gateways/adminApiClient";
 import { adminContent } from "../../constants/adminContent";
 import {
   clearAdminSession,
@@ -85,17 +86,21 @@ export default function AdminAccessButton() {
     setIsOpen((current) => !current);
   };
 
-  const completeLogout = () => {
-    clearAdminDataStore();
-    clearAdminSession();
-    setLogoutChanges(null);
-    setIsOpen(false);
-    navigate("/admin");
+  const completeLogout = async () => {
+    try {
+      await logoutAdmin();
+    } finally {
+      clearAdminDataStore();
+      clearAdminSession();
+      setLogoutChanges(null);
+      setIsOpen(false);
+      navigate("/admin");
+    }
   };
 
   const handleDiscardAndLogout = () => {
     discardAdminPendingChanges();
-    completeLogout();
+    void completeLogout();
   };
 
   const handleLogout = () => {
@@ -104,7 +109,7 @@ export default function AdminAccessButton() {
       return;
     }
 
-    completeLogout();
+    void completeLogout();
   };
 
   const handleSaveAndLogout = async () => {
@@ -112,7 +117,7 @@ export default function AdminAccessButton() {
 
     try {
       await saveAdminPendingChanges({ password: ADMIN_PASSWORD });
-      completeLogout();
+      await completeLogout();
     } finally {
       setSavingLogoutChanges(false);
     }

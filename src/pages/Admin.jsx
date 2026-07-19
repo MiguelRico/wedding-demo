@@ -2,7 +2,6 @@ import { useInView } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Info, Home, LockKeyhole, LogIn, X } from "lucide-react";
 
-import { ADMIN_PASSWORD } from "../constants/admin";
 import AnimatedInfoCard from "../components/ui/AnimatedInfoCard";
 import HeaderSection from "../components/ui/HeaderSection";
 import IconButton from "../components/ui/IconButton";
@@ -22,6 +21,7 @@ import { storageKeys } from "../config/storageKeys";
 import { getAdminModuleCards } from "../config/adminModules";
 import useIsMobileView from "../hooks/useIsMobileView";
 import { loadAdminDataOnce } from "../services/adminDataStore";
+import { loginAdmin } from "../gateways/adminApiClient";
 import {
   isAdminSessionAuthenticated,
   setAdminSessionAuthenticated,
@@ -79,24 +79,20 @@ export default function Admin() {
 
     const normalizedPassword = password.trim();
 
-    if (normalizedPassword === ADMIN_PASSWORD) {
-      try {
-        setLoading(true);
-        await loadAdminDataOnce({ password: normalizedPassword });
-        setAdminSessionAuthenticated();
-        setIsAuthenticated(true);
-        setError("");
-        setPassword("");
-      } catch (error) {
-        console.error(error);
-        setError(adminContent.auth.error);
-      } finally {
-        setLoading(false);
-      }
-      return;
+    try {
+      setLoading(true);
+      await loginAdmin(normalizedPassword);
+      await loadAdminDataOnce();
+      setAdminSessionAuthenticated();
+      setIsAuthenticated(true);
+      setError("");
+      setPassword("");
+    } catch (error) {
+      console.error(error);
+      setError(adminContent.auth.error);
+    } finally {
+      setLoading(false);
     }
-
-    setError(adminContent.auth.error);
   };
 
   return (
