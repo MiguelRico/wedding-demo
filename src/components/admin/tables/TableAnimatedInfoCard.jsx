@@ -393,7 +393,7 @@ function TableDiagram({ onSeatClick, onCenterClick, table }) {
         ))}
       </div>
 
-      <div className="mt-2 flex flex-wrap gap-1.5 text-[0.78rem] text-[var(--color-muted)]">
+      <div className="mt-2 grid grid-cols-2 gap-1.5 text-[0.78rem] text-[var(--color-muted)] md:grid-cols-4">
         {summaryItems.map((item) => (
           <TableLegendItem
             icon={item.icon}
@@ -409,7 +409,7 @@ function TableDiagram({ onSeatClick, onCenterClick, table }) {
 
 function TableLegendItem({ icon, label, value }) {
   return (
-    <div className="flex min-w-0 flex-1 basis-[calc(50%-0.375rem)] items-center justify-between gap-2 rounded-xl border border-[var(--color-border)] bg-white/35 px-2.5 py-1.5">
+    <div className="flex min-w-0 items-center justify-between gap-2 rounded-xl border border-[var(--color-border)] bg-white/35 px-2.5 py-1.5">
       <span className="inline-flex min-w-0 items-center gap-1.5 text-[var(--color-accent)]">
         {icon && (
           <span className="shrink-0 text-[var(--color-accent-dark)]">

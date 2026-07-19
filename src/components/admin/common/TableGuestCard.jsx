@@ -7,6 +7,7 @@ export default function TableGuestCard({
   actions,
   children,
   chips = [],
+  detailChipsClassName = "",
   decorativeText = "?",
   eyebrow,
   guest = {},
@@ -64,7 +65,10 @@ export default function TableGuestCard({
               </div>
             )}
 
-            <GuestDetailChips className="mt-3" guest={guest} />
+            <GuestDetailChips
+              className={`mt-3 ${detailChipsClassName}`}
+              guest={guest}
+            />
           </div>
         </div>
 

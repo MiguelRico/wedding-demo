@@ -9,7 +9,6 @@ import {
   Flower2,
   Gift,
   GlassWater,
-  Globe,
   Headphones,
   Hotel,
   Lightbulb,
@@ -118,7 +117,6 @@ function ProviderCard({ onDelete, onEdit, onSelect, provider, selected }) {
   const paid = getProviderPaidTotal(provider);
   const pending = getProviderPendingTotal(provider);
   const paymentCount = getProviderPaymentCount(provider);
-  const webHref = getWebHref(provider.web);
 
   return (
     <SelectableCardFrame
@@ -142,7 +140,7 @@ function ProviderCard({ onDelete, onEdit, onSelect, provider, selected }) {
         eyebrow={PROVIDER_CATEGORY_LABELS[provider.category]}
         title={provider.name || adminContent.common.fallbacks.provider}
       >
-        <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
+        <div className="mt-4 grid grid-cols-2 gap-2 text-xs md:grid-cols-4">
           <Chip
             className="col-span-2"
             href={getEmailHref(provider.email)}
@@ -151,22 +149,12 @@ function ProviderCard({ onDelete, onEdit, onSelect, provider, selected }) {
             value={provider.email || "-"}
           />
           <Chip
+            className="md:col-span-2"
             href={getPhoneHref(provider.phone)}
             icon={<Phone size={13} strokeWidth={1.8} />}
             tone="secondary"
             value={provider.phone || "-"}
           />
-          {provider.web ? (
-            <Chip
-              href={webHref}
-              icon={<Globe size={13} strokeWidth={1.8} />}
-              target="_blank"
-              tone="secondary"
-              value="Web"
-            />
-          ) : (
-            <span aria-hidden="true" />
-          )}
           <Chip
             className="col-span-2"
             icon={<BriefcaseBusiness size={13} strokeWidth={1.8} />}
@@ -218,9 +206,9 @@ function ServiceCard({ onDelete, onEdit, onSelect, selected, service }) {
         eyebrow={service.providerName}
         title={service.name || adminContent.common.fallbacks.service}
       >
-        <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
+        <div className="mt-4 grid grid-cols-2 gap-2 text-xs md:grid-cols-3">
           <Chip
-            className="col-span-2"
+            className="col-span-2 md:col-span-1"
             icon={<BriefcaseBusiness size={13} strokeWidth={1.8} />}
             strong
             value={PROVIDER_CATEGORY_LABELS[service.category]}
@@ -238,11 +226,10 @@ function ServiceCard({ onDelete, onEdit, onSelect, selected, service }) {
           />
           {activePayments.map((payment, index) => (
             <Chip
-              className="col-span-2"
+              className="col-span-2 md:col-span-1"
               icon={<BadgeEuro size={13} strokeWidth={1.8} />}
               key={payment.id || payment.paymentId || index}
               value={[
-                `Plazo ${index + 1}`,
                 formatDate(payment.date),
                 formatCurrency(payment.amount),
               ].join(adminContent.common.separator)}
@@ -264,16 +251,6 @@ function getProviderPaymentCount(provider) {
 
 function getActiveServicePayments(service) {
   return service.payments.slice(0, service.paymentCount);
-}
-
-function getWebHref(web) {
-  const normalizedWeb = String(web || "").trim();
-
-  if (!normalizedWeb) return undefined;
-
-  return /^https?:\/\//i.test(normalizedWeb)
-    ? normalizedWeb
-    : `https://${normalizedWeb}`;
 }
 
 function getProviderCategoryIcon(category) {

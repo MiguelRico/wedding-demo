@@ -192,6 +192,7 @@ function GuestItemCard({ guestItem, onDelete, onEdit, onSelect, selected }) {
           />
         }
         decorativeText={guestItem.guestIndex + 1}
+        detailChipsClassName="md:grid-cols-4"
         eyebrow={guestItem.confirmationName}
         guest={guestItem}
       />
@@ -240,10 +241,12 @@ function AdminGuestConfirmationCard({
         titleRef={titleRef}
         titleStyle={titleStyle}
       >
-        <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
+        <div className="mt-4 grid grid-cols-2 gap-2 text-xs md:grid-cols-4">
           {chips.map((chip) => (
             <Chip
-              className={chip.className}
+              className={`${chip.className || ""} ${
+                chip.key === "phone" ? "md:col-span-2" : ""
+              }`}
               href={chip.href}
               icon={chip.icon}
               key={chip.key}
