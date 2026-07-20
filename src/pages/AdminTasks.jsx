@@ -1,5 +1,4 @@
-import { useInView } from "framer-motion";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Navigate } from "react-router-dom";
 
 import { ADMIN_PASSWORD } from "../constants/admin";
@@ -23,7 +22,7 @@ import {
   upsertAdminTask,
 } from "../services/adminDataStore";
 import {
-  AdminPageShell,
+  AdminPage,
   AdminPendingChangesActions,
   AdminTableSection,
   EditorDialog as AdminEditorDialog,
@@ -36,7 +35,6 @@ import {
   TaskTableActions,
   TaskTotalsPanel,
 } from "../components/admin/tasks";
-import CinematicPage from "../components/cinematic/CinematicPage";
 import CinematicStaggeredRevealItem from "../components/cinematic/CinematicStaggeredRevealItem";
 import DeleteDialog from "../components/ui/DeleteDialog";
 import Spinner from "../components/ui/Spinner";
@@ -51,11 +49,6 @@ const getTaskKey = (task) => task.id;
 
 export default function AdminTasks() {
   const spinner = useSpinner();
-  const tasksRef = useRef(null);
-  const tasksInView = useInView(tasksRef, {
-    once: true,
-    amount: 0.12,
-  });
   const isAuthenticated = isAdminSessionAuthenticated();
   const isMobileView = useIsMobileView();
   const [loading, setLoading] = useState(true);
@@ -291,15 +284,13 @@ export default function AdminTasks() {
   }
 
   return (
-    <CinematicPage>
-      {spinner.loading && <Spinner text={spinner.text} />}
-
-      <AdminPageShell
+    <AdminPage
         header={adminContent.tasks.header}
         innerClassName="max-w-7xl py-6"
-        isVisible={tasksInView}
-        rootRef={tasksRef}
       >
+      {({ isVisible: tasksInView }) => (
+        <>
+      {spinner.loading && <Spinner text={spinner.text} />}
         <CinematicStaggeredRevealItem index={2} isVisible={tasksInView}>
           <TaskTotalsPanel loading={loading} stats={stats} />
         </CinematicStaggeredRevealItem>
@@ -390,7 +381,7 @@ export default function AdminTasks() {
             </div>
           </AdminTableSection>
         </CinematicStaggeredRevealItem>
-      </AdminPageShell>
+
 
       {editingTask && (
         <AdminEditorDialog
@@ -453,7 +444,9 @@ export default function AdminTasks() {
         title={popup.title}
         type={popup.type}
       />
-    </CinematicPage>
+        </>
+      )}
+    </AdminPage>
   );
 }
 

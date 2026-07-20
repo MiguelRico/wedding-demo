@@ -11,6 +11,7 @@ export {
   AdminMetricGroupCardSkeleton,
 } from "./AdminMetricGrid";
 export { default as AdminPageShell } from "./AdminPageShell";
+export { default as AdminPage } from "./AdminPage";
 export { default as AdminPendingChangesActions } from "./AdminPendingChangesActions";
 export { default as AdminTableSection } from "./AdminTableSection";
 export { default as Card } from "./Card";

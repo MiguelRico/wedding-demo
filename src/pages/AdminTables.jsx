@@ -1,10 +1,9 @@
-import { useInView } from "framer-motion";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Navigate } from "react-router-dom";
 
 import { ADMIN_PASSWORD } from "../constants/admin";
 import {
-  AdminPageShell,
+  AdminPage,
   AdminPendingChangesActions,
   AdminResponsivePanels,
   AdminTableSection,
@@ -21,7 +20,6 @@ import {
   TableTabActions,
   TableTotalsPanel,
 } from "../components/admin/tables";
-import CinematicPage from "../components/cinematic/CinematicPage";
 import CinematicStaggeredRevealItem from "../components/cinematic/CinematicStaggeredRevealItem";
 import StatusDialog from "../components/ui/StatusDialog";
 import Spinner from "../components/ui/Spinner";
@@ -82,14 +80,9 @@ const emptyState = {
 };
 export default function AdminTables() {
   const spinner = useSpinner();
-  const tablesRef = useRef(null);
   const tablesCardRef = useRef(null);
   const tablesStartRef = useRef(null);
   const manualTablesRef = useRef(null);
-  const tablesInView = useInView(tablesRef, {
-    once: true,
-    amount: 0.1,
-  });
   const isAuthenticated = isAdminSessionAuthenticated();
   const [state, setState] = useState(emptyState);
   const [manualTables, setManualTables] = useState([]);
@@ -758,10 +751,19 @@ export default function AdminTables() {
   }
 
   return (
-    <CinematicPage>
-      {spinner.loading && <Spinner text={spinner.text} />}
+    <AdminPage
+      header={{
+        eyebrow: adminContent.tables.header.adminEyebrow,
+        text: adminContent.tables.header.text,
+        title: adminContent.tables.header.title,
+      }}
+      inViewAmount={0.1}
+    >
+      {({ isVisible: tablesInView }) => (
+        <>
+          {spinner.loading && <Spinner text={spinner.text} />}
 
-      {blocker.state === "blocked" && (
+          {blocker.state === "blocked" && (
         <UnsavedChangesDialog
           changes={pendingChanges}
           onCancel={cancelBlockedNavigation}
@@ -777,17 +779,7 @@ export default function AdminTables() {
           }}
           titleId="unsaved-table-changes-title"
         />
-      )}
-
-      <AdminPageShell
-        header={{
-          eyebrow: adminContent.tables.header.adminEyebrow,
-          text: adminContent.tables.header.text,
-          title: adminContent.tables.header.title,
-        }}
-        isVisible={tablesInView}
-        rootRef={tablesRef}
-      >
+          )}
         <CinematicStaggeredRevealItem index={2} isVisible={tablesInView}>
           <TableTotalsPanel loading={state.loading} stats={tableStats} />
         </CinematicStaggeredRevealItem>
@@ -1002,7 +994,7 @@ export default function AdminTables() {
             }
           />
         </CinematicStaggeredRevealItem>
-      </AdminPageShell>
+
 
       <StatusDialog
         eyebrow={adminContent.tables.dialogs.warningEyebrow}
@@ -1061,7 +1053,9 @@ export default function AdminTables() {
           table={seatAssignmentTarget.table}
         />
       )}
-    </CinematicPage>
+        </>
+      )}
+    </AdminPage>
   );
 }
 

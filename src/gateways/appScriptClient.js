@@ -1,4 +1,5 @@
 import { getRequiredRsvpApiUrl } from "@/config/environment";
+import { ADMIN_API_CONTRACT_VERSION } from "@/contracts/adminApiContracts";
 
 const inFlightJsonpRequests = new Map();
 const WRITE_VERIFY_ATTEMPTS = 5;
@@ -16,7 +17,11 @@ const createRequestKey = (params) =>
   );
 
 export const requestJsonp = (params) => {
-  const requestKey = createRequestKey(params);
+  const requestParams = {
+    ...params,
+    contractVersion: ADMIN_API_CONTRACT_VERSION,
+  };
+  const requestKey = createRequestKey(requestParams);
   const inFlightRequest = inFlightJsonpRequests.get(requestKey);
 
   if (inFlightRequest) return inFlightRequest;
@@ -47,7 +52,7 @@ export const requestJsonp = (params) => {
       reject(new Error(message));
     };
 
-    Object.entries(params).forEach(([key, value]) => {
+    Object.entries(requestParams).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== "") {
         url.searchParams.set(key, value);
       }
@@ -91,7 +96,10 @@ export const sendToRsvpApi = async (payload) => {
   await fetch(getRsvpApiUrl(), {
     method: "POST",
     mode: "no-cors",
-    body: JSON.stringify(payload),
+    body: JSON.stringify({
+      ...payload,
+      contractVersion: ADMIN_API_CONTRACT_VERSION,
+    }),
   });
 };
 

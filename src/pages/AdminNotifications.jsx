@@ -1,17 +1,15 @@
-import { useInView } from "framer-motion";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Navigate } from "react-router-dom";
 
 import { ADMIN_PASSWORD } from "../constants/admin";
 import { isAdminSessionAuthenticated } from "../utils/adminSession";
 import {
-  AdminPageShell,
+  AdminPage,
   AdminPendingChangesActions,
   AdminTableSection,
   EditorDialog as AdminEditorDialog,
   UnsavedChangesDialog,
 } from "../components/admin/common";
-import CinematicPage from "../components/cinematic/CinematicPage";
 import CinematicStaggeredRevealItem from "../components/cinematic/CinematicStaggeredRevealItem";
 import {
   NotificationCards,
@@ -26,12 +24,12 @@ import { adminContent } from "../constants/adminContent";
 import { AdminNotification } from "../models";
 import {
   discardAdminNotificationChanges,
-  getAdminDataSnapshot,
   getAdminNotificationChangesSummary,
   loadAdminDataOnce,
   markAdminDataSaved,
   removeAdminNotification,
   setAdminNotificationRead,
+  subscribeAdminData,
   upsertAdminNotification,
 } from "../services/adminDataStore";
 import {
@@ -48,12 +46,7 @@ import { getStableJson } from "../utils/objectSnapshot";
 const createEmptyForm = () => AdminNotification.create();
 
 export default function AdminNotifications() {
-  const notificationsRef = useRef(null);
   const tableStartRef = useRef(null);
-  const notificationsInView = useInView(notificationsRef, {
-    once: true,
-    amount: 0.12,
-  });
   const isAuthenticated = isAdminSessionAuthenticated();
   const isMobileView = useIsMobileView();
   const pageSize = DEFAULT_TABLE_PAGE_SIZE;
@@ -144,18 +137,14 @@ export default function AdminNotifications() {
       });
   }, [isAuthenticated, syncNotifications]);
 
-  useEffect(() => {
-    const intervalId = window.setInterval(() => {
-      const snapshot = getAdminDataSnapshot();
+  useEffect(() =>
+    subscribeAdminData((snapshot) => {
+      syncNotifications(snapshot.notifications);
       setState((current) => ({
         ...current,
         confirmations: snapshot.confirmations,
-        notifications: AdminNotification.normalizeList(snapshot.notifications),
       }));
-    }, 500);
-
-    return () => window.clearInterval(intervalId);
-  }, []);
+    }), [syncNotifications]);
 
   const handlePageChange = (nextPage) => {
     if (
@@ -307,13 +296,12 @@ export default function AdminNotifications() {
   }
 
   return (
-    <CinematicPage>
-      <AdminPageShell
+    <AdminPage
         header={adminContent.notifications.header}
         innerClassName="max-w-7xl py-6"
-        isVisible={notificationsInView}
-        rootRef={notificationsRef}
       >
+      {({ isVisible: notificationsInView }) => (
+        <>
         <CinematicStaggeredRevealItem index={2} isVisible={notificationsInView}>
           <NotificationTotalsPanel
             loading={state.loading}
@@ -417,7 +405,7 @@ export default function AdminNotifications() {
             totalPages={state.loading ? undefined : totalPages}
           />
         </CinematicStaggeredRevealItem>
-      </AdminPageShell>
+
 
       {editingNotification && (
         <AdminEditorDialog
@@ -487,6 +475,8 @@ export default function AdminNotifications() {
         title={statusPopup.title}
         type={statusPopup.type}
       />
-    </CinematicPage>
+        </>
+      )}
+    </AdminPage>
   );
 }

@@ -6,6 +6,10 @@ import {
 } from "./appScriptClient";
 import { requestAdminApi } from "./adminApiClient";
 import {
+  assertAdminListResponse,
+  assertAdminMutationResponse,
+} from "../contracts/adminApiContracts";
+import {
   getConfirmationComparable,
   sameFingerprint,
 } from "./appScriptFingerprints";
@@ -97,45 +101,53 @@ export const findConfirmationByPhone = async (phone) => {
 };
 
 export const findAllConfirmations = async ({ password } = {}) => {
-  return decodeApiResponse(
-    await requestAdminApi({
+  const response = await requestAdminApi({
       entity: "confirmations",
       method: "GET",
       password,
-    }),
-  );
+    });
+
+  return decodeApiResponse(assertAdminListResponse("confirmations", response));
 };
 
 export const findAllTables = async ({ password } = {}) => {
-  return await requestAdminApi({
+  const response = await requestAdminApi({
     entity: "tables",
     method: "GET",
     password,
   });
+
+  return assertAdminListResponse("tables", response);
 };
 
 export const findAllProviders = async ({ password } = {}) => {
-  return await requestAdminApi({
+  const response = await requestAdminApi({
     entity: "providers",
     method: "GET",
     password,
   });
+
+  return assertAdminListResponse("providers", response);
 };
 
 export const findAllNotifications = async ({ password } = {}) => {
-  return await requestAdminApi({
+  const response = await requestAdminApi({
     entity: "notifications",
     method: "GET",
     password,
   });
+
+  return assertAdminListResponse("notifications", response);
 };
 
 export const findAllTasks = async ({ password } = {}) => {
-  return await requestAdminApi({
+  const response = await requestAdminApi({
     entity: "tasks",
     method: "GET",
     password,
   });
+
+  return assertAdminListResponse("tasks", response);
 };
 
 export const sendGuestEmail = async ({ message, password, recipients, subject }) => {
@@ -148,11 +160,7 @@ export const sendGuestEmail = async ({ message, password, recipients, subject })
     subject,
   });
 
-  if (response?.success === false) {
-    throw new Error(response.error || "No se pudo enviar el email.");
-  }
-
-  return response;
+  return assertAdminMutationResponse(response);
 };
 
 export const savePublicConfirmation = async (payload, { method = "POST" } = {}) => {
@@ -214,9 +222,7 @@ export const saveAdminConfirmation = async ({
 
   const response = await requestAdminApi(payload);
 
-  if (response?.success === false) {
-    throw new Error(response.error || "No se pudo guardar la confirmacion.");
-  }
+  assertAdminMutationResponse(response);
 
   return {
     success: true,
@@ -235,7 +241,7 @@ export const saveAdminTables = async ({ password, tables }) => {
     tables,
   });
 
-  if (response?.success === false) throw new Error(response.error);
+  assertAdminMutationResponse(response);
 
   return {
     success: true,
@@ -251,7 +257,7 @@ export const deleteAdminConfirmation = async ({ confirmationId, password }) => {
     password,
   });
 
-  if (response?.success === false) throw new Error(response.error);
+  assertAdminMutationResponse(response);
 
   return {
     success: true,
@@ -270,7 +276,7 @@ export const saveAdminProviders = async ({ password, providers }) => {
     providers,
   });
 
-  if (response?.success === false) throw new Error(response.error);
+  assertAdminMutationResponse(response);
 
   return {
     success: true,
@@ -286,7 +292,7 @@ export const saveAdminNotifications = async ({ notifications, password }) => {
     password,
   });
 
-  if (response?.success === false) throw new Error(response.error);
+  assertAdminMutationResponse(response);
 
   return {
     success: true,
@@ -315,13 +321,15 @@ export const updateAdminNotificationRead = async ({
   password,
   read,
 }) => {
-  await requestAdminApi({
+  const response = await requestAdminApi({
     entity: "notificationRead",
     method: "PUT",
     notificationId,
     password,
     read,
   });
+
+  assertAdminMutationResponse(response);
 
   return {
     notificationId,

@@ -20,6 +20,11 @@ function doGet(e) {
 }
 
 function routeGet(e) {
+  const contractError = validateRequestContract(e.parameter);
+  if (contractError) {
+    return jsonResponse({ success: false, error: contractError }, e);
+  }
+
   const entity = readParam(e.parameter.entity);
 
   if (entity === "confirmations") {

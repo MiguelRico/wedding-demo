@@ -1,10 +1,8 @@
-import { useInView } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 
 import { GuestEmailCard } from "../components/admin/notifications";
-import { AdminPageShell } from "../components/admin/common";
-import CinematicPage from "../components/cinematic/CinematicPage";
+import { AdminPage } from "../components/admin/common";
 import CinematicStaggeredRevealItem from "../components/cinematic/CinematicStaggeredRevealItem";
 import StatusDialog from "../components/ui/StatusDialog";
 import { ADMIN_PASSWORD } from "../constants/admin";
@@ -14,8 +12,6 @@ import { sendGuestEmail } from "../services/notificationsService";
 import { isAdminSessionAuthenticated } from "../utils/adminSession";
 
 export default function AdminEmails() {
-  const emailsRef = useRef(null);
-  const emailsInView = useInView(emailsRef, { once: true, amount: 0.12 });
   const isAuthenticated = isAdminSessionAuthenticated();
   const [confirmations, setConfirmations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -71,14 +67,13 @@ export default function AdminEmails() {
   if (!isAuthenticated) return <Navigate replace to="/admin" />;
 
   return (
-    <CinematicPage>
-      <AdminPageShell
+    <AdminPage
         header={adminContent.emails.header}
         innerClassName="max-w-7xl py-6"
-        isVisible={emailsInView}
-        rootRef={emailsRef}
       >
-        <CinematicStaggeredRevealItem index={2} isVisible={emailsInView}>
+        {({ isVisible }) => (
+          <>
+        <CinematicStaggeredRevealItem index={2} isVisible={isVisible}>
           <GuestEmailCard
             confirmations={confirmations}
             loading={loading}
@@ -86,15 +81,16 @@ export default function AdminEmails() {
             sending={sending}
           />
         </CinematicStaggeredRevealItem>
-      </AdminPageShell>
 
-      <StatusDialog
+        <StatusDialog
         message={status.message}
         onClose={() => setStatus((current) => ({ ...current, open: false }))}
         open={status.open}
         title={status.title}
         type={status.type}
-      />
-    </CinematicPage>
+        />
+          </>
+        )}
+    </AdminPage>
   );
 }

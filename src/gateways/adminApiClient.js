@@ -26,8 +26,12 @@ export function logoutAdmin() {
 }
 
 export function requestAdminApi(requestPayload) {
-  const adminRequest = { ...requestPayload };
+  const adminRequest = {
+    ...requestPayload,
+    contractVersion: ADMIN_API_CONTRACT_VERSION,
+  };
   delete adminRequest.password;
 
   return request("/api/admin/proxy", { request: adminRequest });
 }
+import { ADMIN_API_CONTRACT_VERSION } from "../contracts/adminApiContracts";

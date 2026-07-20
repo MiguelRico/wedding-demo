@@ -61,15 +61,21 @@ Las variables `VITE_` se envian al navegador y nunca deben contener secretos. La
 
 La configuracion fija de Apps Script (`SPREADSHEET_ID`, `ADMIN_EMAIL`, `APP_BASE_URL` y `RSVP_URL`) vive en `apps-script/constants.js`; no son Script Properties. Tras modificar esos valores, publica una nueva version de Apps Script.
 
+## Contrato de API
+
+Las peticiones entre el cliente, el proxy administrativo y Apps Script usan el contrato de API version `1`. La versión es obligatoria: los clientes o despliegues anteriores que no la envíen serán rechazados. Al cambiar el contrato, actualiza la versión en el cliente y en `apps-script/constants.js`, y publica una nueva versión de Apps Script junto con el frontend.
+
 Para trabajar en local usa `npm run dev`. Con el bypass activo, `.env.local` necesita `ADMIN_APPS_SCRIPT_URL` y `ADMIN_APPS_SCRIPT_PASSWORD`; `ADMIN_PASSWORD` y `ADMIN_SESSION_SECRET` solo se necesitan al probar el login real.
 
 El inventario con los valores de este equipo se encuentra en `docs/environment-properties.local.md`. Ese archivo esta ignorado por Git y no debe compartirse porque contiene credenciales.
 
 ## Adaptar un clon
 
-- `src/config/siteContentOverrides.js`: contenido y tarjetas visibles del evento.
+- `src/config/siteContentOverrides.js`: contenido visible del evento.
 - `src/config/adminContentOverrides.js`: sustituciones parciales de textos del panel privado.
-- `src/config/adminModules.js`: módulos privados activos, sus rutas y carga diferida. El panel y el router se generan a partir de este registro.
+- `src/config/adminModules.js`: módulos privados activos, sus rutas, tarjeta y carga diferida. El panel y el router se generan a partir de este registro.
+
+Consulta también [la guía de arquitectura](docs/architecture.md) antes de crear módulos o modificar la sincronización administrativa.
 
 ## Comandos
 

@@ -1,4 +1,3 @@
-import { useInView } from "framer-motion";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Navigate } from "react-router-dom";
 import {
@@ -24,7 +23,7 @@ import {
   setAdminProviders,
 } from "../services/adminDataStore";
 import {
-  AdminPageShell,
+  AdminPage,
   AdminPendingChangesActions,
   AdminResponsivePanels,
   AdminTableSection,
@@ -39,7 +38,6 @@ import {
   ProviderTotalsPanel,
   ServiceCardsPage,
 } from "../components/admin/providers";
-import CinematicPage from "../components/cinematic/CinematicPage";
 import CinematicStaggeredRevealItem from "../components/cinematic/CinematicStaggeredRevealItem";
 import DeleteDialog from "../components/ui/DeleteDialog";
 import StatusDialog from "../components/ui/StatusDialog";
@@ -83,15 +81,10 @@ const withProviderPaymentTotals = (provider) => ({
 });
 
 export default function AdminProviders() {
-  const providersRef = useRef(null);
   const tableStartRef = useRef(null);
   const initialLoadStartedRef = useRef(false);
   const spinner = useSpinner();
   const isMobileView = useIsMobileView();
-  const providersInView = useInView(providersRef, {
-    once: true,
-    amount: 0.1,
-  });
   const isAuthenticated = isAdminSessionAuthenticated();
   const [loadingProviders, setLoadingProviders] = useState(true);
   const [savedProviders, setSavedProviders] = useState([]);
@@ -463,10 +456,12 @@ export default function AdminProviders() {
   }
 
   return (
-    <CinematicPage>
-      {spinner.loading && <Spinner text={spinner.text} />}
+    <AdminPage header={adminContent.providers.header}>
+      {({ isVisible: providersInView }) => (
+        <>
+          {spinner.loading && <Spinner text={spinner.text} />}
 
-      {blocker.state === "blocked" && (
+          {blocker.state === "blocked" && (
         <UnsavedProviderChangesDialog
           changes={pendingChanges}
           onCancel={cancelBlockedNavigation}
@@ -474,13 +469,7 @@ export default function AdminProviders() {
           onSaveAndExit={saveAndContinueNavigation}
           saving={spinner.loading}
         />
-      )}
-
-      <AdminPageShell
-        header={adminContent.providers.header}
-        isVisible={providersInView}
-        rootRef={providersRef}
-      >
+          )}
         <CinematicStaggeredRevealItem index={2} isVisible={providersInView}>
           <ProviderTotalsPanel loading={loadingProviders} stats={stats} />
         </CinematicStaggeredRevealItem>
@@ -714,7 +703,7 @@ export default function AdminProviders() {
             }
           />
         </CinematicStaggeredRevealItem>
-      </AdminPageShell>
+
 
       {editingProvider && (
         <AdminEditorDialog
@@ -785,7 +774,9 @@ export default function AdminProviders() {
         title={popup.title}
         type={popup.type}
       />
-    </CinematicPage>
+        </>
+      )}
+    </AdminPage>
   );
 }
 

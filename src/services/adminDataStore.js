@@ -30,6 +30,19 @@ const emptySnapshot = {
 };
 
 const store = { ...emptySnapshot };
+const subscribers = new Set();
+
+const notifyAdminDataChange = () => {
+  const snapshot = getAdminDataSnapshot();
+
+  subscribers.forEach((subscriber) => {
+    try {
+      subscriber(snapshot);
+    } catch (error) {
+      console.error("Error al sincronizar un suscriptor administrativo:", error);
+    }
+  });
+};
 
 const getConfirmationKey = (group = {}) =>
   group.confirmationId ||
@@ -51,6 +64,36 @@ export const clearAdminDataStore = () => {
   store.savedTasks = [];
   store.tables = [];
   store.tasks = [];
+  notifyAdminDataChange();
+};
+
+export const subscribeAdminData = (subscriber) => {
+  subscribers.add(subscriber);
+
+  return () => subscribers.delete(subscriber);
+};
+
+export const invalidateAdminData = () => {
+  store.loaded = false;
+};
+
+export const refreshAdminData = async ({
+  discardPendingChanges = false,
+  password = ADMIN_PASSWORD,
+} = {}) => {
+  if (hasAdminPendingChanges() && !discardPendingChanges) {
+    throw new Error(
+      "No se puede actualizar mientras existan cambios pendientes sin guardar.",
+    );
+  }
+
+  if (discardPendingChanges) {
+    discardAdminPendingChanges();
+  }
+
+  invalidateAdminData();
+
+  return loadAdminDataOnce({ password });
 };
 
 export const loadAdminDataOnce = async ({ password = ADMIN_PASSWORD } = {}) => {
@@ -214,6 +257,7 @@ export const markAdminDataSaved = ({
   store.savedTables = Table.normalizeList(tables);
   store.savedTasks = Task.normalizeList(tasks);
 
+  notifyAdminDataChange();
   return getAdminDataSnapshot();
 };
 
@@ -226,6 +270,7 @@ export const discardAdminPendingChanges = () => {
   store.tables = Table.normalizeList(store.savedTables);
   store.tasks = Task.normalizeList(store.savedTasks);
 
+  notifyAdminDataChange();
   return getAdminDataSnapshot();
 };
 
@@ -234,12 +279,14 @@ export const discardAdminNotificationChanges = () => {
     store.savedNotifications,
   );
 
+  notifyAdminDataChange();
   return store.notifications;
 };
 
 export const discardAdminTaskChanges = () => {
   store.tasks = Task.normalizeList(store.savedTasks);
 
+  notifyAdminDataChange();
   return store.tasks;
 };
 
@@ -326,6 +373,7 @@ export const saveAdminPendingChanges = async ({
 export const setAdminConfirmations = (confirmations) => {
   store.confirmations = mapAdminConfirmations(confirmations);
 
+  notifyAdminDataChange();
   return store.confirmations;
 };
 
@@ -344,6 +392,7 @@ export const upsertAdminConfirmation = (confirmation) => {
     );
   }
 
+  notifyAdminDataChange();
   return store.confirmations;
 };
 
@@ -352,30 +401,35 @@ export const removeAdminConfirmation = (confirmationId) => {
     (confirmation) => getConfirmationKey(confirmation) !== confirmationId,
   );
 
+  notifyAdminDataChange();
   return store.confirmations;
 };
 
 export const setAdminTables = (tables) => {
   store.tables = Table.normalizeList(tables);
 
+  notifyAdminDataChange();
   return store.tables;
 };
 
 export const setAdminProviders = (providers) => {
   store.providers = mapAdminProviders(providers);
 
+  notifyAdminDataChange();
   return store.providers;
 };
 
 export const setAdminNotifications = (notifications) => {
   store.notifications = AdminNotification.normalizeList(notifications);
 
+  notifyAdminDataChange();
   return store.notifications;
 };
 
 export const setAdminTasks = (tasks) => {
   store.tasks = Task.normalizeList(tasks);
 
+  notifyAdminDataChange();
   return store.tasks;
 };
 
@@ -398,6 +452,7 @@ export const upsertAdminNotification = (notification) => {
     );
   }
 
+  notifyAdminDataChange();
   return store.notifications;
 };
 
@@ -425,6 +480,7 @@ export const setAdminNotificationRead = (
     );
   }
 
+  notifyAdminDataChange();
   return store.notifications;
 };
 
@@ -433,6 +489,7 @@ export const removeAdminNotification = (notificationId) => {
     store.notifications.filter((notification) => notification.id !== notificationId),
   );
 
+  notifyAdminDataChange();
   return store.notifications;
 };
 
@@ -452,6 +509,7 @@ export const upsertAdminTask = (task) => {
     );
   }
 
+  notifyAdminDataChange();
   return store.tasks;
 };
 
@@ -460,6 +518,7 @@ export const removeAdminTask = (taskId) => {
     store.tasks.filter((task) => task.id !== taskId),
   );
 
+  notifyAdminDataChange();
   return store.tasks;
 };
 

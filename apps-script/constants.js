@@ -9,10 +9,11 @@ const PROVIDER_SERVICES_SHEET_NAME = "Servicios";
 const PROVIDER_PAYMENTS_SHEET_NAME = "PagosServicios";
 const NOTIFICATIONS_SHEET_NAME = "Notificaciones";
 const TASKS_SHEET_NAME = "Tareas";
-const SPREADSHEET_ID = "1bNNIgd7F-tsmKtKu_vChwIJP8DabGOW1wXWlzPvxRdM";
+const SPREADSHEET_ID = "1g6ILX7_Q_-EQdNY6ZlahMCXOWX77K9JdvQCv2hdXoFU";
 const ADMIN_EMAIL = "miguel.rico.vazquez@gmail.com";
-const APP_BASE_URL = "https://boda-sara-fran.vercel.app";
+const APP_BASE_URL = "https://wedding-demo-eosin.vercel.app/";
 const RSVP_URL = `${APP_BASE_URL}/rsvp`;
+const API_CONTRACT_VERSION = 1;
 
 const COLOR_BG = "#f5f8f2";
 const COLOR_BG_SOFT = "#edf3e8";
@@ -69,4 +70,3 @@ const EMAIL_COPY = {
     },
   },
 };
-

@@ -1,16 +1,14 @@
-import { useInView } from "framer-motion";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { Save, Trash2, X } from "lucide-react";
 
 import { ADMIN_PASSWORD } from "../constants/admin";
-import CinematicPage from "../components/cinematic/CinematicPage";
 import CinematicStaggeredRevealItem from "../components/cinematic/CinematicStaggeredRevealItem";
 import DeleteDialog from "../components/ui/DeleteDialog";
 import StatusDialog from "../components/ui/StatusDialog";
 import Spinner from "../components/ui/Spinner";
 import {
-  AdminPageShell,
+  AdminPage,
   AdminPendingChangesActions,
   AdminResponsivePanels,
   AdminTableSection,
@@ -108,14 +106,9 @@ const createAdminPopup = ({ message, title, type = "success" }) => ({
 
 export default function AdminGuests() {
   const spinner = useSpinner();
-  const guestsRef = useRef(null);
   const tableCardRef = useRef(null);
   const tableStartRef = useRef(null);
   const initialLoadStartedRef = useRef(false);
-  const guestsInView = useInView(guestsRef, {
-    once: true,
-    amount: 0.18,
-  });
   const isAuthenticated = isAdminSessionAuthenticated();
   const [state, setState] = useState(emptyState);
   const [savedConfirmations, setSavedConfirmations] = useState([]);
@@ -494,10 +487,16 @@ export default function AdminGuests() {
   }
 
   return (
-    <CinematicPage>
-      {spinner.loading && <Spinner text={spinner.text} />}
+    <AdminPage
+      header={adminContent.guests.header}
+      inViewAmount={0.18}
+      innerClassName="max-w-7xl py-6"
+    >
+      {({ isVisible: guestsInView }) => (
+        <>
+          {spinner.loading && <Spinner text={spinner.text} />}
 
-      {blocker.state === "blocked" && (
+          {blocker.state === "blocked" && (
         <UnsavedGuestChangesDialog
           changes={pendingChanges}
           onCancel={cancelBlockedNavigation}
@@ -505,14 +504,7 @@ export default function AdminGuests() {
           onSaveAndExit={saveAndContinueNavigation}
           saving={spinner.loading}
         />
-      )}
-
-      <AdminPageShell
-        header={adminContent.guests.header}
-        innerClassName="max-w-7xl py-6"
-        isVisible={guestsInView}
-        rootRef={guestsRef}
-      >
+          )}
         <CinematicStaggeredRevealItem index={2} isVisible={guestsInView}>
           <GuestTotalsPanel
             chartStats={guestChartStats}
@@ -757,7 +749,7 @@ export default function AdminGuests() {
             }
           />
         </CinematicStaggeredRevealItem>
-      </AdminPageShell>
+
 
       {editingGroup && (
         <GroupEditor
@@ -811,7 +803,9 @@ export default function AdminGuests() {
         title={adminContent.guests.dialogs.problemTitle}
         type="error"
       />
-    </CinematicPage>
+        </>
+      )}
+    </AdminPage>
   );
 }
 function UnsavedGuestChangesDialog({

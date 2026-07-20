@@ -1,5 +1,4 @@
-import { useInView } from "framer-motion";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Navigate } from "react-router-dom";
 
 import { isAdminSessionAuthenticated } from "../utils/adminSession";
@@ -8,10 +7,8 @@ import { TableTotalsPanel } from "../components/admin/tables";
 import { ProviderTotalsPanel } from "../components/admin/providers";
 import { NotificationTotalsPanel } from "../components/admin/notifications";
 import { TaskTotalsPanel } from "../components/admin/tasks";
-import CinematicPage from "../components/cinematic/CinematicPage";
-import CinematicSection from "../components/cinematic/CinematicSection";
 import CinematicStaggeredRevealItem from "../components/cinematic/CinematicStaggeredRevealItem";
-import HeaderSection from "../components/ui/HeaderSection";
+import { AdminPage } from "../components/admin/common";
 import StatusDialog from "../components/ui/StatusDialog";
 import { adminContent } from "../constants/adminContent";
 import { COMMON_ALLERGIES } from "../constants/rsvp";
@@ -46,11 +43,6 @@ const emptyState = {
 };
 
 export default function AdminStats() {
-  const statsRef = useRef(null);
-  const statsInView = useInView(statsRef, {
-    once: true,
-    amount: 0.2,
-  });
   const isAuthenticated = isAdminSessionAuthenticated();
   const [state, setState] = useState(emptyState);
 
@@ -134,23 +126,14 @@ export default function AdminStats() {
   }
 
   return (
-    <CinematicPage>
-      <CinematicSection
-        className="surface-soft admin-section"
+    <AdminPage
+        header={adminContent.stats.header}
         innerClassName="max-w-7xl py-6"
-        reveal={false}
+        inViewAmount={0.2}
       >
-        <div ref={statsRef}>
-          <CinematicStaggeredRevealItem index={0} isVisible={statsInView}>
-            <HeaderSection
-              eyebrow={adminContent.stats.header.eyebrow}
-              title={adminContent.stats.header.title}
-              titleAs="h1"
-              text={adminContent.stats.header.text}
-            />
-          </CinematicStaggeredRevealItem>
-
-          <CinematicStaggeredRevealItem index={2} isVisible={statsInView}>
+        {({ isVisible }) => (
+          <>
+          <CinematicStaggeredRevealItem index={2} isVisible={isVisible}>
             <div className="grid gap-5">
               <TaskTotalsPanel loading={state.loading} stats={taskStats} />
               <NotificationTotalsPanel
@@ -169,18 +152,18 @@ export default function AdminStats() {
               />
             </div>
           </CinematicStaggeredRevealItem>
-        </div>
-      </CinematicSection>
 
-      <StatusDialog
+          <StatusDialog
         eyebrow={adminContent.stats.dialogs.warningEyebrow}
         message={state.error}
         onClose={() => setState((current) => ({ ...current, error: "" }))}
         open={Boolean(state.error)}
         title={adminContent.stats.dialogs.problemTitle}
         type="error"
-      />
-    </CinematicPage>
+          />
+          </>
+        )}
+    </AdminPage>
   );
 }
 

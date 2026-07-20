@@ -2,6 +2,10 @@
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
+    const contractError = validateRequestContract(data);
+
+    if (contractError) throw new Error(contractError);
+
     return withWriteLock(() => {
       const method = getRequestMethod(data);
 

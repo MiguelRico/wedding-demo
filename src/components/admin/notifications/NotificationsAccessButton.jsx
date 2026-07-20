@@ -14,9 +14,9 @@ import { CONFIRMATION_TYPE } from "../../../models/AdminNotification";
 import { updateNotificationRead } from "../../../services/notificationsService";
 import { NotificationChips } from "./NotificationCards";
 import {
-  getAdminDataSnapshot,
   loadAdminDataOnce,
   markAdminNotificationRead,
+  subscribeAdminData,
 } from "../../../services/adminDataStore";
 
 export default function NotificationsAccessButton() {
@@ -30,9 +30,9 @@ export default function NotificationsAccessButton() {
   const visibleNotifications = notifications.filter(isVisibleNotification);
   const unreadCount = visibleNotifications.length;
 
-  const refreshNotifications = () => {
+  const refreshNotifications = (snapshot) => {
     setNotifications(
-      AdminNotification.normalizeList(getAdminDataSnapshot().notifications),
+      AdminNotification.normalizeList(snapshot?.notifications || []),
     );
   };
 
@@ -53,12 +53,15 @@ export default function NotificationsAccessButton() {
   useEffect(() => {
     if (!isAuthenticated) return undefined;
 
-    loadAdminDataOnce({ password: ADMIN_PASSWORD }).finally(
-      refreshNotifications,
-    );
-    const intervalId = window.setInterval(refreshNotifications, 500);
+    const unsubscribe = subscribeAdminData(refreshNotifications);
 
-    return () => window.clearInterval(intervalId);
+    loadAdminDataOnce({ password: ADMIN_PASSWORD })
+      .then(refreshNotifications)
+      .catch((error) => {
+        console.error("Error al cargar notificaciones:", error);
+      });
+
+    return unsubscribe;
   }, [isAuthenticated]);
 
   useEffect(() => {
@@ -89,7 +92,6 @@ export default function NotificationsAccessButton() {
 
   const handleMarkRead = (notificationId) => {
     markAdminNotificationRead(notificationId, { markSaved: true });
-    refreshNotifications();
     void updateNotificationRead({
       notificationId,
       password: ADMIN_PASSWORD,

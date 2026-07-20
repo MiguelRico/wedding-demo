@@ -336,6 +336,14 @@ function readParam(value) {
   return decodeURIComponent(value || "").trim();
 }
 
+function validateRequestContract(data) {
+  const version = data && data.contractVersion;
+
+  return Number(version) === API_CONTRACT_VERSION
+    ? ""
+    : "Unsupported contract version";
+}
+
 function normalizeAdminPassword(value) {
   return String(value || "").trim();
 }

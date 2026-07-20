@@ -1,4 +1,5 @@
 import { requireAdminSession } from "../_adminAuth.js";
+import { validateAdminRequest } from "../../src/contracts/adminApiContracts.js";
 
 const allowedRequests = new Set([
   "GET:confirmations",
@@ -42,6 +43,12 @@ export default async function handler(request, response) {
   if (!requireAdminSession(request, response)) return;
 
   const adminRequest = request.body?.request || {};
+  const contractError = validateAdminRequest(adminRequest);
+
+  if (contractError) {
+    response.status(400).json({ error: contractError });
+    return;
+  }
   const method = String(adminRequest.method || "").toUpperCase();
   const entity = String(adminRequest.entity || "");
 
