@@ -1,4 +1,3 @@
-import { createEmptyTableForm } from "../constants/tables";
 import { Confirmation } from "../models";
 
 const ADMIN_DEFAULT_EMAIL = "admin@admin.com";
@@ -20,10 +19,4 @@ export function normalizeAdminGroupBeforeSave(group, { isCreation }) {
     email: confirmation.email.trim() || ADMIN_DEFAULT_EMAIL,
     phone: confirmation.phone.trim() || ADMIN_DEFAULT_PHONE,
   });
-}
-
-export function createDraftTableForm(table) {
-  if (!table) return createEmptyTableForm();
-
-  return table;
 }

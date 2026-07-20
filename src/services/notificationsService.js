@@ -26,14 +26,6 @@ export function buildNotificationStats(notifications) {
   };
 }
 
-export const loadNotifications = async ({ password } = {}) => {
-  const response = await notificationRepository.findAll({ password });
-
-  return AdminNotification.normalizeList(
-    response?.notifications || response || [],
-  );
-};
-
 export const persistNotifications = async ({ notifications, password }) => {
   const normalizedNotifications =
     AdminNotification.normalizeList(notifications);

@@ -89,10 +89,6 @@ export function getNextPaymentInfoFromServices(services) {
   };
 }
 
-export function getProviderNextPaymentInfo(provider) {
-  return getNextPaymentInfoFromServices(Provider.normalize(provider).services);
-}
-
 export function buildProviderStats(providers) {
   const normalizedProviders = normalizeProviders(providers);
   const baseStats = normalizedProviders.reduce(

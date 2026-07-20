@@ -1,4 +1,3 @@
-import { adminContent } from "../constants/adminContent";
 import { Task } from "../models";
 import { taskRepository } from "../repositories/taskRepository";
 
@@ -39,16 +38,6 @@ export function buildTaskStats(tasks) {
     totalCount: normalizedTasks.length,
   };
 }
-
-export const loadTasks = async ({ password } = {}) => {
-  const response = await taskRepository.findAll({ password });
-
-  if (response?.success === false) {
-    throw new Error(response.error || adminContent.tasks.dialogs.loadError);
-  }
-
-  return normalizeTasks(response?.tasks || []);
-};
 
 export const persistTasks = async ({ password, tasks }) => {
   const normalizedTasks = normalizeTasks(tasks);

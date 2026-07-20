@@ -27,8 +27,6 @@ export {
   unassignGuestFromSeat,
   unassignGuestFromSeatLocal,
 } from "./tableAssignmentService";
-export { downloadTablesCsv } from "./tableExportService";
-
 export const loadAdminTableConfirmations = async ({ password } = {}) => {
   const response = await confirmationRepository.findAll({
     password,
