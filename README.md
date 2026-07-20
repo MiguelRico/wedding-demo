@@ -41,6 +41,30 @@ VITE_BYPASS_ADMIN_AUTH=true
 
 El bypass se ignora siempre en producción. Para que las operaciones del panel funcionen, `.env.local` debe incluir igualmente las cuatro variables privadas de Vercel indicadas arriba.
 
+## Referencia completa de variables
+
+Esta seccion prevalece sobre las notas resumidas anteriores.
+
+| Ambito | Propiedad | Objetivo |
+| --- | --- | --- |
+| Cliente / Vercel | `VITE_RSVP_API_URL` | URL publica `/exec` de Apps Script para el formulario RSVP. |
+| Cliente / Vercel | `VITE_APP_STORAGE_PREFIX` | Prefijo del almacenamiento del navegador; por defecto `wedding-template`. |
+| Cliente / Vercel | `VITE_ENABLE_MENU_MODULE` | Activa o desactiva el modulo de menu. |
+| Solo desarrollo local | `VITE_BYPASS_ADMIN_AUTH` | Omite el login solo cuando Vite esta en modo desarrollo. Debe ser `false` o no existir fuera de local. |
+| Servidor de Vercel | `ADMIN_PASSWORD` | Contrasena de acceso al panel. |
+| Servidor de Vercel | `ADMIN_SESSION_SECRET` | Secreto aleatorio de al menos 32 caracteres para firmar la cookie HTTP-only de administracion. |
+| Servidor de Vercel | `ADMIN_APPS_SCRIPT_URL` | URL `/exec` de Apps Script para operaciones administrativas. |
+| Servidor de Vercel | `ADMIN_APPS_SCRIPT_PASSWORD` | Secreto que usa el proxy para autenticarse ante Apps Script. |
+| Script Properties de Apps Script | `ADMIN_PASSWORD` | Debe coincidir exactamente con `ADMIN_APPS_SCRIPT_PASSWORD`. |
+
+Las variables `VITE_` se envian al navegador y nunca deben contener secretos. La URL y la contrasena administrativas se anaden solo en `api/admin/proxy.js`, en el servidor. Configura las cuatro variables de servidor en Vercel para Production, Preview y Development segun proceda.
+
+La configuracion fija de Apps Script (`SPREADSHEET_ID`, `ADMIN_EMAIL`, `APP_BASE_URL` y `RSVP_URL`) vive en `apps-script/constants.js`; no son Script Properties. Tras modificar esos valores, publica una nueva version de Apps Script.
+
+Para trabajar en local usa `npm run dev`. Con el bypass activo, `.env.local` necesita `ADMIN_APPS_SCRIPT_URL` y `ADMIN_APPS_SCRIPT_PASSWORD`; `ADMIN_PASSWORD` y `ADMIN_SESSION_SECRET` solo se necesitan al probar el login real.
+
+El inventario con los valores de este equipo se encuentra en `docs/environment-properties.local.md`. Ese archivo esta ignorado por Git y no debe compartirse porque contiene credenciales.
+
 ## Adaptar un clon
 
 - `src/config/siteContentOverrides.js`: contenido y tarjetas visibles del evento.
