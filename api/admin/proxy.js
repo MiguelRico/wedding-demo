@@ -6,6 +6,7 @@ const allowedRequests = new Set([
   "GET:providers",
   "GET:notifications",
   "GET:tasks",
+  "POST:guestEmail",
   "PUT:confirmations",
   "PUT:tables",
   "PUT:providers",

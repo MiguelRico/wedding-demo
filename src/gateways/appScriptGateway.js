@@ -138,6 +138,23 @@ export const findAllTasks = async ({ password } = {}) => {
   });
 };
 
+export const sendGuestEmail = async ({ message, password, recipients, subject }) => {
+  const response = await requestAdminApi({
+    entity: "guestEmail",
+    message,
+    method: "POST",
+    password,
+    recipients,
+    subject,
+  });
+
+  if (response?.success === false) {
+    throw new Error(response.error || "No se pudo enviar el email.");
+  }
+
+  return response;
+};
+
 export const savePublicConfirmation = async (payload, { method = "POST" } = {}) => {
   const confirmation = encodeConfirmationPayload(payload);
   const expectedConfirmation = getConfirmationComparable(payload);

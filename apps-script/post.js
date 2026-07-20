@@ -42,5 +42,9 @@ function routePost(data) {
     return saveConfirmation(data);
   }
 
+  if (entity === "guestEmail") {
+    return sendGuestEmailFromAdmin(data);
+  }
+
   throw new Error("Resource not supported");
 }

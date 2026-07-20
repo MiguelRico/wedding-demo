@@ -1,5 +1,6 @@
 import { AdminNotification } from "../models";
 import { notificationRepository } from "../repositories/notificationRepository";
+import { sendGuestEmail as sendGuestEmailRequest } from "../gateways/appScriptGateway";
 
 export function buildNotificationStats(notifications) {
   const normalizedNotifications =
@@ -55,3 +56,6 @@ export const updateNotificationRead = async ({
     password,
     read,
   });
+
+export const sendGuestEmail = ({ message, password, recipients, subject }) =>
+  sendGuestEmailRequest({ message, password, recipients, subject });

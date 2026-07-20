@@ -117,6 +117,44 @@ function sendConfirmationEmail(email, confirmationName, guests, confirmationId) 
   );
 }
 
+function sendGuestEmailFromAdmin(data) {
+  requireAdmin(data);
+
+  const recipients = Array.from(
+    new Set(
+      (Array.isArray(data.recipients) ? data.recipients : [])
+        .map((email) => String(email || "").trim().toLowerCase())
+        .filter((email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)),
+    ),
+  );
+  const subject = String(data.subject || "").trim();
+  const message = String(data.message || "").trim();
+
+  if (!recipients.length) throw new Error("Select at least one recipient");
+  if (!subject) throw new Error("Missing email subject");
+  if (!message) throw new Error("Missing email message");
+  if (subject.length > 200 || message.length > 10000) {
+    throw new Error("Email content is too long");
+  }
+
+  const paragraphs = message
+    .split(/\r?\n/)
+    .map((line) => `<p style="margin:0 0 14px;font-size:15px;line-height:1.8;color:${COLOR_MUTED};">${escapeEmailHtml(line || " ")}</p>`)
+    .join("");
+  const html = emailShell(paragraphs, {
+    eyebrow: EMAIL_COPY.brand,
+    preheader: subject,
+    title: subject,
+  });
+
+  GmailApp.sendEmail(ADMIN_EMAIL, subject, message, {
+    bcc: recipients.join(","),
+    htmlBody: html,
+  });
+
+  return jsonResponse({ success: true, sent: recipients.length });
+}
+
 function sendAdminNotification(confirmationName, email, phone, guests) {
   const copy = EMAIL_COPY.admin;
   const fallback = EMAIL_COPY.fallback;
