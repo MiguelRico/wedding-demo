@@ -1,4 +1,11 @@
-import { Armchair, CircleCheckBig, CircleDashed, Grid2X2 } from "lucide-react";
+import {
+  Armchair,
+  Circle,
+  CircleCheckBig,
+  CircleDashed,
+  Grid2X2,
+  RectangleHorizontal,
+} from "lucide-react";
 
 import { adminContent } from "../../../constants/adminContent";
 import {
@@ -6,7 +13,7 @@ import {
   AdminMetricGroupCardSkeleton,
 } from "../common";
 
-const TABLE_METRIC_GRID_CLASS = "grid grid-cols-4 gap-2";
+const TABLE_METRIC_GRID_CLASS = "grid grid-cols-6 gap-2";
 
 export default function TableTotalsPanel({ loading, stats }) {
   return (
@@ -19,6 +26,11 @@ export default function TableTotalsPanel({ loading, stats }) {
       </h2>
       {loading ? (
         <div className={TABLE_METRIC_GRID_CLASS}>
+          <AdminMetricGroupCardSkeleton
+            className="col-span-2"
+            itemCount={2}
+            showHeader={false}
+          />
           <AdminMetricGroupCardSkeleton
             className="col-span-2"
             itemCount={2}
@@ -50,6 +62,25 @@ export default function TableTotalsPanel({ loading, stats }) {
             showHeaderIcon={false}
             showHeaderTitle={false}
             title={adminContent.tables.overview.metrics.tableCount}
+          />
+          <AdminMetricGroupCard
+            className="col-span-2"
+            icon={<RectangleHorizontal size={22} strokeWidth={1.8} />}
+            items={[
+              {
+                icon: <RectangleHorizontal size={18} strokeWidth={1.8} />,
+                label: adminContent.tables.overview.metrics.rectangularTables,
+                value: stats.rectangularTables,
+              },
+              {
+                icon: <Circle size={18} strokeWidth={1.8} />,
+                label: adminContent.tables.overview.metrics.roundTables,
+                value: stats.roundTables,
+              },
+            ]}
+            showHeaderIcon={false}
+            showHeaderTitle={false}
+            title={adminContent.tables.overview.metrics.rectangularTables}
           />
           <AdminMetricGroupCard
             className="col-span-2"

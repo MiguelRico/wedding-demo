@@ -154,6 +154,7 @@ export function AdminMetricGroupCardSkeleton({
 
 function getGroupColumnsClass(count) {
   if (count <= 2) return "grid-cols-2";
+  if (count === 4) return "grid-cols-2";
 
   return "grid-cols-3";
 }

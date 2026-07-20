@@ -2,6 +2,7 @@ import { Guest } from "./Guest";
 import {
   DEFAULT_TABLE_SHAPE,
   TABLE_SHAPE_OPTIONS,
+  TABLE_SHAPES,
 } from "../constants/tables";
 
 const TABLE_DEFAULTS = {
@@ -232,10 +233,18 @@ export const Table = {
       (sum, table) => sum + Table.getAssignedGuests(table).length,
       0,
     );
+    const rectangularTables = normalizedTables.filter(
+      (table) => table.shape === TABLE_SHAPES.rectangular,
+    ).length;
+    const roundTables = normalizedTables.filter(
+      (table) => table.shape === TABLE_SHAPES.round,
+    ).length;
 
     return {
       assignedSeats,
       pendingSeats: Math.max(totalSeats - assignedSeats, 0),
+      rectangularTables,
+      roundTables,
       totalSeats,
       totalTables: normalizedTables.length,
     };
