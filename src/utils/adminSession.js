@@ -1,9 +1,18 @@
 import { storageEvents, storageKeys } from "../config/storageKeys";
 
 const TRUE_VALUE = "true";
+const LOCAL_AUTH_BYPASS_ENABLED =
+  import.meta.env.DEV && import.meta.env.VITE_BYPASS_ADMIN_AUTH === TRUE_VALUE;
+
+export function isLocalAdminAuthBypassEnabled() {
+  return LOCAL_AUTH_BYPASS_ENABLED;
+}
 
 export function isAdminSessionAuthenticated() {
-  return getSessionValue(storageKeys.adminSession) === TRUE_VALUE;
+  return (
+    isLocalAdminAuthBypassEnabled() ||
+    getSessionValue(storageKeys.adminSession) === TRUE_VALUE
+  );
 }
 
 export function setAdminSessionAuthenticated() {

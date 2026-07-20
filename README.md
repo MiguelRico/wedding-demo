@@ -16,6 +16,7 @@ VITE_ENABLE_MENU_MODULE=false
 - `VITE_RSVP_API_URL`: URL publicada de Google Apps Script.
 - `VITE_APP_STORAGE_PREFIX`: prefijo para claves locales de navegador.
 - `VITE_ENABLE_MENU_MODULE`: activa o desactiva el modulo de menu.
+- `VITE_BYPASS_ADMIN_AUTH`: permite omitir el login exclusivamente en desarrollo local. Déjalo en `false` salvo que lo necesites.
 
 En desarrollo, la app avisa por consola si falta configuracion critica. Las operaciones contra Apps Script fallan con un error explicito si la URL no esta configurada.
 
@@ -30,7 +31,15 @@ Configura estas variables solo en el proyecto de Vercel; nunca con el prefijo `V
 
 En Apps Script, define la Script Property `ADMIN_PASSWORD` con el mismo valor que `ADMIN_APPS_SCRIPT_PASSWORD` y publica una nueva versión del despliegue. Usa un valor aleatorio distinto de la contraseña de acceso al panel.
 
-Para probar las rutas de API en local, usa `vercel dev` tras definir estas mismas variables en un archivo `.env.local` no versionado.
+Para probar las rutas de API en local, usa `npm run dev`. Vite sirve también las rutas administrativas locales tras definir estas mismas variables en un archivo `.env.local` no versionado.
+
+Si quieres acceder al panel sin login durante el desarrollo local, añade además lo siguiente a `.env.local`:
+
+```env
+VITE_BYPASS_ADMIN_AUTH=true
+```
+
+El bypass se ignora siempre en producción. Para que las operaciones del panel funcionen, `.env.local` debe incluir igualmente las cuatro variables privadas de Vercel indicadas arriba.
 
 ## Adaptar un clon
 

@@ -1,4 +1,8 @@
-import { isValidAdminPassword, setAdminSession } from "../_adminAuth.js";
+import {
+  isLocalAdminAuthBypassEnabled,
+  isValidAdminPassword,
+  setAdminSession,
+} from "../_adminAuth.js";
 
 export default function handler(request, response) {
   if (request.method !== "POST") {
@@ -12,7 +16,11 @@ export default function handler(request, response) {
     return;
   }
 
+  if (isLocalAdminAuthBypassEnabled()) {
+    response.status(204).end();
+    return;
+  }
+
   setAdminSession(response);
   response.status(204).end();
 }
-

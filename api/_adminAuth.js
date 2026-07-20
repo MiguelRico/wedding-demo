@@ -3,6 +3,13 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 const COOKIE_NAME = "wedding_admin_session";
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 8;
 
+export function isLocalAdminAuthBypassEnabled() {
+  return (
+    process.env.NODE_ENV !== "production" &&
+    process.env.VITE_BYPASS_ADMIN_AUTH === "true"
+  );
+}
+
 function secureCookieAttribute() {
   return process.env.NODE_ENV === "production" ? "; Secure" : "";
 }
@@ -44,6 +51,8 @@ function readCookie(request, name) {
 }
 
 export function isValidAdminPassword(password) {
+  if (isLocalAdminAuthBypassEnabled()) return true;
+
   return safeEqual(
     String(password || ""),
     getRequiredEnvironment("ADMIN_PASSWORD"),
@@ -85,7 +94,7 @@ export function hasAdminSession(request) {
 }
 
 export function requireAdminSession(request, response) {
-  if (hasAdminSession(request)) return true;
+  if (isLocalAdminAuthBypassEnabled() || hasAdminSession(request)) return true;
 
   response.status(401).json({ error: "Unauthorized" });
   return false;
