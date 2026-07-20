@@ -249,6 +249,14 @@ export const siteContentOverrides = {
         icon: "bell",
       },
       {
+        title: "Emails",
+        subtitle: "Comunicación con invitados",
+        description:
+          "Redactar y enviar mensajes privados a uno o varios invitados.",
+        to: "/admin/emails",
+        icon: "mail",
+      },
+      {
         title: "Invitados",
         subtitle: "Gestiona la lista",
         description:

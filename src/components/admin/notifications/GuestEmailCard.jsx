@@ -1,7 +1,8 @@
-import { Mail, Search, Send } from "lucide-react";
+import { AlertTriangle, BusFront, Mail, Search, Send, X } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { AdminFiltersPanel, Card } from "../common";
+import Chip from "../../ui/Chip";
 import IconButton from "../../ui/IconButton";
 import { SkeletonBlock } from "../../ui/TableSectionSkeleton";
 import {
@@ -11,6 +12,9 @@ import {
   selectClassName,
 } from "../../rsvp/FormPrimitives";
 import { Guest } from "../../../models";
+import { GUEST_MENU_OPTIONS } from "../../../constants/rsvp";
+import { isMenuModuleEnabled } from "../../../config/features";
+import { getMenuIcon } from "../../../utils/rsvpSummaryChips";
 
 const FORM_ID = "guest-email-form";
 
@@ -22,7 +26,9 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [query, setQuery] = useState("");
-  const [selectionFilter, setSelectionFilter] = useState("all");
+  const [menuFilter, setMenuFilter] = useState("all");
+  const [allergiesFilter, setAllergiesFilter] = useState("all");
+  const [transportFilter, setTransportFilter] = useState("all");
   const [error, setError] = useState("");
 
   const recipients = useMemo(
@@ -46,13 +52,27 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
       .join(" ")}`
       .toLocaleLowerCase()
       .includes(query.trim().toLocaleLowerCase());
-    const isSelected = selectedIds.includes(recipient.id);
-    const matchesSelection =
-      selectionFilter === "all" ||
-      (selectionFilter === "selected" && isSelected) ||
-      (selectionFilter === "unselected" && !isSelected);
+    const matchesMenu =
+      menuFilter === "all" ||
+      recipient.guests.some(
+        (guest) => Guest.normalize(guest).menu === menuFilter,
+      );
+    const matchesAllergies =
+      allergiesFilter === "all" ||
+      recipient.guests.some((guest) =>
+        allergiesFilter === "with"
+          ? Guest.hasAllergies(guest)
+          : !Guest.hasAllergies(guest),
+      );
+    const matchesTransport =
+      transportFilter === "all" ||
+      recipient.guests.some((guest) =>
+        transportFilter === "with"
+          ? Guest.usesBus(guest)
+          : !Guest.usesBus(guest),
+      );
 
-    return matchesQuery && matchesSelection;
+    return matchesQuery && matchesMenu && matchesAllergies && matchesTransport;
   });
   const activeFilters = [
     query.trim() && {
@@ -60,11 +80,20 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
       label: `Búsqueda: ${query.trim()}`,
       onRemove: () => setQuery(""),
     },
-    selectionFilter !== "all" && {
-      key: "selection",
-      label:
-        selectionFilter === "selected" ? "Seleccionados" : "Sin seleccionar",
-      onRemove: () => setSelectionFilter("all"),
+    menuFilter !== "all" && {
+      key: "menu",
+      label: `Menú: ${menuFilter}`,
+      onRemove: () => setMenuFilter("all"),
+    },
+    allergiesFilter !== "all" && {
+      key: "allergies",
+      label: allergiesFilter === "with" ? "Con alergias" : "Sin alergias",
+      onRemove: () => setAllergiesFilter("all"),
+    },
+    transportFilter !== "all" && {
+      key: "transport",
+      label: transportFilter === "with" ? "Con transporte" : "Sin transporte",
+      onRemove: () => setTransportFilter("all"),
     },
   ].filter(Boolean);
 
@@ -124,7 +153,6 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
         />
       }
       decorativeText={<Mail size={76} strokeWidth={1.3} />}
-      detail="Selecciona uno o varios invitados y envía el mismo mensaje de forma privada."
       eyebrow="Comunicación"
       title="Enviar email a invitados"
     >
@@ -140,7 +168,7 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
           <AdminFiltersPanel
             activeFilters={activeFilters}
             className="mb-3"
-            fieldsClassName="grid gap-3 sm:grid-cols-[minmax(0,1fr)_12rem]"
+            fieldsClassName="grid gap-3 sm:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_11rem_11rem_11rem]"
             title="Filtros"
           >
             <div>
@@ -159,16 +187,45 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
                 />
               </div>
             </div>
+            {isMenuModuleEnabled && (
+              <div>
+                <Label>Menú</Label>
+                <select
+                  className={selectClassName}
+                  onChange={(event) => setMenuFilter(event.target.value)}
+                  value={menuFilter}
+                >
+                  <option value="all">Todos</option>
+                  {GUEST_MENU_OPTIONS.map((menu) => (
+                    <option key={menu} value={menu}>
+                      {menu}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
             <div>
-              <Label>Estado</Label>
+              <Label>Alergias</Label>
               <select
                 className={selectClassName}
-                onChange={(event) => setSelectionFilter(event.target.value)}
-                value={selectionFilter}
+                onChange={(event) => setAllergiesFilter(event.target.value)}
+                value={allergiesFilter}
               >
                 <option value="all">Todos</option>
-                <option value="selected">Seleccionados</option>
-                <option value="unselected">Sin seleccionar</option>
+                <option value="with">Con alergias</option>
+                <option value="without">Sin alergias</option>
+              </select>
+            </div>
+            <div>
+              <Label>Transporte</Label>
+              <select
+                className={selectClassName}
+                onChange={(event) => setTransportFilter(event.target.value)}
+                value={transportFilter}
+              >
+                <option value="all">Todos</option>
+                <option value="with">Usan transporte</option>
+                <option value="without">No usan transporte</option>
               </select>
             </div>
           </AdminFiltersPanel>
@@ -181,6 +238,30 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
                   const guestNames = recipient.guests
                     .map((guest, index) => Guest.getDisplayName(guest, index))
                     .join(", ");
+                  const summaryChips = [
+                    ...(isMenuModuleEnabled
+                      ? GUEST_MENU_OPTIONS.map((menu) => ({
+                          icon: getMenuIcon(menu),
+                          key: `menu-${menu}`,
+                          strong: true,
+                          value: recipient.guests.filter(
+                            (guest) => Guest.normalize(guest).menu === menu,
+                          ).length,
+                        }))
+                      : []),
+                    {
+                      icon: <AlertTriangle size={13} strokeWidth={1.8} />,
+                      key: "allergies",
+                      value: recipient.guests.some(Guest.hasAllergies)
+                        ? "Sí"
+                        : "No",
+                    },
+                    {
+                      icon: <BusFront size={13} strokeWidth={1.8} />,
+                      key: "transport",
+                      value: recipient.guests.some(Guest.usesBus) ? "Sí" : "No",
+                    },
+                  ];
 
                   return (
                     <label
@@ -202,6 +283,17 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
                         <span className="mt-1 block break-words text-xs leading-snug text-[var(--color-muted)]">
                           {guestNames || recipient.email}
                         </span>
+                        <span className="mt-2 flex flex-wrap gap-1.5">
+                          {summaryChips.map((chip) => (
+                            <Chip
+                              className="!w-auto !px-2 !py-1 text-[0.65rem]"
+                              icon={chip.icon}
+                              key={chip.key}
+                              strong={chip.strong}
+                              value={chip.value}
+                            />
+                          ))}
+                        </span>
                       </span>
                     </label>
                   );
@@ -216,6 +308,23 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
             )}
           </div>
         </div>
+
+        {selectedRecipients.length > 0 && (
+          <div className="flex flex-wrap gap-2" aria-label="Destinatarios seleccionados">
+            {selectedRecipients.map((recipient) => (
+              <button
+                aria-label={`Quitar destinatario ${recipient.name}`}
+                className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-[var(--color-border-strong)] bg-[var(--color-accent)] px-3 py-1.5 text-sm font-medium text-white shadow-[var(--shadow-button)] transition hover:bg-[var(--color-accent)]/75 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-dark)]/35"
+                key={recipient.id}
+                onClick={() => toggleRecipient(recipient.id)}
+                type="button"
+              >
+                <span className="truncate">{recipient.name}</span>
+                <X aria-hidden="true" className="shrink-0" size={14} strokeWidth={2.2} />
+              </button>
+            ))}
+          </div>
+        )}
 
         <div>
           <Label>Asunto</Label>

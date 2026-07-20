@@ -3,6 +3,7 @@ import {
   Bell,
   ChartColumn,
   ClipboardCheck,
+  Mail,
   ListTodo,
   ReceiptText,
 } from "lucide-react";
@@ -44,6 +45,12 @@ export const adminModules = [
     path: "notifications",
     icon: Bell,
     load: () => import("../pages/AdminNotifications"),
+  },
+  {
+    id: "emails",
+    path: "emails",
+    icon: Mail,
+    load: () => import("../pages/AdminEmails"),
   },
   {
     id: "tasks",

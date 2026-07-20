@@ -618,6 +618,19 @@ const defaultAdminContent = {
       warningEyebrow: "Aviso",
     },
   },
+  emails: {
+    header: {
+      eyebrow: "Panel privado",
+      title: "Emails",
+      text: "Redacta y envía comunicaciones privadas a los invitados.",
+    },
+    dialogs: {
+      loadError: "No se pudieron cargar los invitados.",
+      problemTitle: "Ha ocurrido un problema",
+      sendError: "No se ha podido enviar el email. Inténtalo de nuevo en unos minutos.",
+      sentTitle: "Email enviado",
+    },
+  },
   tasks: {
     header: {
       eyebrow: "Panel privado",

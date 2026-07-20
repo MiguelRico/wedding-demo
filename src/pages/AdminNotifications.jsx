@@ -19,7 +19,6 @@ import {
   NotificationForm,
   NotificationTableActions,
   NotificationTotalsPanel,
-  GuestEmailCard,
 } from "../components/admin/notifications";
 import DeleteDialog from "../components/ui/DeleteDialog";
 import StatusDialog from "../components/ui/StatusDialog";
@@ -38,7 +37,6 @@ import {
 import {
   buildNotificationStats,
   persistNotifications,
-  sendGuestEmail,
   updateNotificationRead,
 } from "../services/notificationsService";
 import useIsMobileView from "../hooks/useIsMobileView";
@@ -82,7 +80,6 @@ export default function AdminNotifications() {
     type: "success",
   });
   const [saving, setSaving] = useState(false);
-  const [sendingEmail, setSendingEmail] = useState(false);
   const pendingChanges = getAdminNotificationChangesSummary();
   const hasPendingChanges = pendingChanges.length > 0;
   const notificationStats = useMemo(
@@ -254,36 +251,6 @@ export default function AdminNotifications() {
     showPendingPopup();
   };
 
-  const handleSendGuestEmail = async (email) => {
-    if (sendingEmail) return false;
-
-    setSendingEmail(true);
-    try {
-      const result = await sendGuestEmail({
-        ...email,
-        password: ADMIN_PASSWORD,
-      });
-      setStatusPopup({
-        message: `El email se ha enviado a ${result.sent || email.recipients.length} destinatarios.`,
-        open: true,
-        title: "Email enviado",
-        type: "success",
-      });
-      return true;
-    } catch (error) {
-      console.error(error);
-      setStatusPopup({
-        message: "No se ha podido enviar el email. Inténtalo de nuevo en unos minutos.",
-        open: true,
-        title: adminContent.notifications.dialogs.problemTitle,
-        type: "error",
-      });
-      return false;
-    } finally {
-      setSendingEmail(false);
-    }
-  };
-
   const handleDiscard = () => {
     const nextNotifications = discardAdminNotificationChanges();
     syncNotifications(nextNotifications);
@@ -355,15 +322,6 @@ export default function AdminNotifications() {
         </CinematicStaggeredRevealItem>
 
         <CinematicStaggeredRevealItem index={3} isVisible={notificationsInView}>
-          <GuestEmailCard
-            confirmations={state.confirmations}
-            loading={state.loading}
-            onSend={handleSendGuestEmail}
-            sending={sendingEmail}
-          />
-        </CinematicStaggeredRevealItem>
-
-        <CinematicStaggeredRevealItem index={4} isVisible={notificationsInView}>
           <AdminPendingChangesActions
             changes={pendingChanges}
             discardLabel={adminContent.notifications.actions.discardChanges}
@@ -379,7 +337,7 @@ export default function AdminNotifications() {
           />
         </CinematicStaggeredRevealItem>
 
-        <CinematicStaggeredRevealItem index={5} isVisible={notificationsInView}>
+        <CinematicStaggeredRevealItem index={4} isVisible={notificationsInView}>
           <AdminTableSection
             className="pt-0 mt-4"
             actions={
