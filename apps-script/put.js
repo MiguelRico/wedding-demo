@@ -7,9 +7,60 @@ function routePut(data) {
   if (entity === "providers") return saveProviders(data);
   if (entity === "notifications") return saveNotifications(data);
   if (entity === "tasks") return saveTasks(data);
+  if (entity === "tablePlan") return saveTablePlan(data);
   if (entity === "notificationRead") return updateNotificationRead(data);
 
   throw new Error("Resource not supported");
+}
+
+function saveTablePlan(data) {
+  requireAdmin(data);
+
+  const tables = Array.isArray(data.tables) ? data.tables : [];
+  const confirmations = Array.isArray(data.confirmations)
+    ? data.confirmations
+    : [];
+
+  tables.forEach((table) => {
+    if (!String(table.name || "").trim()) {
+      throw new Error("Cada mesa debe tener nombre");
+    }
+  });
+  confirmations.forEach((confirmation) => {
+    if (!String(confirmation.confirmationId || confirmation.id || "").trim()) {
+      throw new Error("Cada confirmación debe tener identificador");
+    }
+  });
+
+  const snapshots = [
+    [getTablesSheet(), TABLES_HEADERS],
+    [getSeatsSheet(), SEATS_HEADERS],
+    [getTableAssignmentsSheet(), TABLE_ASSIGNMENTS_HEADERS],
+    [getConfirmationsSheet(), CONFIRMATIONS_HEADERS],
+    [getSheet(), GUESTS_HEADERS],
+  ].map(([sheet, headers]) => ({
+    headers,
+    rows: sheet.getDataRange().getValues().slice(1),
+    sheet,
+  }));
+
+  try {
+    saveTables({ ...data, tables });
+    confirmations.forEach((confirmation) =>
+      saveConfirmation({ ...confirmation, entity: "confirmations", password: data.password }),
+    );
+  } catch (error) {
+    snapshots.forEach(({ headers, rows, sheet }) =>
+      replaceSheetData(sheet, headers, rows),
+    );
+    throw error;
+  }
+
+  return jsonResponse({
+    confirmations: confirmations.length,
+    success: true,
+    tables: tables.length,
+  });
 }
 
 function saveConfirmation(data) {

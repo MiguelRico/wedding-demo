@@ -1,12 +1,14 @@
 import {
   deleteAdminConfirmation,
   findAllConfirmations,
+  saveAdminConfirmation,
+} from "../gateways/adminGateway";
+import {
   findConfirmationByEmail,
   findConfirmationById,
   findConfirmationByPhone,
-  saveAdminConfirmation,
   savePublicConfirmation,
-} from "../gateways/appScriptGateway";
+} from "../gateways/publicRsvpGateway";
 
 export const confirmationRepository = {
   deleteAdmin: deleteAdminConfirmation,

@@ -249,6 +249,24 @@ export const saveAdminTables = async ({ password, tables }) => {
   };
 };
 
+export const saveAdminTablePlan = async ({
+  confirmations,
+  password,
+  tables,
+}) => {
+  const response = await requestAdminApi({
+    confirmations,
+    entity: "tablePlan",
+    method: "PUT",
+    password,
+    tables,
+  });
+
+  assertAdminMutationResponse(response);
+
+  return { confirmations, success: true, tables };
+};
+
 export const deleteAdminConfirmation = async ({ confirmationId, password }) => {
   const response = await requestAdminApi({
     entity: "confirmations",

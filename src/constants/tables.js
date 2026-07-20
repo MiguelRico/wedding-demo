@@ -1,4 +1,3 @@
-import { storageKeys } from "../config/storageKeys";
 import { tableContent } from "./tableContent";
 
 export const TABLE_SHAPES = {
@@ -20,7 +19,6 @@ export const TABLE_SHAPE_OPTIONS = [
 ];
 
 export const DEFAULT_TABLE_SHAPE = TABLE_SHAPES.rectangular;
-export const ADMIN_TABLES_STORAGE_KEY = storageKeys.adminTables;
 
 export const TABLE_GROUP_OPTIONS = [
   {

@@ -37,14 +37,13 @@ import {
   getGuestsUnassignedBySeatReduction,
   getPendingGuests,
   getPendingGuestRowKey,
-  persistAdminTables,
+  persistAdminTablePlan,
   unassignGuestFromSeatLocal,
   unassignGuestsOutsideTableSize,
   upsertManualTable,
   getTableKey,
 } from "../services/tablesService";
 import { validateTableForm } from "../validators/tableValidators";
-import { confirmationRepository } from "../repositories/confirmationRepository";
 import {
   loadAdminDataOnce,
   markAdminDataSaved,
@@ -470,17 +469,11 @@ export default function AdminTables() {
     try {
       spinner.show(adminContent.tables.spinner.save);
 
-      await persistAdminTables({
+      await persistAdminTablePlan({
+        confirmations: changedConfirmations,
         password: ADMIN_PASSWORD,
         tables: manualTables,
       });
-
-      for (const group of changedConfirmations) {
-        await confirmationRepository.saveAdmin({
-          confirmation: group,
-          password: ADMIN_PASSWORD,
-        });
-      }
 
       setAdminTables(manualTables);
       setAdminConfirmations(state.confirmations);

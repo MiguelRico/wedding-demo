@@ -31,9 +31,11 @@ const emptySnapshot = {
 
 const store = { ...emptySnapshot };
 const subscribers = new Set();
+let snapshotCache = null;
 
 const notifyAdminDataChange = () => {
-  const snapshot = getAdminDataSnapshot();
+  snapshotCache = createAdminDataSnapshot();
+  const snapshot = snapshotCache;
 
   subscribers.forEach((subscriber) => {
     try {
@@ -149,7 +151,7 @@ export const loadAdminDataOnce = async ({ password = ADMIN_PASSWORD } = {}) => {
   return store.loadingPromise;
 };
 
-export const getAdminDataSnapshot = () => ({
+const createAdminDataSnapshot = () => ({
   confirmations: cloneJson(store.confirmations),
   notifications: cloneJson(store.notifications),
   providers: cloneJson(store.providers),
@@ -161,6 +163,14 @@ export const getAdminDataSnapshot = () => ({
   tables: cloneJson(store.tables),
   tasks: cloneJson(store.tasks),
 });
+
+export const getAdminDataSnapshot = () => {
+  if (!snapshotCache) {
+    snapshotCache = createAdminDataSnapshot();
+  }
+
+  return snapshotCache;
+};
 
 export const hasAdminPendingChanges = () =>
   hasJsonChanged(store.confirmations, store.savedConfirmations) ||

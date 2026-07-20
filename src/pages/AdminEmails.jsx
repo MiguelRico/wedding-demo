@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 
-import { GuestEmailCard } from "../components/admin/notifications";
+import { GuestEmailComposer } from "../components/admin/emails";
 import { AdminPage } from "../components/admin/common";
 import CinematicStaggeredRevealItem from "../components/cinematic/CinematicStaggeredRevealItem";
 import StatusDialog from "../components/ui/StatusDialog";
 import { ADMIN_PASSWORD } from "../constants/admin";
 import { adminContent } from "../constants/adminContent";
 import { loadAdminDataOnce } from "../services/adminDataStore";
-import { sendGuestEmail } from "../services/notificationsService";
+import { sendGuestEmail } from "../services/emailsService";
+import useAdminDataSnapshot from "../hooks/useAdminDataSnapshot";
 import { isAdminSessionAuthenticated } from "../utils/adminSession";
 
 export default function AdminEmails() {
   const isAuthenticated = isAdminSessionAuthenticated();
-  const [confirmations, setConfirmations] = useState([]);
+  const { confirmations } = useAdminDataSnapshot();
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [status, setStatus] = useState({ message: "", open: false, title: "", type: "success" });
@@ -22,7 +23,6 @@ export default function AdminEmails() {
     if (!isAuthenticated) return;
 
     loadAdminDataOnce({ password: ADMIN_PASSWORD })
-      .then((snapshot) => setConfirmations(snapshot.confirmations))
       .catch((error) => {
         console.error(error);
         setStatus({
@@ -74,7 +74,7 @@ export default function AdminEmails() {
         {({ isVisible }) => (
           <>
         <CinematicStaggeredRevealItem index={2} isVisible={isVisible}>
-          <GuestEmailCard
+          <GuestEmailComposer
             confirmations={confirmations}
             loading={loading}
             onSend={handleSend}

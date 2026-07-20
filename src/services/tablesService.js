@@ -1,8 +1,6 @@
-import { ADMIN_TABLES_STORAGE_KEY } from "../constants/tables";
 import { adminContent } from "../constants/adminContent";
 import { rsvpContent } from "../constants/rsvpContent";
 import { Confirmation, Guest, Table } from "../models";
-import { confirmationRepository } from "../repositories/confirmationRepository";
 import { tableRepository } from "../repositories/tableRepository";
 import { normalizeAdminConfirmations } from "../utils/rsvpGroups";
 import {
@@ -10,10 +8,6 @@ import {
   validateTableForm,
 } from "../validators/tableValidators";
 import { getStableJson, hasJsonChanged } from "../utils/objectSnapshot";
-import {
-  getLocalStorageValue,
-  setLocalStorageValue,
-} from "../utils/browserStorage";
 
 export { getTableKey, validateTableForm };
 export {
@@ -27,54 +21,26 @@ export {
   unassignGuestFromSeat,
   unassignGuestFromSeatLocal,
 } from "./tableAssignmentService";
-export const loadAdminTableConfirmations = async ({ password } = {}) => {
-  const response = await confirmationRepository.findAll({
+export const persistAdminTablePlan = async ({
+  confirmations,
+  password,
+  tables,
+}) => {
+  const normalizedTables = Table.normalizeList(tables).map((table) => ({
+    id: table.id || table.tableId,
+    tableId: table.tableId || table.id,
+    name: table.name,
+    group: table.group,
+    tag: table.tag || table.group,
+    shape: table.shape,
+    seatCount: table.seats.length,
+    notes: table.notes,
+  }));
+
+  await tableRepository.savePlan({
+    confirmations: normalizeAdminConfirmations(confirmations),
     password,
-  });
-
-  return normalizeAdminConfirmations(response);
-};
-
-export const loadAdminTables = async ({ password } = {}) => {
-  const response = await tableRepository.findAll({ password });
-
-  if (response?.success === false) {
-    throw new Error(response.error || adminContent.tables.errors.load);
-  }
-
-  return Table.normalizeList(response?.tables || []);
-};
-
-export const readStoredTables = () => {
-  try {
-    return Table.normalizeList(
-      JSON.parse(getLocalStorageValue(ADMIN_TABLES_STORAGE_KEY) || "[]"),
-    );
-  } catch {
-    return [];
-  }
-};
-
-export const saveStoredTables = (tables) => {
-  setLocalStorageValue(
-    ADMIN_TABLES_STORAGE_KEY,
-    JSON.stringify(Table.normalizeList(tables)),
-  );
-};
-
-export const persistAdminTables = async ({ password, tables }) => {
-  await tableRepository.saveAdmin({
-    password,
-    tables: Table.normalizeList(tables).map((table) => ({
-      id: table.id || table.tableId,
-      tableId: table.tableId || table.id,
-      name: table.name,
-      group: table.group,
-      tag: table.tag || table.group,
-      shape: table.shape,
-      seatCount: table.seats.length,
-      notes: table.notes,
-    })),
+    tables: normalizedTables,
   });
 };
 

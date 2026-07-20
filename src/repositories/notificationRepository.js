@@ -2,7 +2,7 @@ import {
   findAllNotifications,
   saveAdminNotifications,
   updateAdminNotificationRead,
-} from "../gateways/appScriptGateway";
+} from "../gateways/adminGateway";
 
 export const notificationRepository = {
   findAll: findAllNotifications,

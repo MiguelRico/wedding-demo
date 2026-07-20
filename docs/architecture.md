@@ -57,6 +57,12 @@ Las modificaciones deben realizarse siempre a través de sus funciones `set`,
 los suscriptores. Para actualizar datos desde el servidor usa
 `refreshAdminData`. Por seguridad rechaza la operación si hay cambios locales
 pendientes, salvo que se solicite expresamente `discardPendingChanges: true`.
+Los componentes nuevos que necesiten leer la instantánea completa deben usar
+`useAdminDataSnapshot`, basado en `useSyncExternalStore`, en lugar de copiar
+esa instantánea a estado local.
+
+Las modificaciones que afectan a mesas y confirmaciones se envían como un
+único `tablePlan`; Apps Script las procesa bajo el mismo bloqueo de escritura.
 
 ## Contratos y despliegue
 
@@ -73,4 +79,5 @@ compatibilidad con versiones anteriores.
 - Conserva los componentes de UI sin acceso directo a repositorios, gateways o
   variables de entorno.
 - Antes de integrar cambios, ejecuta `npm run lint`, `npm run build` y
-  `git diff --check`.
+  `npm test` y `git diff --check`.
+- GitHub Actions ejecuta esas comprobaciones en cada `push` y `pull request`.

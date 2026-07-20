@@ -1,5 +1,6 @@
 import { getRequiredRsvpApiUrl } from "@/config/environment";
 import { ADMIN_API_CONTRACT_VERSION } from "@/contracts/adminApiContracts";
+import { AppError } from "@/utils/appError";
 
 const inFlightJsonpRequests = new Map();
 const WRITE_VERIFY_ATTEMPTS = 5;
@@ -35,8 +36,9 @@ export const requestJsonp = (params) => {
     const timeoutId = window.setTimeout(() => {
       cleanup();
       reject(
-        new Error(
+        new AppError(
           `No se pudo conectar con Google Apps Script. URL: ${url.toString()}`,
+          { code: "RSVP_TIMEOUT" },
         ),
       );
     }, 15000);
@@ -49,7 +51,7 @@ export const requestJsonp = (params) => {
 
     const rejectWithRemoteError = (message) => {
       cleanup();
-      reject(new Error(message));
+      reject(new AppError(message, { code: "RSVP_REMOTE_ERROR" }));
     };
 
     Object.entries(requestParams).forEach(([key, value]) => {
@@ -119,11 +121,14 @@ export const verifyWrite = async ({ errorMessage, isVerified, read }) => {
     lastResponse = await read();
 
     if (lastResponse?.success === false) {
-      throw new Error(lastResponse.error || errorMessage);
+      throw new AppError(lastResponse.error || errorMessage, {
+        code: "RSVP_WRITE_REJECTED",
+        details: lastResponse,
+      });
     }
 
     if (isVerified(lastResponse)) return lastResponse;
   }
 
-  throw new Error(errorMessage);
+  throw new AppError(errorMessage, { code: "RSVP_WRITE_UNVERIFIED" });
 };

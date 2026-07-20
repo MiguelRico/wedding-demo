@@ -13,6 +13,7 @@ const allowedRequests = new Set([
   "PUT:providers",
   "PUT:notifications",
   "PUT:tasks",
+  "PUT:tablePlan",
   "PUT:notificationRead",
   "DELETE:confirmations",
 ]);

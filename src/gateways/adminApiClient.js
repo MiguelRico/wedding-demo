@@ -1,3 +1,6 @@
+import { ADMIN_API_CONTRACT_VERSION } from "../contracts/adminApiContracts";
+import { AppError } from "../utils/appError";
+
 async function request(path, body) {
   const response = await fetch(path, {
     body: body === undefined ? undefined : JSON.stringify(body),
@@ -11,7 +14,10 @@ async function request(path, body) {
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new Error(data.error || "No se pudo validar la sesion de administracion.");
+    throw new AppError(
+      data.error || "No se pudo validar la sesión de administración.",
+      { code: `ADMIN_HTTP_${response.status}`, details: data },
+    );
   }
 
   return data;
@@ -34,4 +40,3 @@ export function requestAdminApi(requestPayload) {
 
   return request("/api/admin/proxy", { request: adminRequest });
 }
-import { ADMIN_API_CONTRACT_VERSION } from "../contracts/adminApiContracts";

@@ -12,7 +12,6 @@ export const storageKeys = {
   },
   adminMemoryNoticeDismissed: buildKey("admin:memory-notice-dismissed"),
   adminSession: buildKey("admin:auth"),
-  adminTables: buildKey("admin:tables"),
 };
 
 export const storageEvents = {

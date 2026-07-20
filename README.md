@@ -82,6 +82,7 @@ Consulta también [la guía de arquitectura](docs/architecture.md) antes de crea
 ```bash
 npm run dev
 npm run lint
+npm test
 npm run build
 npm run preview
 ```

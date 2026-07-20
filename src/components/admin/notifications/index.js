@@ -5,4 +5,3 @@ export { default as NotificationForm } from "./NotificationForm";
 export { default as NotificationTableActions } from "./NotificationTableActions";
 export { default as NotificationsAccessButton } from "./NotificationsAccessButton";
 export { default as NotificationTotalsPanel } from "./NotificationTotalsPanel";
-export { default as GuestEmailCard } from "./GuestEmailCard";

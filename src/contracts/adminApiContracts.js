@@ -28,6 +28,18 @@ export function validateAdminRequest(request) {
     if (!Array.isArray(request[entity])) {
       return `El campo ${entity} debe ser una lista.`;
     }
+    if (!request[entity].every(isRecord)) {
+      return `La lista ${entity} contiene elementos no válidos.`;
+    }
+  }
+
+  if (method === "PUT" && entity === "tablePlan") {
+    if (!Array.isArray(request.tables) || !Array.isArray(request.confirmations)) {
+      return "El plan de mesas requiere listas de mesas y confirmaciones.";
+    }
+    if (!request.tables.every(isRecord) || !request.confirmations.every(isRecord)) {
+      return "El plan de mesas contiene elementos no válidos.";
+    }
   }
 
   if (method === "POST" && entity === "guestEmail") {

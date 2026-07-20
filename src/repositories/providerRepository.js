@@ -1,7 +1,7 @@
 import {
   findAllProviders,
   saveAdminProviders,
-} from "../gateways/appScriptGateway";
+} from "../gateways/adminGateway";
 
 export const providerRepository = {
   findAll: findAllProviders,

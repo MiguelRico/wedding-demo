@@ -1,0 +1,16 @@
+export {
+  deleteAdminConfirmation,
+  findAllConfirmations,
+  findAllNotifications,
+  findAllProviders,
+  findAllTables,
+  findAllTasks,
+  saveAdminConfirmation,
+  saveAdminNotifications,
+  saveAdminProviders,
+  saveAdminTablePlan,
+  saveAdminTables,
+  saveAdminTasks,
+  sendGuestEmail,
+  updateAdminNotificationRead,
+} from "./appScriptGateway";
