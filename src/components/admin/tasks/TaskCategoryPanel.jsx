@@ -6,7 +6,6 @@ import {
   Flag,
   Siren,
 } from "lucide-react";
-import { useState } from "react";
 
 import { adminContent } from "../../../constants/adminContent";
 import TaskCards from "./TaskCards";
@@ -18,9 +17,10 @@ export default function TaskCategoryPanel({
   onDelete,
   onEdit,
   onToggleStatus,
+  onToggle,
+  open,
   tasks,
 }) {
-  const [open, setOpen] = useState(false);
   const reduceMotion = useReducedMotion();
   const summary = getCategorySummary(tasks);
   const panelHidden = reduceMotion
@@ -34,7 +34,7 @@ export default function TaskCategoryPanel({
     <section className="rounded-[1rem] border border-[var(--color-border)] bg-white/35 p-2">
       <button
         className="grid w-full grid-cols-[minmax(0,1fr)_8.75rem_auto] items-center gap-2 text-left"
-        onClick={() => setOpen((current) => !current)}
+        onClick={onToggle}
         type="button"
       >
         <span className="min-w-0 px-1">

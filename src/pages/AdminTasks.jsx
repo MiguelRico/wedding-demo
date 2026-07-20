@@ -65,6 +65,7 @@ export default function AdminTasks() {
   const [priorityFilter, setPriorityFilter] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
+  const [openCategories, setOpenCategories] = useState({});
   const [editingTask, setEditingTask] = useState(null);
   const [editingTaskSnapshot, setEditingTaskSnapshot] = useState("");
   const [deleteTarget, setDeleteTarget] = useState(null);
@@ -107,6 +108,25 @@ export default function AdminTasks() {
           text: adminContent.tasks.list.emptyText,
           title: adminContent.tasks.list.emptyTitle,
         };
+  const allCategoriesOpen = groupedTasks.every(
+    ({ category }) => openCategories[category.value],
+  );
+
+  const handleToggleCategory = (categoryValue) => {
+    setOpenCategories((current) => ({
+      ...current,
+      [categoryValue]: !current[categoryValue],
+    }));
+  };
+  const handleToggleAllCategories = () => {
+    const nextOpen = !allCategoriesOpen;
+
+    setOpenCategories(
+      Object.fromEntries(
+        TASK_CATEGORIES.map((category) => [category.value, nextOpen]),
+      ),
+    );
+  };
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -305,8 +325,10 @@ export default function AdminTasks() {
             className="mt-4"
             actions={
               <TaskTableActions
+                allCategoriesOpen={allCategoriesOpen}
                 loading={loading}
                 onCreate={handleCreateTask}
+                onToggleCategories={handleToggleAllCategories}
                 showText
               />
             }
@@ -314,9 +336,11 @@ export default function AdminTasks() {
             eyebrow={adminContent.tasks.list.eyebrow}
             headerActions={
               <TaskTableActions
+                allCategoriesOpen={allCategoriesOpen}
                 compact
                 loading={loading}
                 onCreate={handleCreateTask}
+                onToggleCategories={handleToggleAllCategories}
                 showText={false}
               />
             }
@@ -348,7 +372,7 @@ export default function AdminTasks() {
             }}
             title={adminContent.tasks.list.title}
           >
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-3">
               {groupedTasks.map(({ category, tasks: categoryTasks }) => (
                 <TaskCategoryPanel
                   category={category}
@@ -357,7 +381,9 @@ export default function AdminTasks() {
                   key={category.value}
                   onDelete={setDeleteTarget}
                   onEdit={handleEditTask}
+                  onToggle={() => handleToggleCategory(category.value)}
                   onToggleStatus={handleToggleStatus}
+                  open={Boolean(openCategories[category.value])}
                   tasks={categoryTasks}
                 />
               ))}

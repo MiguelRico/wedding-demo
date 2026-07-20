@@ -680,11 +680,13 @@ const defaultAdminContent = {
     },
     actions: {
       add: "Agregar tarea",
+      collapseAll: "Ocultar categorías",
       delete: "Eliminar",
       discardChanges: "Deshacer cambios",
       edit: "Editar",
       save: "Guardar tarea",
       saveChanges: "Guardar cambios",
+      expandAll: "Desplegar categorías",
       toggleComplete: "Cambiar estado",
     },
     dialogs: {
