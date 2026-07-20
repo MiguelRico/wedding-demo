@@ -441,6 +441,55 @@ function isAdminPayload(data) {
   return Boolean(password) && password === getAdminPassword();
 }
 
+function requireAdmin(data) {
+  if (
+    !normalizeAdminPassword(data.password) ||
+    normalizeAdminPassword(data.password) !== getAdminPassword()
+  ) {
+    throw new Error("Unauthorized");
+  }
+}
+
+function withWriteLock(callback) {
+  const lock = LockService.getScriptLock();
+
+  if (!lock.tryLock(30000)) {
+    throw new Error("Another update is in progress. Please try again.");
+  }
+
+  try {
+    return callback();
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function replaceSheetData(sheet, headers, rows) {
+  const lastRow = sheet.getLastRow();
+  const previousCount = Math.max(lastRow - 1, 0);
+
+  if (rows.length) {
+    sheet.getRange(2, 1, rows.length, headers.length).setValues(rows);
+  }
+
+  if (previousCount > rows.length) {
+    sheet.deleteRows(rows.length + 2, previousCount - rows.length);
+  }
+}
+
+function getSheetRowsById(sheet, idColumn) {
+  const rows = sheet.getDataRange().getValues();
+  const byId = {};
+
+  for (let index = 1; index < rows.length; index++) {
+    const id = String(rows[index][idColumn] || "").trim();
+
+    if (id) byId[id] = rows[index];
+  }
+
+  return byId;
+}
+
 function normalizeAllergies(allergies) {
   if (!Array.isArray(allergies)) return "";
 
@@ -912,6 +961,21 @@ function deleteAssignmentsByConfirmationId(sheet, confirmationId) {
 
 function appendAssignmentRowsForGuests(sheet, confirmation, guests) {
   const context = buildAssignmentContext();
+  const rows = buildAssignmentRowsForGuests(confirmation, guests, context);
+
+  if (rows.length) {
+    sheet
+      .getRange(
+        sheet.getLastRow() + 1,
+        1,
+        rows.length,
+        TABLE_ASSIGNMENTS_HEADERS.length,
+      )
+      .setValues(rows);
+  }
+}
+
+function buildAssignmentRowsForGuests(confirmation, guests, context) {
   const rows = [];
   const now = getCurrentTimestamp();
 
@@ -941,16 +1005,7 @@ function appendAssignmentRowsForGuests(sheet, confirmation, guests) {
     ]);
   });
 
-  if (rows.length) {
-    sheet
-      .getRange(
-        sheet.getLastRow() + 1,
-        1,
-        rows.length,
-        TABLE_ASSIGNMENTS_HEADERS.length,
-      )
-      .setValues(rows);
-  }
+  return rows;
 }
 
 function cleanAssignmentsOutsideValidSeats(sheet, validTableIds, validSeatIds) {

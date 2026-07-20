@@ -2,13 +2,15 @@
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
-    const method = getRequestMethod(data);
+    return withWriteLock(() => {
+      const method = getRequestMethod(data);
 
-    if (method === "POST") return routePost(data);
-    if (method === "PUT") return routePut(data);
-    if (method === "DELETE") return routeDelete(data);
+      if (method === "POST") return routePost(data);
+      if (method === "PUT") return routePut(data);
+      if (method === "DELETE") return routeDelete(data);
 
-    throw new Error("Method not supported");
+      throw new Error("Method not supported");
+    });
   } catch (err) {
     return jsonResponse({
       success: false,

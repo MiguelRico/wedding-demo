@@ -10,9 +10,7 @@ function routeDelete(data) {
 }
 
 function deleteConfirmation(data) {
-  if (!normalizeAdminPassword(data.password) || normalizeAdminPassword(data.password) !== getAdminPassword()) {
-    throw new Error("Unauthorized");
-  }
+  requireAdmin(data);
 
   const confirmationsSheet = getConfirmationsSheet();
   const guestsSheet = getSheet();
@@ -23,9 +21,33 @@ function deleteConfirmation(data) {
     throw new Error("Missing confirmationId");
   }
 
-  deleteConfirmationRow(confirmationsSheet, { confirmationId });
-  deleteGuestRows(guestsSheet, { confirmationId });
-  deleteAssignmentsByConfirmationId(assignmentsSheet, confirmationId);
+  const normalizedConfirmationId = confirmationId.toLowerCase();
+  const filterRows = (sheet, column) =>
+    sheet
+      .getDataRange()
+      .getValues()
+      .slice(1)
+      .filter(
+        (row) =>
+          String(row[column] || "").trim().toLowerCase() !==
+          normalizedConfirmationId,
+      );
+
+  replaceSheetData(
+    confirmationsSheet,
+    CONFIRMATIONS_HEADERS,
+    filterRows(confirmationsSheet, CONFIRMATIONS_COLUMNS.confirmationId),
+  );
+  replaceSheetData(
+    guestsSheet,
+    GUESTS_HEADERS,
+    filterRows(guestsSheet, GUESTS_COLUMNS.confirmationId),
+  );
+  replaceSheetData(
+    assignmentsSheet,
+    TABLE_ASSIGNMENTS_HEADERS,
+    filterRows(assignmentsSheet, TABLE_ASSIGNMENTS_COLUMNS.confirmationId),
+  );
 
   return jsonResponse({
     success: true,

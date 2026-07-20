@@ -7,10 +7,6 @@ import {
 import { requestAdminApi } from "./adminApiClient";
 import {
   getConfirmationComparable,
-  getNotificationsComparable,
-  getProvidersComparable,
-  getTablesComparable,
-  getTasksComparable,
   sameFingerprint,
 } from "./appScriptFingerprints";
 import {
@@ -192,7 +188,6 @@ export const saveAdminConfirmation = async ({
   password,
 }) => {
   const confirmation = encodeConfirmationPayload(confirmationInput);
-  const expectedConfirmation = getConfirmationComparable(confirmationInput);
   const payload = {
     ...confirmation,
     entity: "confirmations",
@@ -200,58 +195,30 @@ export const saveAdminConfirmation = async ({
     password,
   };
 
-  await requestAdminApi(payload);
+  const response = await requestAdminApi(payload);
 
-  const verifiedResponse = await verifyWrite({
-    errorMessage: "No se pudo verificar el guardado de la confirmacion.",
-    isVerified: (response) =>
-      response?.found !== false &&
-      sameFingerprint(
-        getConfirmationComparable(response),
-        expectedConfirmation,
-      ),
-    read: () => {
-      const normalizedConfirmation = Confirmation.normalize(confirmationInput);
-
-      if (normalizedConfirmation.confirmationId || normalizedConfirmation.id) {
-        return findConfirmationById(
-          normalizedConfirmation.confirmationId || normalizedConfirmation.id,
-        );
-      }
-
-      if (normalizedConfirmation.email) {
-        return findConfirmationByEmail(normalizedConfirmation.email);
-      }
-
-      return findConfirmationByPhone(normalizedConfirmation.phone);
-    },
-  });
+  if (response?.success === false) {
+    throw new Error(response.error || "No se pudo guardar la confirmacion.");
+  }
 
   return {
     success: true,
     confirmationId:
-      verifiedResponse?.confirmationId ||
+      response?.confirmationId ||
       responsePlaceholderConfirmationId(confirmationInput),
     confirmationName: Confirmation.normalize(confirmationInput).confirmationName,
   };
 };
 
 export const saveAdminTables = async ({ password, tables }) => {
-  const expectedTables = getTablesComparable(tables);
-
-  await requestAdminApi({
+  const response = await requestAdminApi({
     entity: "tables",
     method: "PUT",
     password,
     tables,
   });
 
-  await verifyWrite({
-    errorMessage: "No se pudo verificar el guardado de las mesas.",
-    isVerified: (response) =>
-      sameFingerprint(getTablesComparable(response?.tables || []), expectedTables),
-    read: () => findAllTables({ password }),
-  });
+  if (response?.success === false) throw new Error(response.error);
 
   return {
     success: true,
@@ -260,18 +227,14 @@ export const saveAdminTables = async ({ password, tables }) => {
 };
 
 export const deleteAdminConfirmation = async ({ confirmationId, password }) => {
-  await requestAdminApi({
+  const response = await requestAdminApi({
     entity: "confirmations",
     confirmationId,
     method: "DELETE",
     password,
   });
 
-  await verifyWrite({
-    errorMessage: "No se pudo verificar la eliminacion de la confirmacion.",
-    isVerified: (response) => response?.found === false,
-    read: () => findConfirmationById(confirmationId),
-  });
+  if (response?.success === false) throw new Error(response.error);
 
   return {
     success: true,
@@ -283,24 +246,14 @@ const responsePlaceholderConfirmationId = (confirmationInput) =>
   Confirmation.normalize(confirmationInput).confirmationId;
 
 export const saveAdminProviders = async ({ password, providers }) => {
-  const expectedProviders = getProvidersComparable(providers);
-
-  await requestAdminApi({
+  const response = await requestAdminApi({
     entity: "providers",
     method: "PUT",
     password,
     providers,
   });
 
-  await verifyWrite({
-    errorMessage: "No se pudo verificar el guardado de proveedores.",
-    isVerified: (response) =>
-      sameFingerprint(
-        getProvidersComparable(response?.providers || []),
-        expectedProviders,
-      ),
-    read: () => findAllProviders({ password }),
-  });
+  if (response?.success === false) throw new Error(response.error);
 
   return {
     success: true,
@@ -309,24 +262,14 @@ export const saveAdminProviders = async ({ password, providers }) => {
 };
 
 export const saveAdminNotifications = async ({ notifications, password }) => {
-  const expectedNotifications = getNotificationsComparable(notifications);
-
-  await requestAdminApi({
+  const response = await requestAdminApi({
     entity: "notifications",
     method: "PUT",
     notifications,
     password,
   });
 
-  await verifyWrite({
-    errorMessage: "No se pudo verificar el guardado de notificaciones.",
-    isVerified: (response) =>
-      sameFingerprint(
-        getNotificationsComparable(response?.notifications || response || []),
-        expectedNotifications,
-      ),
-    read: () => findAllNotifications({ password }),
-  });
+  if (response?.success === false) throw new Error(response.error);
 
   return {
     success: true,
@@ -335,21 +278,14 @@ export const saveAdminNotifications = async ({ notifications, password }) => {
 };
 
 export const saveAdminTasks = async ({ password, tasks }) => {
-  const expectedTasks = getTasksComparable(tasks);
-
-  await requestAdminApi({
+  const response = await requestAdminApi({
     entity: "tasks",
     method: "PUT",
     password,
     tasks,
   });
 
-  await verifyWrite({
-    errorMessage: "No se pudo verificar el guardado de tareas.",
-    isVerified: (response) =>
-      sameFingerprint(getTasksComparable(response?.tasks || []), expectedTasks),
-    read: () => findAllTasks({ password }),
-  });
+  if (response?.success === false) throw new Error(response.error);
 
   return {
     success: true,
