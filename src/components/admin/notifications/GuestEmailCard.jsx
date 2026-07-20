@@ -1,7 +1,7 @@
 import { Mail, Search, Send } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import { Card } from "../common";
+import { AdminFiltersPanel, Card } from "../common";
 import IconButton from "../../ui/IconButton";
 import { SkeletonBlock } from "../../ui/TableSectionSkeleton";
 import {
@@ -54,6 +54,19 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
 
     return matchesQuery && matchesSelection;
   });
+  const activeFilters = [
+    query.trim() && {
+      key: "query",
+      label: `Búsqueda: ${query.trim()}`,
+      onRemove: () => setQuery(""),
+    },
+    selectionFilter !== "all" && {
+      key: "selection",
+      label:
+        selectionFilter === "selected" ? "Seleccionados" : "Sin seleccionar",
+      onRemove: () => setSelectionFilter("all"),
+    },
+  ].filter(Boolean);
 
   const toggleRecipient = (id) => {
     setSelectedIds((current) =>
@@ -124,7 +137,12 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
             </span>
           </div>
 
-          <div className="mb-3 grid gap-3 sm:grid-cols-[minmax(0,1fr)_12rem]">
+          <AdminFiltersPanel
+            activeFilters={activeFilters}
+            className="mb-3"
+            fieldsClassName="grid gap-3 sm:grid-cols-[minmax(0,1fr)_12rem]"
+            title="Filtros"
+          >
             <div>
               <Label>Buscar invitado</Label>
               <div className="relative">
@@ -153,7 +171,7 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
                 <option value="unselected">Sin seleccionar</option>
               </select>
             </div>
-          </div>
+          </AdminFiltersPanel>
 
           <div className="max-h-52 overflow-y-auto rounded-2xl border border-[var(--color-border)] bg-white/45 p-2">
             {filteredRecipients.length ? (
@@ -246,9 +264,11 @@ function GuestEmailCardSkeleton() {
               <SkeletonBlock className="h-4 w-28 rounded-full" />
               <SkeletonBlock className="h-7 w-28 rounded-full" />
             </div>
-            <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_12rem]">
-              <SkeletonBlock className="h-11 rounded-2xl" />
-              <SkeletonBlock className="h-11 rounded-xl" />
+            <div className="rounded-[1rem] border border-[var(--color-border)] bg-white/35 p-2">
+              <div className="flex items-center justify-between gap-2">
+                <SkeletonBlock className="h-5 w-20 rounded-full" />
+                <SkeletonBlock className="h-[1.125rem] w-8 rounded-full" />
+              </div>
             </div>
             <div className="mt-3 grid gap-2 rounded-2xl border border-[var(--color-border)] bg-white/45 p-2 sm:grid-cols-2 xl:grid-cols-3">
               {Array.from({ length: 6 }).map((_, index) => (
