@@ -289,16 +289,36 @@ export const saveAdminPendingChanges = async ({
     );
   });
 
-  await Promise.all([
-    ...confirmationRequests,
-    notificationRepository.saveAdmin({
-      password,
-      notifications: store.notifications,
-    }),
-    tableRepository.saveAdmin({ password, tables: store.tables }),
-    providerRepository.saveAdmin({ password, providers: store.providers }),
-    taskRepository.saveAdmin({ password, tasks: store.tasks }),
-  ]);
+  const persistenceRequests = [...confirmationRequests];
+
+  if (hasJsonChanged(store.notifications, store.savedNotifications)) {
+    persistenceRequests.push(
+      notificationRepository.saveAdmin({
+        password,
+        notifications: store.notifications,
+      }),
+    );
+  }
+
+  if (hasJsonChanged(store.tables, store.savedTables)) {
+    persistenceRequests.push(
+      tableRepository.saveAdmin({ password, tables: store.tables }),
+    );
+  }
+
+  if (hasJsonChanged(store.providers, store.savedProviders)) {
+    persistenceRequests.push(
+      providerRepository.saveAdmin({ password, providers: store.providers }),
+    );
+  }
+
+  if (hasJsonChanged(store.tasks, store.savedTasks)) {
+    persistenceRequests.push(
+      taskRepository.saveAdmin({ password, tasks: store.tasks }),
+    );
+  }
+
+  await Promise.all(persistenceRequests);
 
   return markAdminDataSaved();
 };
