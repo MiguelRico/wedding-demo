@@ -8,12 +8,14 @@ Copia `.env.example` a `.env` y ajusta los valores del despliegue:
 
 ```env
 VITE_RSVP_API_URL=https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec
+RSVP_API_URL=https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec
 VITE_APP_STORAGE_PREFIX=wedding-template
 VITE_ENABLE_MENU_MODULE=false
 ```
 
 - La autenticacion del panel usa variables privadas del servidor; consulta las variables de despliegue mas abajo.
 - `VITE_RSVP_API_URL`: URL publicada de Google Apps Script.
+- `RSVP_API_URL`: misma URL, disponible solo en el servidor para el guardado público.
 - `VITE_APP_STORAGE_PREFIX`: prefijo para claves locales de navegador.
 - `VITE_ENABLE_MENU_MODULE`: activa o desactiva el modulo de menu.
 - `VITE_BYPASS_ADMIN_AUTH`: permite omitir el login exclusivamente en desarrollo local. Déjalo en `false` salvo que lo necesites.
@@ -48,6 +50,7 @@ Esta seccion prevalece sobre las notas resumidas anteriores.
 | Ambito | Propiedad | Objetivo |
 | --- | --- | --- |
 | Cliente / Vercel | `VITE_RSVP_API_URL` | URL publica `/exec` de Apps Script para el formulario RSVP. |
+| Servidor de Vercel | `RSVP_API_URL` | URL `/exec` de Apps Script usada por el proxy del formulario RSVP. |
 | Cliente / Vercel | `VITE_APP_STORAGE_PREFIX` | Prefijo del almacenamiento del navegador; por defecto `wedding-template`. |
 | Cliente / Vercel | `VITE_ENABLE_MENU_MODULE` | Activa o desactiva el modulo de menu. |
 | Solo desarrollo local | `VITE_BYPASS_ADMIN_AUTH` | Omite el login solo cuando Vite esta en modo desarrollo. Debe ser `false` o no existir fuera de local. |

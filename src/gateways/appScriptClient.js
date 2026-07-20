@@ -95,14 +95,25 @@ export const requestJsonp = (params) => {
 };
 
 export const sendToRsvpApi = async (payload) => {
-  await fetch(getRsvpApiUrl(), {
-    method: "POST",
-    mode: "no-cors",
+  const response = await fetch("/api/rsvp/proxy", {
     body: JSON.stringify({
       ...payload,
       contractVersion: ADMIN_API_CONTRACT_VERSION,
     }),
+    headers: { "Content-Type": "application/json" },
+    method: "POST",
   });
+
+  const result = await response.json().catch(() => ({}));
+
+  if (!response.ok || result?.success === false) {
+    throw new AppError(
+      result.error || "No se pudo guardar la confirmación.",
+      { code: `RSVP_HTTP_${response.status}`, details: result },
+    );
+  }
+
+  return result;
 };
 
 const wait = (milliseconds) =>

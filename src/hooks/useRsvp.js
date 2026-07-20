@@ -315,7 +315,7 @@ export default function useRsvp(spinner, { mode = "search" } = {}) {
         open: true,
         type: "error",
         title: rsvpContent.status.problemTitle,
-        message: rsvpContent.status.submitError,
+        message: error.message || rsvpContent.status.submitError,
       });
     } finally {
       hide();
