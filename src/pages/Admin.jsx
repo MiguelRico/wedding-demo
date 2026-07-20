@@ -100,7 +100,7 @@ export default function Admin() {
       {loading && <Spinner text={adminContent.auth.loading} />}
       <CinematicSection
         className="surface-soft admin-section"
-        innerClassName="max-w-md md:max-w-6xl py-6"
+        innerClassName="max-w-7xl py-6"
         reveal={false}
       >
         <div ref={adminRef}>

@@ -14,14 +14,23 @@ import {
 import { Guest } from "../../../models";
 import { GUEST_MENU_OPTIONS } from "../../../constants/rsvp";
 import { isMenuModuleEnabled } from "../../../config/features";
+import { adminContent } from "../../../constants/adminContent";
 import { getMenuIcon } from "../../../utils/rsvpSummaryChips";
 
 const FORM_ID = "guest-email-form";
 
 const getRecipientId = (confirmation, index) =>
-  confirmation.confirmationId || confirmation.id || `${confirmation.email}-${index}`;
+  confirmation.confirmationId ||
+  confirmation.id ||
+  `${confirmation.email}-${index}`;
 
-export default function GuestEmailCard({ confirmations = [], loading, onSend, sending }) {
+export default function GuestEmailCard({
+  confirmations = [],
+  loading,
+  onSend,
+  sending,
+}) {
+  const content = adminContent.emails.composer;
   const [selectedIds, setSelectedIds] = useState([]);
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
@@ -47,11 +56,12 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
     selectedIds.includes(recipient.id),
   );
   const filteredRecipients = recipients.filter((recipient) => {
-    const matchesQuery = `${recipient.name} ${recipient.email} ${recipient.guests
-      .map((guest, index) => Guest.getDisplayName(guest, index))
-      .join(" ")}`
-      .toLocaleLowerCase()
-      .includes(query.trim().toLocaleLowerCase());
+    const matchesQuery =
+      `${recipient.name} ${recipient.email} ${recipient.guests
+        .map((guest, index) => Guest.getDisplayName(guest, index))
+        .join(" ")}`
+        .toLocaleLowerCase()
+        .includes(query.trim().toLocaleLowerCase());
     const matchesMenu =
       menuFilter === "all" ||
       recipient.guests.some(
@@ -77,22 +87,22 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
   const activeFilters = [
     query.trim() && {
       key: "query",
-      label: `Búsqueda: ${query.trim()}`,
+      label: content.filters.activeQuery(query.trim()),
       onRemove: () => setQuery(""),
     },
     menuFilter !== "all" && {
       key: "menu",
-      label: `Menú: ${menuFilter}`,
+      label: content.filters.activeMenu(menuFilter),
       onRemove: () => setMenuFilter("all"),
     },
     allergiesFilter !== "all" && {
       key: "allergies",
-      label: allergiesFilter === "with" ? "Con alergias" : "Sin alergias",
+      label: content.filters.activeAllergies(allergiesFilter),
       onRemove: () => setAllergiesFilter("all"),
     },
     transportFilter !== "all" && {
       key: "transport",
-      label: transportFilter === "with" ? "Con transporte" : "Sin transporte",
+      label: content.filters.activeTransport(transportFilter),
       onRemove: () => setTransportFilter("all"),
     },
   ].filter(Boolean);
@@ -110,15 +120,15 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
     event.preventDefault();
 
     if (!selectedRecipients.length) {
-      setError("Selecciona al menos un invitado.");
+      setError(content.validation.recipients);
       return;
     }
     if (!subject.trim()) {
-      setError("Añade un asunto para el email.");
+      setError(content.validation.subject);
       return;
     }
     if (!message.trim()) {
-      setError("Escribe el mensaje que recibirán los invitados.");
+      setError(content.validation.message);
       return;
     }
 
@@ -140,7 +150,7 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
 
   return (
     <AdminTableSection
-      eyebrow="Comunicación"
+      eyebrow={content.eyebrow}
       headerActions={
         <IconButton
           className="h-10 w-10 !px-0"
@@ -148,20 +158,20 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
           form={FORM_ID}
           icon={<Send size={16} strokeWidth={1.8} />}
           keepTextOnAdminSubpages
-          label={sending ? "Enviando email…" : "Enviar email"}
+          label={sending ? content.actions.sending : content.actions.send}
           showText="always"
           tone="primary"
           type="submit"
         />
       }
-      title="Enviar email a invitados"
+      title={content.title}
     >
       <form className="grid gap-5" id={FORM_ID} onSubmit={handleSubmit}>
         <div>
           <div className="mb-3 flex items-center justify-between gap-3">
-            <Label>Destinatarios</Label>
+            <Label>{content.recipients.label}</Label>
             <span className="rounded-full bg-[var(--color-bg)] px-3 py-1 text-xs text-[var(--color-accent-dark)]">
-              {selectedRecipients.length} seleccionados
+              {content.recipients.selected(selectedRecipients.length)}
             </span>
           </div>
 
@@ -169,10 +179,10 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
             activeFilters={activeFilters}
             className="mb-3"
             fieldsClassName="grid gap-3 sm:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_11rem_11rem_11rem]"
-            title="Filtros"
+            title={content.filters.title}
           >
             <div>
-              <Label>Buscar invitado</Label>
+              <Label>{content.filters.searchLabel}</Label>
               <div className="relative">
                 <Search
                   aria-hidden="true"
@@ -182,20 +192,20 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
                 <input
                   className={`${inputClassName} py-2.5 pl-10 text-sm`}
                   onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Nombre, grupo o email"
+                  placeholder={content.filters.searchPlaceholder}
                   value={query}
                 />
               </div>
             </div>
             {isMenuModuleEnabled && (
               <div>
-                <Label>Menú</Label>
+                <Label>{content.filters.menuLabel}</Label>
                 <select
                   className={selectClassName}
                   onChange={(event) => setMenuFilter(event.target.value)}
                   value={menuFilter}
                 >
-                  <option value="all">Todos</option>
+                  <option value="all">{content.filters.all}</option>
                   {GUEST_MENU_OPTIONS.map((menu) => (
                     <option key={menu} value={menu}>
                       {menu}
@@ -205,27 +215,27 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
               </div>
             )}
             <div>
-              <Label>Alergias</Label>
+              <Label>{content.filters.allergiesLabel}</Label>
               <select
                 className={selectClassName}
                 onChange={(event) => setAllergiesFilter(event.target.value)}
                 value={allergiesFilter}
               >
-                <option value="all">Todos</option>
-                <option value="with">Con alergias</option>
-                <option value="without">Sin alergias</option>
+                <option value="all">{content.filters.all}</option>
+                <option value="with">{content.filters.withAllergies}</option>
+                <option value="without">{content.filters.withoutAllergies}</option>
               </select>
             </div>
             <div>
-              <Label>Transporte</Label>
+              <Label>{content.filters.transportLabel}</Label>
               <select
                 className={selectClassName}
                 onChange={(event) => setTransportFilter(event.target.value)}
                 value={transportFilter}
               >
-                <option value="all">Todos</option>
-                <option value="with">Usan transporte</option>
-                <option value="without">No usan transporte</option>
+                <option value="all">{content.filters.all}</option>
+                <option value="with">{content.filters.withTransport}</option>
+                <option value="without">{content.filters.withoutTransport}</option>
               </select>
             </div>
           </AdminFiltersPanel>
@@ -253,13 +263,15 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
                       icon: <AlertTriangle size={13} strokeWidth={1.8} />,
                       key: "allergies",
                       value: recipient.guests.some(Guest.hasAllergies)
-                        ? "Sí"
-                        : "No",
+                        ? content.summary.yes
+                        : content.summary.no,
                     },
                     {
                       icon: <BusFront size={13} strokeWidth={1.8} />,
                       key: "transport",
-                      value: recipient.guests.some(Guest.usesBus) ? "Sí" : "No",
+                      value: recipient.guests.some(Guest.usesBus)
+                        ? content.summary.yes
+                        : content.summary.no,
                     },
                   ];
 
@@ -279,7 +291,9 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
                         type="checkbox"
                       />
                       <span className="min-w-0">
-                        <span className="block break-words text-sm text-[var(--color-text)]">{recipient.name}</span>
+                        <span className="block break-words text-sm text-[var(--color-text)]">
+                          {recipient.name}
+                        </span>
                         <span className="mt-1 block break-words text-xs leading-snug text-[var(--color-muted)]">
                           {guestNames || recipient.email}
                         </span>
@@ -302,48 +316,56 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
             ) : (
               <p className="p-3 text-sm text-[var(--color-muted)]">
                 {recipients.length
-                  ? "No hay invitados que coincidan con los filtros."
-                  : "No hay invitados con email disponible."}
+                  ? content.recipients.emptyFiltered
+                  : content.recipients.emptyAvailable}
               </p>
             )}
           </div>
         </div>
 
         {selectedRecipients.length > 0 && (
-          <div className="flex flex-wrap gap-2" aria-label="Destinatarios seleccionados">
+          <div
+            className="flex flex-wrap gap-2"
+            aria-label={content.recipients.selectedAriaLabel}
+          >
             {selectedRecipients.map((recipient) => (
               <button
-                aria-label={`Quitar destinatario ${recipient.name}`}
+                aria-label={content.recipients.removeAriaLabel(recipient.name)}
                 className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-[var(--color-border-strong)] bg-[var(--color-accent)] px-3 py-1.5 text-sm font-medium text-white shadow-[var(--shadow-button)] transition hover:bg-[var(--color-accent)]/75 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-dark)]/35"
                 key={recipient.id}
                 onClick={() => toggleRecipient(recipient.id)}
                 type="button"
               >
                 <span className="truncate">{recipient.name}</span>
-                <X aria-hidden="true" className="shrink-0" size={14} strokeWidth={2.2} />
+                <X
+                  aria-hidden="true"
+                  className="shrink-0"
+                  size={14}
+                  strokeWidth={2.2}
+                />
               </button>
             ))}
           </div>
         )}
 
         <div>
-          <Label>Asunto</Label>
+          <Label>{content.fields.subjectLabel}</Label>
           <input
             className={inputClassName}
             maxLength={200}
             onChange={(event) => setSubject(event.target.value)}
-            placeholder="Ej: Información importante de la boda"
+            placeholder={content.fields.subjectPlaceholder}
             value={subject}
           />
         </div>
 
         <div>
-          <Label>Mensaje</Label>
+          <Label>{content.fields.messageLabel}</Label>
           <textarea
             className={`${inputClassName} min-h-32 resize-y`}
             maxLength={10000}
             onChange={(event) => setMessage(event.target.value)}
-            placeholder="Escribe aquí el mensaje para los invitados…"
+            placeholder={content.fields.messagePlaceholder}
             value={message}
           />
           <FieldError>{error}</FieldError>

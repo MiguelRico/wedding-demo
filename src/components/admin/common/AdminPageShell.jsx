@@ -5,7 +5,7 @@ import HeaderSection from "../../ui/HeaderSection";
 export default function AdminPageShell({
   children,
   header,
-  innerClassName = "max-w-6xl py-6",
+  innerClassName = "max-w-7xl py-6",
   isVisible,
   rootRef,
 }) {

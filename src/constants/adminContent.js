@@ -150,7 +150,7 @@ const defaultAdminContent = {
     },
     list: {
       eyebrow: "Confirmaciones recibidas",
-      title: "Gestión de confirmaciones",
+      title: "Confirmaciones",
       pageLabel: "Confirmación",
       mobilePageLabel: "Confirmación",
       emptyTitle: "Sin resultados",
@@ -174,7 +174,7 @@ const defaultAdminContent = {
     },
     guestList: {
       eyebrow: "Detalle de confirmación",
-      title: "Invitados confirmados",
+      title: "Invitados",
       mobilePageLabel: "Invitado",
       noConfirmationsTitle: "Sin confirmaciones",
       noConfirmationsText:
@@ -277,7 +277,7 @@ const defaultAdminContent = {
       title: "Mesas",
       text: "Organización de mesas, asientos e invitados asignados.",
       eyebrow: "Distribución y asignaciones",
-      sectionTitle: "Gestión de mesas",
+      sectionTitle: "Mesas",
       exportTable: "Exportar tabla",
       pageLabel: "Pagina",
       mobilePageLabel: "Mesas",
@@ -433,7 +433,7 @@ const defaultAdminContent = {
     },
     list: {
       eyebrow: "Directorio de proveedores",
-      title: "Gestión de proveedores",
+      title: "Proveedores",
       pageLabel: "Proveedores",
       mobilePageLabel: "Proveedores",
       emptyTitle: "Sin proveedores",
@@ -443,7 +443,7 @@ const defaultAdminContent = {
     },
     services: {
       eyebrow: "Catálogo del proveedor",
-      title: "Servicios del proveedor",
+      title: "Servicios",
       pageLabel: "Servicios",
       mobilePageLabel: "Servicios",
       emptyTitle: "Sin servicios",
@@ -583,7 +583,7 @@ const defaultAdminContent = {
     },
     list: {
       eyebrow: "Bandeja de avisos",
-      title: "Gestión de notificaciones",
+      title: "Notificaciones",
       pageLabel: "Notificaciones",
       mobilePageLabel: "Notificaciones",
       emptyTitle: "Sin notificaciones",
@@ -624,10 +624,63 @@ const defaultAdminContent = {
       title: "Emails",
       text: "Redacta y envía comunicaciones privadas a los invitados.",
     },
+    composer: {
+      eyebrow: "Enviar email a invitados",
+      title: "Comunicaciones",
+      actions: {
+        send: "Enviar email",
+        sending: "Enviando email…",
+      },
+      recipients: {
+        label: "Destinatarios",
+        selected: (count) => `${count} seleccionados`,
+        selectedAriaLabel: "Destinatarios seleccionados",
+        removeAriaLabel: (name) => `Quitar destinatario ${name}`,
+        emptyFiltered: "No hay invitados que coincidan con los filtros.",
+        emptyAvailable: "No hay invitados con email disponible.",
+      },
+      filters: {
+        title: "Filtros",
+        searchLabel: "Buscar invitado",
+        searchPlaceholder: "Nombre, grupo o email",
+        menuLabel: "Menú",
+        allergiesLabel: "Alergias",
+        transportLabel: "Transporte",
+        all: "Todos",
+        withAllergies: "Con alergias",
+        withoutAllergies: "Sin alergias",
+        withTransport: "Usan transporte",
+        withoutTransport: "No usan transporte",
+        activeQuery: (query) => `Búsqueda: ${query}`,
+        activeMenu: (menu) => `Menú: ${menu}`,
+        activeAllergies: (value) =>
+          value === "with" ? "Con alergias" : "Sin alergias",
+        activeTransport: (value) =>
+          value === "with" ? "Con transporte" : "Sin transporte",
+      },
+      summary: {
+        yes: "Sí",
+        no: "No",
+      },
+      fields: {
+        subjectLabel: "Asunto",
+        subjectPlaceholder: "Ej: Información importante de la boda",
+        messageLabel: "Mensaje",
+        messagePlaceholder: "Escribe aquí el mensaje para los invitados…",
+      },
+      validation: {
+        recipients: "Selecciona al menos un invitado.",
+        subject: "Añade un asunto para el email.",
+        message: "Escribe el mensaje que recibirán los invitados.",
+      },
+    },
     dialogs: {
       loadError: "No se pudieron cargar los invitados.",
       problemTitle: "Ha ocurrido un problema",
-      sendError: "No se ha podido enviar el email. Inténtalo de nuevo en unos minutos.",
+      sendError:
+        "No se ha podido enviar el email. Inténtalo de nuevo en unos minutos.",
+      sentMessage: (count) =>
+        `El email se ha enviado a ${count} destinatarios.`,
       sentTitle: "Email enviado",
     },
   },
@@ -761,11 +814,15 @@ const defaultAdminContent = {
   },
 };
 
-export const adminContent = mergeContent(defaultAdminContent, adminContentOverrides);
+export const adminContent = mergeContent(
+  defaultAdminContent,
+  adminContentOverrides,
+);
 
 function mergeContent(base, overrides) {
   if (Array.isArray(base) || Array.isArray(overrides)) return overrides ?? base;
-  if (!isPlainObject(base) || !isPlainObject(overrides)) return overrides ?? base;
+  if (!isPlainObject(base) || !isPlainObject(overrides))
+    return overrides ?? base;
 
   return Object.keys({ ...base, ...overrides }).reduce((result, key) => {
     result[key] = mergeContent(base[key], overrides[key]);

@@ -46,7 +46,9 @@ export default function AdminEmails() {
     try {
       const result = await sendGuestEmail({ ...email, password: ADMIN_PASSWORD });
       setStatus({
-        message: `El email se ha enviado a ${result.sent || email.recipients.length} destinatarios.`,
+        message: adminContent.emails.dialogs.sentMessage(
+          result.sent || email.recipients.length,
+        ),
         open: true,
         title: adminContent.emails.dialogs.sentTitle,
         type: "success",
