@@ -1,7 +1,7 @@
-import { AlertTriangle, BusFront, Mail, Search, Send, X } from "lucide-react";
+import { AlertTriangle, BusFront, Search, Send, X } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import { AdminFiltersPanel, Card } from "../common";
+import { AdminFiltersPanel, AdminTableSection } from "../common";
 import Chip from "../../ui/Chip";
 import IconButton from "../../ui/IconButton";
 import { SkeletonBlock } from "../../ui/TableSectionSkeleton";
@@ -139,9 +139,11 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
   if (loading) return <GuestEmailCardSkeleton />;
 
   return (
-    <Card
-      actions={
+    <AdminTableSection
+      eyebrow="Comunicación"
+      headerActions={
         <IconButton
+          className="h-10 w-10 !px-0"
           disabled={sending || !recipients.length}
           form={FORM_ID}
           icon={<Send size={16} strokeWidth={1.8} />}
@@ -152,11 +154,9 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
           type="submit"
         />
       }
-      decorativeText={<Mail size={76} strokeWidth={1.3} />}
-      eyebrow="Comunicación"
       title="Enviar email a invitados"
     >
-      <form className="mt-5 grid gap-5" id={FORM_ID} onSubmit={handleSubmit}>
+      <form className="grid gap-5" id={FORM_ID} onSubmit={handleSubmit}>
         <div>
           <div className="mb-3 flex items-center justify-between gap-3">
             <Label>Destinatarios</Label>
@@ -349,7 +349,7 @@ export default function GuestEmailCard({ confirmations = [], loading, onSend, se
           <FieldError>{error}</FieldError>
         </div>
       </form>
-    </Card>
+    </AdminTableSection>
   );
 }
 
