@@ -788,7 +788,7 @@ const defaultAdminContent = {
   },
   pendingGuests: {
     filtersEyebrow: "Filtros",
-    title: "Invitados pendientes",
+    title: "Invitados",
     confirmationLabel: "Confirmación",
     allConfirmations: "Todas las confirmaciones",
     menuLabel: "Preferencia de menú",
@@ -802,7 +802,7 @@ const defaultAdminContent = {
     pageLabel: ({ page, total }) => `${page} / ${total}`,
     showingLabel: ({ filtered, total }) =>
       `Mostrando ${filtered} de ${total} invitados pendientes`,
-    pendingEyebrow: "Invitados pendientes",
+    pendingEyebrow: "Sin asiento asignado",
     tableLabel: "Mesa",
     tablePlaceholder: "Seleccionar",
     selectTableFirst: "Selecciona una mesa",
