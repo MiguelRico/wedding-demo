@@ -75,7 +75,6 @@ export default function AdminTableSection({
   totalPages,
   items = [],
 }) {
-  const hasResults = items.length > 0;
   const hasFilterSlot = Boolean(filters);
   const pagination = getPaginationState({
     items,
@@ -85,10 +84,9 @@ export default function AdminTableSection({
   });
   const hasPagination =
     !loading &&
-    (hasResults || hasFilterSlot) &&
     page &&
     pageSize &&
-    pagination.totalPages > 1;
+    pagination.totalPages;
   const hasPaginationSlot =
     skeletonConfig.pagination ??
     Boolean(

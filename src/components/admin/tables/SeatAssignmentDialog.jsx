@@ -214,7 +214,7 @@ export default function SeatAssignmentDialog({
             onFilterChange={handleFilterChange}
           />
 
-          {totalPages > 1 && (
+          {totalPages >= 1 && (
             <Pagination
               className="my-0"
               onNext={() =>

@@ -24,7 +24,7 @@ export default function Pagination({
       <div className={contentClassName}>
         <IconButton
           className={buttonClassName}
-          disabled={page === 1}
+          disabled={page <= 1 || totalPages <= 1}
           icon={<ChevronLeft size={15} strokeWidth={1.8} />}
           label={previousLabel}
           onClick={onPrev}
@@ -39,7 +39,7 @@ export default function Pagination({
 
         <IconButton
           className={buttonClassName}
-          disabled={page === totalPages}
+          disabled={page >= totalPages || totalPages <= 1}
           icon={<ChevronRight size={15} strokeWidth={1.8} />}
           label={nextLabel}
           onClick={onNext}

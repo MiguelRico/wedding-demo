@@ -81,7 +81,7 @@ const defaultAdminContent = {
       text: "Seguimiento de respuestas recibidas y datos operativos",
     },
     confirmations: {
-      eyebrow: "Confirmaciones",
+      eyebrow: "Estado de asistencia",
       title: "Confirmaciones",
       charts: {
         allergies: "Alergias",
@@ -92,15 +92,15 @@ const defaultAdminContent = {
       },
     },
     providers: {
-      eyebrow: "Proveedores",
+      eyebrow: "Red de servicios",
       title: "Proveedores",
     },
     tables: {
-      eyebrow: "Mesas y asientos",
+      eyebrow: "Distribución de invitados",
       title: "Mesas y asientos",
     },
     notifications: {
-      eyebrow: "Notificaciones",
+      eyebrow: "Actividad reciente",
       title: "Notificaciones",
     },
     dialogs: {
@@ -121,7 +121,7 @@ const defaultAdminContent = {
       text: "Gestión de confirmaciones, datos de contacto, alergias y transporte",
     },
     overview: {
-      eyebrow: "Confirmaciones",
+      eyebrow: "Resumen de asistencia",
       title: "Confirmaciones",
       emptyAllergies: "Sin alergias registradas",
       metrics: {
@@ -149,7 +149,7 @@ const defaultAdminContent = {
       ],
     },
     list: {
-      eyebrow: "Gestión de confirmaciones",
+      eyebrow: "Confirmaciones recibidas",
       title: "Gestión de confirmaciones",
       pageLabel: "Confirmación",
       mobilePageLabel: "Confirmación",
@@ -173,7 +173,7 @@ const defaultAdminContent = {
       duplicatePhone: "Ya existe una confirmación con este teléfono.",
     },
     guestList: {
-      eyebrow: "Invitados confirmados",
+      eyebrow: "Detalle de confirmación",
       title: "Invitados confirmados",
       mobilePageLabel: "Invitado",
       noConfirmationsTitle: "Sin confirmaciones",
@@ -276,7 +276,7 @@ const defaultAdminContent = {
       adminEyebrow: "Panel privado",
       title: "Mesas",
       text: "Organización de mesas, asientos e invitados asignados.",
-      eyebrow: "Gestión de mesas",
+      eyebrow: "Distribución y asignaciones",
       sectionTitle: "Gestión de mesas",
       exportTable: "Exportar tabla",
       pageLabel: "Pagina",
@@ -366,7 +366,7 @@ const defaultAdminContent = {
       warningEyebrow: "Aviso",
     },
     overview: {
-      eyebrow: "Mesas y asientos",
+      eyebrow: "Resumen de ocupación",
       title: "Mesas y asientos",
       metrics: {
         tableCount: "Mesas",
@@ -414,7 +414,7 @@ const defaultAdminContent = {
       text: "Gestión de proveedores, servicios contratados y plazos de pago.",
     },
     overview: {
-      eyebrow: "Proveedores",
+      eyebrow: "Resumen de servicios",
       title: "Proveedores",
       metrics: {
         providers: "Proveedores",
@@ -432,7 +432,7 @@ const defaultAdminContent = {
       },
     },
     list: {
-      eyebrow: "Gestión de proveedores",
+      eyebrow: "Directorio de proveedores",
       title: "Gestión de proveedores",
       pageLabel: "Proveedores",
       mobilePageLabel: "Proveedores",
@@ -442,7 +442,7 @@ const defaultAdminContent = {
         "No hay proveedores que coincidan con la busqueda o la categoria seleccionada.",
     },
     services: {
-      eyebrow: "Servicios del proveedor",
+      eyebrow: "Catálogo del proveedor",
       title: "Servicios del proveedor",
       pageLabel: "Servicios",
       mobilePageLabel: "Servicios",
@@ -542,7 +542,7 @@ const defaultAdminContent = {
       viewAll: "Ver notificaciones",
     },
     overview: {
-      eyebrow: "Notificaciones",
+      eyebrow: "Resumen de actividad",
       title: "Notificaciones",
       metrics: {
         total: "Total",
@@ -582,7 +582,7 @@ const defaultAdminContent = {
       readLabel: "Estado",
     },
     list: {
-      eyebrow: "Gestión de notificaciones",
+      eyebrow: "Bandeja de avisos",
       title: "Gestión de notificaciones",
       pageLabel: "Notificaciones",
       mobilePageLabel: "Notificaciones",
@@ -638,7 +638,7 @@ const defaultAdminContent = {
       text: "Checklist de preparativos, responsables, prioridades y fechas limite.",
     },
     overview: {
-      eyebrow: "Tareas",
+      eyebrow: "Progreso de preparación",
       title: "Tareas",
       metrics: {
         total: "Total",
@@ -670,7 +670,7 @@ const defaultAdminContent = {
       dateToLabel: "Hasta",
     },
     list: {
-      eyebrow: "Tareas por categoria",
+      eyebrow: "Planificación por categoría",
       title: "Tareas por categoria",
       emptyTitle: "Sin tareas",
       emptyText: "Crea tareas para empezar a organizar la checklist.",
@@ -709,7 +709,7 @@ const defaultAdminContent = {
       warningEyebrow: "Aviso",
     },
     form: {
-      eyebrow: "Tarea",
+      eyebrow: "Detalle de tarea",
       title: "Tarea",
       fields: {
         category: "Categoria",
