@@ -1,13 +1,11 @@
 import { Download, FileSpreadsheet, FileText, ReceiptText, Armchair } from "lucide-react";
 import { Navigate } from "react-router-dom";
 
-import { AdminPage, AdminResponsivePanels, AdminTableSection } from "../components/admin/common";
+import { AdminPage, AdminTableSection } from "../components/admin/common";
 import CinematicStaggeredRevealItem from "../components/cinematic/CinematicStaggeredRevealItem";
 import IconButton from "../components/ui/IconButton";
 import { adminContent } from "../constants/adminContent";
 import useAdminDataSnapshot from "../hooks/useAdminDataSnapshot";
-import useAdminActiveTab from "../hooks/useAdminActiveTab";
-import { storageKeys } from "../config/storageKeys";
 import { isAdminSessionAuthenticated } from "../utils/adminSession";
 import {
   downloadAdminPdf,
@@ -19,10 +17,6 @@ import {
 export default function AdminExports() {
   const isAuthenticated = isAdminSessionAuthenticated();
   const snapshot = useAdminDataSnapshot();
-  const [activePanel, setActivePanel] = useAdminActiveTab(
-    storageKeys.adminActiveTabs.exports,
-    "workbook",
-  );
   const hasData = [
     snapshot.confirmations,
     snapshot.notifications,
@@ -90,12 +84,13 @@ export default function AdminExports() {
     <AdminPage header={adminContent.exports.header} innerClassName="max-w-7xl py-6">
       {({ isVisible }) => (
         <CinematicStaggeredRevealItem index={2} isVisible={isVisible}>
-          <AdminResponsivePanels
-            activePanel={activePanel}
-            className="lg:grid-cols-2"
-            onChange={setActivePanel}
-            panels={panels}
-          />
+          <div className="grid gap-5 lg:grid-cols-2">
+            {panels.map((panel) => (
+              <div key={panel.id} className="min-w-0">
+                {panel.content}
+              </div>
+            ))}
+          </div>
         </CinematicStaggeredRevealItem>
       )}
     </AdminPage>
@@ -108,17 +103,17 @@ function ExportSection({
   disabled,
   icon,
   onDownload,
-  tone = "terciary",
+  tone = "primary",
 }) {
   return (
     <AdminTableSection
       eyebrow={content.eyebrow}
-      headerActions={<IconButton disabled={disabled} icon={actionIcon} label={content.action} onClick={onDownload} showText="always" tone={tone} type="button">{content.action}</IconButton>}
+      headerActions={<IconButton disabled={disabled} icon={actionIcon} label={content.action} onClick={onDownload} showText={false} tone={tone} type="button">{content.action}</IconButton>}
       title={content.title}
     >
-      <div className="flex items-start gap-4 rounded-[1.5rem] border border-[var(--color-border)] bg-white/45 p-4">
+      <div className="flex items-center gap-4 rounded-[1.5rem] border border-[var(--color-border)] bg-white/45 p-4">
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[var(--color-border-strong)] bg-white/60 text-[var(--color-accent-dark)]">{icon}</span>
-        <p className="text-sm leading-relaxed text-[var(--color-muted)]">{content.text}</p>
+        <p className="line-clamp-2 text-sm leading-relaxed text-[var(--color-muted)]">{content.text}</p>
       </div>
     </AdminTableSection>
   );
