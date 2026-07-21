@@ -1,5 +1,7 @@
 import { Guest } from "../models";
+import { isMenuModuleEnabled } from "../config/features";
 import { buildTables } from "./tablesService";
+import { getTableSeatPositions } from "../utils/tableSeatPositions";
 
 const escapeXml = (value) =>
   String(value ?? "")
@@ -289,6 +291,240 @@ const buildPdf = (sheets) => {
   return toPdfBytes(pdf);
 };
 
+const buildSeatingPlanPdf = (tables) => {
+  const pageWidth = 595;
+  const pageHeight = 842;
+  const tablesPerPage = 2;
+  const pages = Array.from(
+    { length: Math.max(1, Math.ceil(tables.length / tablesPerPage)) },
+    (_, pageIndex) => {
+      const pageTables = tables.slice(
+        pageIndex * tablesPerPage,
+        (pageIndex + 1) * tablesPerPage,
+      );
+      const commands = [
+        "q 0.98 0.99 0.97 rg 0 0 595 842 re f Q",
+        pdfText("PLANO DE MESAS", 42, 805, 18, "0.33 0.42 0.32"),
+        pdfText(
+          `Pagina ${pageIndex + 1} de ${Math.max(1, Math.ceil(tables.length / tablesPerPage))}`,
+          42,
+          788,
+          8,
+          "0.43 0.46 0.41",
+        ),
+      ];
+
+      pageTables.forEach((table, index) => {
+        commands.push(...drawSeatingTable(table, index === 0 ? 425 : 60));
+      });
+
+      return commands;
+    },
+  );
+
+  const objects = ["<< /Type /Catalog /Pages 2 0 R >>", ""];
+  const pageObjectIds = pages.map((_, index) => 3 + index * 2);
+  objects[1] = `<< /Type /Pages /Kids [${pageObjectIds.map((id) => `${id} 0 R`).join(" ")}] /Count ${pages.length} >>`;
+
+  pages.forEach((page, index) => {
+    const pageId = pageObjectIds[index];
+    const contentId = pageId + 1;
+    const stream = page.join("\n");
+
+    objects[pageId - 1] = `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageWidth} ${pageHeight}] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >> >> >> /Contents ${contentId} 0 R >>`;
+    objects[contentId - 1] = `<< /Length ${toPdfBytes(stream).length} >>\nstream\n${stream}\nendstream`;
+  });
+
+  let pdf = "%PDF-1.4\n";
+  const offsets = [0];
+  objects.forEach((object, index) => {
+    offsets[index + 1] = toPdfBytes(pdf).length;
+    pdf += `${index + 1} 0 obj\n${object}\nendobj\n`;
+  });
+  const xrefOffset = toPdfBytes(pdf).length;
+
+  pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
+  offsets.slice(1).forEach((offset) => {
+    pdf += `${String(offset).padStart(10, "0")} 00000 n \n`;
+  });
+  pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
+
+  return toPdfBytes(pdf);
+};
+
+const drawSeatingTable = (table, panelY) => {
+  const panelX = 42;
+  const panelWidth = 511;
+  const panelHeight = 340;
+  const centerX = pageCenter(panelX, panelWidth);
+  const centerY = panelY + 180;
+  const assigned = table.seats.filter((seat) => seat.guest).length;
+  const legend = getTableLegend(table);
+  const commands = [
+    `q 1 1 1 rg ${panelX} ${panelY} ${panelWidth} ${panelHeight} re f Q`,
+    `q 0.78 0.84 0.75 RG 0.8 w ${panelX} ${panelY} ${panelWidth} ${panelHeight} re S Q`,
+    pdfText(table.name || "Mesa sin nombre", panelX + 18, panelY + 310, 14, "0.33 0.42 0.32"),
+    pdfText(
+      `${table.shape === "round" ? "Mesa redonda" : "Mesa rectangular"} - ${assigned}/${table.seats.length} asignados`,
+      panelX + 18,
+      panelY + 294,
+      8,
+      "0.43 0.46 0.41",
+    ),
+  ];
+
+  if (table.shape === "round") {
+    commands.push(pdfCircle(centerX, centerY, 52, "0.95 0.97 0.93", "0.58 0.66 0.55"));
+  } else {
+    commands.push(`q 0.95 0.97 0.93 rg 0.58 0.66 0.55 RG 1 w 170 ${centerY - 28} 255 56 re B Q`);
+  }
+  commands.push(...drawTableLegend(legend, centerX, centerY));
+
+  getTableSeatPositions(table).forEach((position, index) => {
+    const x = position.angle === undefined
+      ? panelX + panelWidth * (position.x / 100)
+      : centerX + Math.cos(position.angle) * 108;
+    const y = position.angle === undefined
+      ? centerY + (50 - position.y) * 2.4
+      : centerY - Math.sin(position.angle) * 108;
+    const assignedSeat = Boolean(position.seat.guest);
+
+    commands.push(
+      pdfCircle(
+        x,
+        y,
+        17,
+        assignedSeat ? "0.33 0.42 0.32" : "1 1 1",
+        assignedSeat ? "0.33 0.42 0.32" : "0.58 0.66 0.55",
+      ),
+      pdfCenteredText(
+        getSeatNumber(position.seat, index),
+        x,
+        y + 5,
+        7,
+        assignedSeat ? "1 1 1" : "0.33 0.42 0.32",
+      ),
+      pdfCenteredText(
+        assignedSeat ? getGuestInitials(position.seat.guest) : "?",
+        x,
+        y - 7,
+        8,
+        assignedSeat ? "1 1 1" : "0.33 0.42 0.32",
+      ),
+    );
+
+    if (assignedSeat) {
+      commands.push(
+        pdfCenteredText(
+          truncatePdfText(getGuestName(position.seat.guest, index), 20),
+          x,
+          y - 25,
+          6,
+          "0.18 0.20 0.17",
+        ),
+      );
+    }
+  });
+
+  return commands;
+};
+
+const pageCenter = (x, width) => x + width / 2;
+
+const pdfText = (value, x, y, size, color) =>
+  `BT /F1 ${size} Tf ${color} rg ${x.toFixed(2)} ${y.toFixed(2)} Td (${escapePdfText(value)}) Tj ET`;
+
+const pdfCenteredText = (value, x, y, size, color) =>
+  pdfText(value, x - getPdfTextWidth(value, size) / 2, y, size, color);
+
+const PDF_HELVETICA_WIDTHS = {
+  " ": 278,
+  "-": 333,
+  ".": 278,
+  "?": 556,
+  A: 667, B: 667, C: 722, D: 722, E: 667, F: 611, G: 778, H: 722,
+  I: 278, J: 500, K: 667, L: 556, M: 833, N: 722, O: 778, P: 667,
+  Q: 778, R: 722, S: 667, T: 611, U: 722, V: 667, W: 944, X: 667,
+  Y: 667, Z: 611,
+  a: 556, b: 556, c: 500, d: 556, e: 556, f: 278, g: 556, h: 556,
+  i: 222, j: 222, k: 500, l: 222, m: 833, n: 556, o: 556, p: 556,
+  q: 556, r: 333, s: 500, t: 278, u: 556, v: 500, w: 722, x: 500,
+  y: 500, z: 500,
+  0: 556, 1: 556, 2: 556, 3: 556, 4: 556, 5: 556, 6: 556, 7: 556,
+  8: 556, 9: 556,
+};
+
+const getPdfTextWidth = (value, size) =>
+  [...String(value ?? "")].reduce(
+    (width, character) => width + (PDF_HELVETICA_WIDTHS[character] || 556),
+    0,
+  ) * (size / 1000);
+
+const getGuestInitials = (guest) => {
+  const words = getGuestName(guest, 0).trim().split(/\s+/).filter(Boolean);
+
+  return `${words[0]?.[0] || "?"}${words.at(-1)?.[0] || ""}`.toUpperCase();
+};
+
+const getSeatNumber = (seat, index = 0) =>
+  seat.number || seat.seat || index + 1;
+
+const drawTableLegend = (legend, centerX, centerY) =>
+  legend.map((item, index) => {
+    const column = index % 2;
+    const row = Math.floor(index / 2);
+    const label = `${item.label}: ${item.value}`;
+
+    return pdfCenteredText(
+      label,
+      centerX + (column ? 27 : -27),
+      centerY + 8 - row * 13,
+      6,
+      "0.33 0.42 0.32",
+    );
+  });
+
+const getTableLegend = (table) => {
+  const assignedGuests = table.seats
+    .filter((seat) => seat.guest)
+    .map((seat) => seat.guest);
+
+  return [
+    ...(isMenuModuleEnabled
+      ? [
+          {
+            label: "Pescado",
+            value: assignedGuests.filter((guest) => guest.menu === "Pescado").length,
+          },
+          {
+            label: "Carne",
+            value: assignedGuests.filter((guest) => guest.menu === "Carne").length,
+          },
+        ]
+      : []),
+    {
+      label: "Alergias",
+      value: assignedGuests.filter(Guest.hasAllergies).length,
+    },
+    {
+      label: "Notas",
+      value: assignedGuests.filter(Guest.hasComments).length,
+    },
+  ];
+};
+
+const pdfCircle = (x, y, radius, fill, stroke) => {
+  const control = radius * 0.55228475;
+
+  return `q ${fill} rg ${stroke} RG 0.8 w ${x} ${y + radius} m ${x + control} ${y + radius} ${x + radius} ${y + control} ${x + radius} ${y} c ${x + radius} ${y - control} ${x + control} ${y - radius} ${x} ${y - radius} c ${x - control} ${y - radius} ${x - radius} ${y - control} ${x - radius} ${y} c ${x - radius} ${y + control} ${x - control} ${y + radius} ${x} ${y + radius} c B Q`;
+};
+
+const truncatePdfText = (value, maxLength) => {
+  const text = String(value || "");
+
+  return text.length > maxLength ? `${text.slice(0, maxLength - 3)}...` : text;
+};
+
 const getGroupedConfirmationPdfSheets = (snapshot) => {
   const tables = buildTables({
     confirmations: snapshot.confirmations || [],
@@ -335,3 +571,37 @@ export const downloadAdminPdf = ({ fileName, snapshot }) =>
     fileName: `${fileName}-${getDateStamp()}.pdf`,
     type: "application/pdf",
   });
+
+export const downloadProvidersPdf = ({ fileName, snapshot }) =>
+  downloadFile({
+    content: buildPdf(
+      (snapshot.providers || []).map((provider) => ({
+        name: provider.name || "Proveedor sin nombre",
+        detail: `${provider.category || "Sin categoría"} · ${provider.email || provider.phone || "Sin contacto"}`,
+        columns: ["Servicio", "Precio", "Pagado", "Pendiente", "Estado"],
+        rows: (provider.services || []).map((service) => {
+          const payments = service.payments || [];
+          const paid = payments.filter((payment) => payment.paid).reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
+          const pending = payments.filter((payment) => !payment.paid).reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
+
+          return [service.name, service.price, paid, pending, pending ? "Pendiente" : "Pagado"];
+        }),
+      })),
+    ),
+    fileName: `${fileName}-${getDateStamp()}.pdf`,
+    type: "application/pdf",
+  });
+
+export const downloadSeatingPlanPdf = ({ fileName, snapshot }) => {
+  const tables = buildTables({
+    confirmations: snapshot.confirmations || [],
+    manualTables: snapshot.tables || [],
+  });
+
+  return downloadFile({
+    content: buildSeatingPlanPdf(tables),
+    fileName: `${fileName}-${getDateStamp()}.pdf`,
+    type: "application/pdf",
+  });
+
+};

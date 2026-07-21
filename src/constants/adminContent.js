@@ -116,6 +116,20 @@ const defaultAdminContent = {
       title: "Exportaciones",
       text: "Descarga la información disponible en memoria sin realizar nuevas consultas.",
     },
+    providers: {
+      eyebrow: "Red de servicios",
+      title: "Proveedores y servicios",
+      text: "Genera un PDF agrupado por proveedor con sus servicios y pagos.",
+      action: "Descargar PDF",
+      fileName: "proveedores-y-servicios",
+    },
+    seating: {
+      eyebrow: "Plano de invitados",
+      title: "Plano de mesas",
+      text: "Genera un plano PDF visual de mesas y asientos.",
+      action: "Descargar PDF",
+      fileName: "plano-de-mesas",
+    },
     workbook: {
       eyebrow: "Archivo completo",
       title: "Excel del evento",

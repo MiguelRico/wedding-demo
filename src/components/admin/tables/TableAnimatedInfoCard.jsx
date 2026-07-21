@@ -17,6 +17,10 @@ import { tableContent } from "../../../constants/tableContent";
 import { isMenuModuleEnabled } from "../../../config/features";
 import usePagedData from "../../../hooks/usePagedData";
 import usePageTransition from "../../../hooks/usePageTransition";
+import {
+  getRectangularSeatPositions,
+  getRoundSeatPositions,
+} from "../../../utils/tableSeatPositions";
 import IconButton from "../../ui/IconButton";
 import PaginatedContent from "../../ui/PaginatedContent";
 import Pagination from "../../ui/Pagination";
@@ -351,7 +355,7 @@ function getAssignedSeatsEmptyState(sourceCount) {
 function TableDiagram({ onSeatClick, onCenterClick, table }) {
   const seats =
     table.shape === TABLE_SHAPES.round
-      ? getRoundSeatPositions(table.seats)
+      ? getRoundSeatStyles(table.seats)
       : getRectangularSeatPositions(table.seats);
   const summaryItems = getTableLegendSummary(table);
 
@@ -519,31 +523,11 @@ function SeatDot({ onClick, seat, style }) {
   );
 }
 
-function getRectangularSeatPositions(seats) {
-  const topCount = Math.ceil(seats.length / 2);
-  const bottomCount = seats.length - topCount;
+function getRoundSeatStyles(seats) {
+  return getRoundSeatPositions(seats).map(({ seat, angle }) => {
+    const seatOffsetRem = 5.15;
+    const seatRadiusRem = 0.625;
 
-  return [
-    ...seats.slice(0, topCount).map((seat, index) => ({
-      seat,
-      x: getJustifiedPosition(index, topCount, 22, 78),
-      y: 24,
-    })),
-    ...seats.slice(topCount).map((seat, index) => ({
-      seat,
-      x: getJustifiedPosition(index, bottomCount, 22, 78),
-      y: 76,
-    })),
-  ];
-}
-
-function getRoundSeatPositions(seats) {
-  const angleStep = (Math.PI * 2) / seats.length;
-  const seatOffsetRem = 5.15;
-  const seatRadiusRem = 0.625;
-
-  return seats.map((seat, index) => {
-    const angle = -Math.PI / 2 + index * angleStep;
     const leftOffset = Math.cos(angle) * seatOffsetRem - seatRadiusRem;
     const topOffset = Math.sin(angle) * seatOffsetRem - seatRadiusRem;
 
@@ -555,12 +539,6 @@ function getRoundSeatPositions(seats) {
       },
     };
   });
-}
-
-function getJustifiedPosition(index, count, min, max) {
-  if (count <= 1) return 50;
-
-  return min + ((index + 1) / (count + 1)) * (max - min);
 }
 
 function getGuestInitials(guest) {
