@@ -6,6 +6,7 @@ const buildKey = (key) => `${STORAGE_PREFIX}:${key}`;
 
 export const storageKeys = {
   adminActiveTabs: {
+    exports: buildKey("admin:exports:active-tab"),
     guests: buildKey("admin:guests:active-tab"),
     providers: buildKey("admin:providers:active-tab"),
     tables: buildKey("admin:tables:active-tab"),

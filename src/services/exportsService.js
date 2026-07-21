@@ -473,9 +473,9 @@ const drawTableLegend = (legend, panelX, panelY, panelWidth) =>
   legend.flatMap((item, index) => {
     const column = index % 2;
     const row = Math.floor(index / 2);
-    const chipWidth = 54;
+    const chipWidth = 60;
     const chipHeight = 22;
-    const x = panelX + panelWidth - 132 + column * 58;
+    const x = panelX + panelWidth - 144 + column * 64;
     const y = panelY + 300 - row * 24;
 
     return [
@@ -488,9 +488,9 @@ const drawTableLegend = (legend, panelX, panelY, panelWidth) =>
         "1 1 1",
         "0.78 0.84 0.75",
       ),
-      pdfCircle(x + 7, y + 11, 2.2, "0.33 0.42 0.32", "0.33 0.42 0.32"),
-      pdfText(`${item.label}:`, x + 11, y + 7, 6, "0.33 0.42 0.32"),
-      pdfCenteredText(item.value, x + 46, y + 6, 9, "0.18 0.20 0.17"),
+      pdfLegendIcon(item.label, x + 8, y + 11),
+      pdfText(`${item.label}:`, x + 16, y + 7, 6, "0.33 0.42 0.32"),
+      pdfCenteredText(item.value, x + 53, y + 6, 9, "0.18 0.20 0.17"),
     ];
   });
 
@@ -527,6 +527,24 @@ const pdfCircle = (x, y, radius, fill, stroke) => {
   const control = radius * 0.55228475;
 
   return `q ${fill} rg ${stroke} RG 0.8 w ${x} ${y + radius} m ${x + control} ${y + radius} ${x + radius} ${y + control} ${x + radius} ${y} c ${x + radius} ${y - control} ${x + control} ${y - radius} ${x} ${y - radius} c ${x - control} ${y - radius} ${x - radius} ${y - control} ${x - radius} ${y} c ${x - radius} ${y + control} ${x - control} ${y + radius} ${x} ${y + radius} c B Q`;
+};
+
+const pdfLegendIcon = (label, x, y) => {
+  const color = "0.33 0.42 0.32";
+
+  if (label === "Pescado") {
+    return `q ${color} RG 0.8 w ${x - 4} ${y} m ${x - 2} ${y + 3} ${x + 3} ${y + 3} ${x + 4} ${y} c ${x + 3} ${y - 3} ${x - 2} ${y - 3} ${x - 4} ${y} c S ${x + 4} ${y} m ${x + 7} ${y + 3} l ${x + 7} ${y - 3} l h S Q`;
+  }
+
+  if (label === "Carne") {
+    return `q ${color} RG 0.8 w ${x - 4} ${y - 2} m ${x - 2} ${y + 4} ${x + 4} ${y + 4} ${x + 5} ${y} c ${x + 5} ${y - 4} ${x - 2} ${y - 4} ${x - 4} ${y - 2} c S Q ${pdfCircle(x, y, 1.3, "1 1 1", color)}`;
+  }
+
+  if (label === "Alergias") {
+    return `q ${color} RG 0.8 w ${x} ${y + 5} m ${x + 5} ${y - 4} l ${x - 5} ${y - 4} l h S ${x} ${y - 1} m ${x} ${y + 1} l S ${x} ${y - 3} m ${x} ${y - 3.5} l S Q`;
+  }
+
+  return `q ${color} RG 0.8 w ${x - 5} ${y - 3} m ${x - 5} ${y + 3} ${x - 2} ${y + 5} ${x + 4} ${y + 5} c ${x + 6} ${y + 5} ${x + 6} ${y - 3} ${x + 4} ${y - 3} c ${x} ${y - 3} l ${x - 2} ${y - 5} l ${x - 2} ${y - 3} l h S Q`;
 };
 
 const pdfRoundedRect = (x, y, width, height, radius, fill, stroke) => {
