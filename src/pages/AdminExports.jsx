@@ -17,7 +17,6 @@ import {
 export default function AdminExports() {
   const isAuthenticated = isAdminSessionAuthenticated();
   const snapshot = useAdminDataSnapshot();
-  const content = adminContent.exports.workbook;
   const hasData = [
     snapshot.confirmations,
     snapshot.notifications,
@@ -33,61 +32,21 @@ export default function AdminExports() {
       {({ isVisible }) => (
         <CinematicStaggeredRevealItem index={2} isVisible={isVisible}>
           <div className="grid gap-5">
-          <AdminTableSection
-            eyebrow={content.eyebrow}
-            headerActions={
-              <div className="flex flex-wrap gap-2">
-                <IconButton
-                  disabled={!hasData}
-                  icon={<Download size={16} strokeWidth={1.8} />}
-                  label={content.action}
-                  onClick={() =>
-                    downloadAdminWorkbook({
-                      fileName: content.fileName,
-                      snapshot,
-                    })
-                  }
-                  showText="always"
-                  tone="primary"
-                  type="button"
-                >
-                  {content.action}
-                </IconButton>
-                <IconButton
-                  disabled={!hasData}
-                  icon={<FileText size={16} strokeWidth={1.8} />}
-                  label={content.pdfAction}
-                  onClick={() =>
-                    downloadAdminPdf({
-                      fileName: content.fileName,
-                      snapshot,
-                    })
-                  }
-                  showText="always"
-                  tone="terciary"
-                  type="button"
-                >
-                  {content.pdfAction}
-                </IconButton>
-              </div>
-            }
-            title={content.title}
-          >
-            <div className="flex items-start gap-4 rounded-[1.5rem] border border-[var(--color-border)] bg-white/45 p-4">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[var(--color-border-strong)] bg-white/60 text-[var(--color-accent-dark)]">
-                <FileSpreadsheet size={20} strokeWidth={1.8} />
-              </span>
-              <div className="min-w-0">
-                <p className="text-sm leading-relaxed text-[var(--color-muted)]">
-                  {hasData ? content.text : content.unavailableText}
-                </p>
-                <p className="mt-2 text-xs font-medium uppercase tracking-[0.14em] text-[var(--color-accent-dark)]">
-                  {hasData ? content.currentData : content.unavailableTitle}
-                </p>
-              </div>
-            </div>
-          </AdminTableSection>
           <div className="grid gap-5 lg:grid-cols-2">
+            <ExportSection
+              content={adminContent.exports.workbook}
+              disabled={!hasData}
+              icon={<FileSpreadsheet size={20} strokeWidth={1.8} />}
+              onDownload={() => downloadAdminWorkbook({ fileName: adminContent.exports.workbook.fileName, snapshot })}
+              actionIcon={<Download size={16} strokeWidth={1.8} />}
+              tone="primary"
+            />
+            <ExportSection
+              content={adminContent.exports.confirmationsPdf}
+              disabled={!snapshot.confirmations.length}
+              icon={<FileText size={20} strokeWidth={1.8} />}
+              onDownload={() => downloadAdminPdf({ fileName: adminContent.exports.confirmationsPdf.fileName, snapshot })}
+            />
             <ExportSection
               content={adminContent.exports.providers}
               disabled={!snapshot.providers.length}
@@ -108,11 +67,18 @@ export default function AdminExports() {
   );
 }
 
-function ExportSection({ content, disabled, icon, onDownload }) {
+function ExportSection({
+  actionIcon = <FileText size={16} strokeWidth={1.8} />,
+  content,
+  disabled,
+  icon,
+  onDownload,
+  tone = "terciary",
+}) {
   return (
     <AdminTableSection
       eyebrow={content.eyebrow}
-      headerActions={<IconButton disabled={disabled} icon={<FileText size={16} strokeWidth={1.8} />} label={content.action} onClick={onDownload} showText="always" tone="terciary" type="button">{content.action}</IconButton>}
+      headerActions={<IconButton disabled={disabled} icon={actionIcon} label={content.action} onClick={onDownload} showText="always" tone={tone} type="button">{content.action}</IconButton>}
       title={content.title}
     >
       <div className="flex items-start gap-4 rounded-[1.5rem] border border-[var(--color-border)] bg-white/45 p-4">

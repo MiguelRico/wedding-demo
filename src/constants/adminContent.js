@@ -135,12 +135,14 @@ const defaultAdminContent = {
       title: "Excel del evento",
       text: "Incluye confirmaciones, invitados, mesas, proveedores, avisos y tareas tal como están ahora en el panel.",
       action: "Descargar Excel",
-      pdfAction: "Descargar PDF",
       fileName: "exportacion-boda",
-      unavailableTitle: "Datos no disponibles en memoria",
-      unavailableText:
-        "Vuelve al panel de administración e inicia sesión para cargar los datos antes de exportarlos.",
-      currentData: "Datos locales actuales",
+    },
+    confirmationsPdf: {
+      eyebrow: "Lista de asistencia",
+      title: "Confirmaciones e invitados",
+      text: "Genera un PDF agrupado por confirmación con los datos de cada invitado.",
+      action: "Descargar PDF",
+      fileName: "confirmaciones-e-invitados",
     },
   },
   guests: {

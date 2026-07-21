@@ -419,7 +419,7 @@ const drawSeatingTable = (table, panelY) => {
           truncatePdfText(getGuestName(position.seat.guest, index), 20),
           x,
           y - 25,
-          6,
+          7,
           "0.18 0.20 0.17",
         ),
       );
@@ -470,18 +470,28 @@ const getSeatNumber = (seat, index = 0) =>
   seat.number || seat.seat || index + 1;
 
 const drawTableLegend = (legend, centerX, centerY) =>
-  legend.map((item, index) => {
+  legend.flatMap((item, index) => {
     const column = index % 2;
     const row = Math.floor(index / 2);
-    const label = `${item.label}: ${item.value}`;
+    const chipWidth = 49;
+    const chipHeight = 15;
+    const x = centerX - 50.5 + column * 52;
+    const y = centerY + 3 - row * 18;
 
-    return pdfCenteredText(
-      label,
-      centerX + (column ? 27 : -27),
-      centerY + 8 - row * 13,
-      6,
-      "0.33 0.42 0.32",
-    );
+    return [
+      pdfRoundedRect(
+        x,
+        y,
+        chipWidth,
+        chipHeight,
+        5,
+        "1 1 1",
+        "0.78 0.84 0.75",
+      ),
+      pdfCircle(x + 7, y + 7.5, 1.8, "0.33 0.42 0.32", "0.33 0.42 0.32"),
+      pdfText(`${item.label}:`, x + 11, y + 5.25, 3.8, "0.33 0.42 0.32"),
+      pdfCenteredText(item.value, x + 42, y + 5, 5.5, "0.18 0.20 0.17"),
+    ];
   });
 
 const getTableLegend = (table) => {
@@ -517,6 +527,14 @@ const pdfCircle = (x, y, radius, fill, stroke) => {
   const control = radius * 0.55228475;
 
   return `q ${fill} rg ${stroke} RG 0.8 w ${x} ${y + radius} m ${x + control} ${y + radius} ${x + radius} ${y + control} ${x + radius} ${y} c ${x + radius} ${y - control} ${x + control} ${y - radius} ${x} ${y - radius} c ${x - control} ${y - radius} ${x - radius} ${y - control} ${x - radius} ${y} c ${x - radius} ${y + control} ${x - control} ${y + radius} ${x} ${y + radius} c B Q`;
+};
+
+const pdfRoundedRect = (x, y, width, height, radius, fill, stroke) => {
+  const control = radius * 0.55228475;
+  const right = x + width;
+  const top = y + height;
+
+  return `q ${fill} rg ${stroke} RG 0.7 w ${x + radius} ${y} m ${right - radius} ${y} l ${right - radius + control} ${y} ${right} ${y + radius - control} ${right} ${y + radius} c ${right} ${top - radius} l ${right} ${top - radius + control} ${right - radius + control} ${top} ${right - radius} ${top} c ${x + radius} ${top} l ${x + radius - control} ${top} ${x} ${top - radius + control} ${x} ${top - radius} c ${x} ${y + radius} l ${x} ${y + radius - control} ${x + radius - control} ${y} ${x + radius} ${y} c B Q`;
 };
 
 const truncatePdfText = (value, maxLength) => {
