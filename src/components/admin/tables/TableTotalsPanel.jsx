@@ -27,17 +27,17 @@ export default function TableTotalsPanel({ loading, stats }) {
       {loading ? (
         <div className={TABLE_METRIC_GRID_CLASS}>
           <AdminMetricGroupCardSkeleton
-            className="col-span-2"
+            className="col-span-6 md:col-span-2"
             itemCount={2}
             showHeader={false}
           />
           <AdminMetricGroupCardSkeleton
-            className="col-span-2"
+            className="col-span-3 md:col-span-2"
             itemCount={2}
             showHeader={false}
           />
           <AdminMetricGroupCardSkeleton
-            className="col-span-2"
+            className="col-span-3 md:col-span-2"
             itemCount={2}
             showHeader={false}
           />
@@ -45,7 +45,7 @@ export default function TableTotalsPanel({ loading, stats }) {
       ) : (
         <div className={TABLE_METRIC_GRID_CLASS}>
           <AdminMetricGroupCard
-            className="col-span-2"
+            className="col-span-6 md:col-span-2"
             icon={<Grid2X2 size={22} strokeWidth={1.8} />}
             items={[
               {
@@ -64,7 +64,7 @@ export default function TableTotalsPanel({ loading, stats }) {
             title={adminContent.tables.overview.metrics.tableCount}
           />
           <AdminMetricGroupCard
-            className="col-span-2"
+            className="col-span-3 md:col-span-2"
             icon={<RectangleHorizontal size={22} strokeWidth={1.8} />}
             items={[
               {
@@ -83,7 +83,7 @@ export default function TableTotalsPanel({ loading, stats }) {
             title={adminContent.tables.overview.metrics.rectangularTables}
           />
           <AdminMetricGroupCard
-            className="col-span-2"
+            className="col-span-3 md:col-span-2"
             icon={<CircleCheckBig size={22} strokeWidth={1.8} />}
             items={[
               {

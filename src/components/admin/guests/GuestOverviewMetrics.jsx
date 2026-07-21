@@ -14,7 +14,7 @@ import {
   AdminMetricGroupCardSkeleton,
 } from "../common";
 
-export function GuestOverviewMetricGrid({ metrics, stats }) {
+export function GuestOverviewMetricGrid({ chartStats, metrics, stats }) {
   return (
     <div className={getGuestMetricGridClass(isMenuModuleEnabled)}>
       <AdminMetricGroupCard
@@ -44,7 +44,7 @@ export function GuestOverviewMetricGrid({ metrics, stats }) {
 
       {isMenuModuleEnabled && (
         <AdminMetricGroupCard
-          className="col-span-4 md:col-span-1"
+          className="col-span-2 md:col-span-1"
           items={getMenuMetricItems(metrics, stats)}
           showHeaderIcon={false}
           showHeaderTitle={false}
@@ -72,25 +72,8 @@ export function GuestOverviewMetricGrid({ metrics, stats }) {
         title={metrics.allergies}
       />
 
-      <AdminMetricGroupCard
-        className="col-span-2 md:col-span-1"
-        icon={<BusFront size={22} strokeWidth={1.8} />}
-        items={[
-          {
-            icon: <BusFront size={18} strokeWidth={1.8} />,
-            label: metrics.outboundBus,
-            value: stats.outboundBusCount,
-          },
-          {
-            icon: <BusFront size={18} strokeWidth={1.8} />,
-            label: metrics.returnBus,
-            value: stats.returnBusCount,
-          },
-        ]}
-        showHeaderIcon={false}
-        showHeaderTitle={false}
-        title="Transporte"
-      />
+      <BusMetricCard items={chartStats?.outboundBusStats} title={metrics.outboundBus} />
+      <BusMetricCard items={chartStats?.returnBusStats} title={metrics.returnBus} />
     </div>
   );
 }
@@ -104,7 +87,7 @@ export function GuestOverviewMetricGridSkeleton() {
       />
       {isMenuModuleEnabled && (
         <AdminMetricGroupCardSkeleton
-          className="col-span-4 md:col-span-1"
+          className="col-span-2 md:col-span-1"
           itemCount={2}
           showHeader={false}
         />
@@ -114,18 +97,15 @@ export function GuestOverviewMetricGridSkeleton() {
         itemCount={2}
         showHeader={false}
       />
-      <AdminMetricGroupCardSkeleton
-        className="col-span-2 md:col-span-1"
-        itemCount={2}
-        showHeader={false}
-      />
+      <AdminMetricGroupCardSkeleton className="col-span-2 md:col-span-1" itemCount={2} showHeader={false} />
+      <AdminMetricGroupCardSkeleton className="col-span-2 md:col-span-1" itemCount={2} showHeader={false} />
     </div>
   );
 }
 
 function getGuestMetricGridClass(hasMenuModule) {
   return `grid grid-cols-4 gap-2 ${
-    hasMenuModule ? "md:grid-cols-4" : "md:grid-cols-3"
+    hasMenuModule ? "md:grid-cols-5" : "md:grid-cols-4"
   }`;
 }
 
@@ -142,4 +122,21 @@ function getMenuMetricItems(metrics, stats) {
       value: stats.fishCount,
     },
   ];
+}
+
+function BusMetricCard({ items = [], title }) {
+  return (
+    <AdminMetricGroupCard
+      className="col-span-2 md:col-span-1"
+      icon={<BusFront size={22} strokeWidth={1.8} />}
+      items={items.map((item) => ({
+        icon: <BusFront size={18} strokeWidth={1.8} />,
+        label: item.label,
+        value: item.value,
+      }))}
+      showHeaderIcon={false}
+      showHeaderTitle={false}
+      title={title}
+    />
+  );
 }

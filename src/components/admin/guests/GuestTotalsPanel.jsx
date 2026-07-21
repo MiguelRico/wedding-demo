@@ -44,7 +44,11 @@ export default function GuestTotalsPanel({
         </>
       ) : (
         <>
-          <GuestOverviewMetricGrid metrics={metrics} stats={stats} />
+          <GuestOverviewMetricGrid
+            chartStats={chartStats}
+            metrics={metrics}
+            stats={stats}
+          />
           {showCharts ? <GuestCharts chartStats={chartStats} /> : null}
         </>
       )}
