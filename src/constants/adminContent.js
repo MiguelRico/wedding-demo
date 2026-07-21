@@ -110,6 +110,25 @@ const defaultAdminContent = {
         "No se pudieron cargar las estadísticas. Revisa que el endpoint admin devuelva el listado de confirmaciones.",
     },
   },
+  exports: {
+    header: {
+      eyebrow: "Panel privado",
+      title: "Exportaciones",
+      text: "Descarga la información disponible en memoria sin realizar nuevas consultas.",
+    },
+    workbook: {
+      eyebrow: "Archivo completo",
+      title: "Excel del evento",
+      text: "Incluye confirmaciones, invitados, mesas, proveedores, avisos y tareas tal como están ahora en el panel.",
+      action: "Descargar Excel",
+      pdfAction: "Descargar PDF",
+      fileName: "exportacion-boda",
+      unavailableTitle: "Datos no disponibles en memoria",
+      unavailableText:
+        "Vuelve al panel de administración e inicia sesión para cargar los datos antes de exportarlos.",
+      currentData: "Datos locales actuales",
+    },
+  },
   guests: {
     tabs: [
       { id: "confirmations", label: "Confirmaciones" },

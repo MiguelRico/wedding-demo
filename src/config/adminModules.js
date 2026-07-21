@@ -3,6 +3,7 @@ import {
   Bell,
   ChartColumn,
   ClipboardCheck,
+  FileSpreadsheet,
   Mail,
   ListTodo,
   ReceiptText,
@@ -87,6 +88,18 @@ export const adminModules = [
       icon: "mail",
     },
     load: () => import("../pages/AdminEmails"),
+  },
+  {
+    id: "exports",
+    path: "exports",
+    icon: FileSpreadsheet,
+    card: {
+      title: "Exportaciones",
+      subtitle: "Descargas del evento",
+      description: "Generar archivos con la información disponible en el panel.",
+      icon: "file-spreadsheet",
+    },
+    load: () => import("../pages/AdminExports"),
   },
   {
     id: "tasks",
