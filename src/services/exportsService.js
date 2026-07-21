@@ -628,6 +628,37 @@ export const downloadProvidersPdf = ({ fileName, snapshot }) =>
     type: "application/pdf",
   });
 
+export const downloadTasksPdf = ({ fileName, snapshot }) => {
+  const categories = new Map();
+
+  (snapshot.tasks || []).forEach((task) => {
+    const category = task.category || "Sin categoría";
+    const tasks = categories.get(category) || [];
+
+    tasks.push(task);
+    categories.set(category, tasks);
+  });
+
+  return downloadFile({
+    content: buildPdf(
+      [...categories.entries()].map(([category, tasks]) => ({
+        name: category,
+        detail: `${tasks.length} ${tasks.length === 1 ? "tarea" : "tareas"}`,
+        columns: ["Tarea", "Responsable", "Fecha límite", "Prioridad", "Estado"],
+        rows: tasks.map((task) => [
+          task.title || "Sin título",
+          task.responsible || "Sin asignar",
+          task.maxDate || "Sin fecha",
+          task.priority || "Sin prioridad",
+          task.status || "Pendiente",
+        ]),
+      })),
+    ),
+    fileName: `${fileName}-${getDateStamp()}.pdf`,
+    type: "application/pdf",
+  });
+};
+
 export const downloadSeatingPlanPdf = ({ fileName, snapshot }) => {
   const tables = buildTables({
     confirmations: snapshot.confirmations || [],

@@ -144,6 +144,13 @@ const defaultAdminContent = {
       action: "Descargar PDF",
       fileName: "confirmaciones-e-invitados",
     },
+    tasks: {
+      eyebrow: "Planificación",
+      title: "Tareas del evento",
+      text: "Genera un PDF de tareas agrupadas por categoría, responsable, fecha límite, prioridad y estado.",
+      action: "Descargar PDF",
+      fileName: "tareas-del-evento",
+    },
   },
   guests: {
     tabs: [

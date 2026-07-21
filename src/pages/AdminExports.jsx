@@ -1,4 +1,4 @@
-import { Download, FileSpreadsheet, FileText, ReceiptText, Armchair } from "lucide-react";
+import { Download, FileSpreadsheet, FileText, ReceiptText, Armchair, ListChecks } from "lucide-react";
 import { Navigate } from "react-router-dom";
 
 import { AdminPage, AdminTableSection } from "../components/admin/common";
@@ -12,6 +12,7 @@ import {
   downloadAdminWorkbook,
   downloadProvidersPdf,
   downloadSeatingPlanPdf,
+  downloadTasksPdf,
 } from "../services/exportsService";
 
 export default function AdminExports() {
@@ -75,6 +76,18 @@ export default function AdminExports() {
           disabled={!snapshot.tables.length && !snapshot.confirmations.length}
           icon={<Armchair size={20} strokeWidth={1.8} />}
           onDownload={() => downloadSeatingPlanPdf({ fileName: adminContent.exports.seating.fileName, snapshot })}
+        />
+      ),
+    },
+    {
+      id: "tasks",
+      label: "Tareas",
+      content: (
+        <ExportSection
+          content={adminContent.exports.tasks}
+          disabled={!snapshot.tasks.length}
+          icon={<ListChecks size={20} strokeWidth={1.8} />}
+          onDownload={() => downloadTasksPdf({ fileName: adminContent.exports.tasks.fileName, snapshot })}
         />
       ),
     },
