@@ -378,7 +378,7 @@ const drawSeatingTable = (table, panelY) => {
   } else {
     commands.push(`q 0.95 0.97 0.93 rg 0.58 0.66 0.55 RG 1 w 170 ${centerY - 28} 255 56 re B Q`);
   }
-  commands.push(...drawTableLegend(legend, centerX, centerY));
+  commands.push(...drawTableLegend(legend, panelX, panelY, panelWidth));
 
   getTableSeatPositions(table).forEach((position, index) => {
     const x = position.angle === undefined
@@ -469,14 +469,14 @@ const getGuestInitials = (guest) => {
 const getSeatNumber = (seat, index = 0) =>
   seat.number || seat.seat || index + 1;
 
-const drawTableLegend = (legend, centerX, centerY) =>
+const drawTableLegend = (legend, panelX, panelY, panelWidth) =>
   legend.flatMap((item, index) => {
     const column = index % 2;
     const row = Math.floor(index / 2);
-    const chipWidth = 49;
-    const chipHeight = 15;
-    const x = centerX - 50.5 + column * 52;
-    const y = centerY + 3 - row * 18;
+    const chipWidth = 54;
+    const chipHeight = 22;
+    const x = panelX + panelWidth - 132 + column * 58;
+    const y = panelY + 300 - row * 24;
 
     return [
       pdfRoundedRect(
@@ -484,13 +484,13 @@ const drawTableLegend = (legend, centerX, centerY) =>
         y,
         chipWidth,
         chipHeight,
-        5,
+        7,
         "1 1 1",
         "0.78 0.84 0.75",
       ),
-      pdfCircle(x + 7, y + 7.5, 1.8, "0.33 0.42 0.32", "0.33 0.42 0.32"),
-      pdfText(`${item.label}:`, x + 11, y + 5.25, 3.8, "0.33 0.42 0.32"),
-      pdfCenteredText(item.value, x + 42, y + 5, 5.5, "0.18 0.20 0.17"),
+      pdfCircle(x + 7, y + 11, 2.2, "0.33 0.42 0.32", "0.33 0.42 0.32"),
+      pdfText(`${item.label}:`, x + 11, y + 7, 6, "0.33 0.42 0.32"),
+      pdfCenteredText(item.value, x + 46, y + 6, 9, "0.18 0.20 0.17"),
     ];
   });
 
