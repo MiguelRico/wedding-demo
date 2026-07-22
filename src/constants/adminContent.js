@@ -118,14 +118,14 @@ const defaultAdminContent = {
     },
     providers: {
       eyebrow: "Red de servicios",
-      title: "Proveedores",
+      title: "Servicios",
       text: "Servicios agrupados por proveedor",
       action: "Descargar PDF",
-      fileName: "proveedores",
+      fileName: "servicios",
     },
     seating: {
-      eyebrow: "Plano de invitados",
-      title: "Plano de mesas",
+      eyebrow: "Plano de mesas",
+      title: "Mesas",
       text: "Organización de mesas y asientos",
       action: "Descargar PDF",
       fileName: "mesas",
