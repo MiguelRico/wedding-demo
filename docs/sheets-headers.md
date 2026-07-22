@@ -125,8 +125,18 @@ musicSongId,momentId,name,title,notes,createdAt,updatedAt
 ## MomentosMusicales
 
 ```csv
-momentId,label,description,icon,createdAt,updatedAt
+momentId,label,description,createdAt,updatedAt
 ```
 
 - Contiene los momentos editables de la escalera musical y se crea con la plantilla inicial.
+
+## BloquesMusicales
+
+```csv
+musicBlockId,momentId,name,style,duration,createdAt,updatedAt
+```
+
+- `momentId`: referencia al momento de la escalera musical.
+- `style`: estilo musical del bloque.
+- `duration`: duración total en texto libre, por ejemplo `01:30`.
 - `createdAt`, `updatedAt`: texto ISO 8601.

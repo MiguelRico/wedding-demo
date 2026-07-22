@@ -15,6 +15,7 @@ const allowedRequests = new Set([
   "PUT:notifications",
   "PUT:tasks",
   "PUT:music",
+  "PUT:seed",
   "PUT:tablePlan",
   "PUT:notificationRead",
   "DELETE:confirmations",

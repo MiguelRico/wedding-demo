@@ -264,8 +264,10 @@ const TASKS_COLUMNS = {
 
 const MUSIC_SONGS_HEADERS = ["musicSongId", "momentId", "name", "title", "notes", "createdAt", "updatedAt"];
 const MUSIC_SONGS_COLUMNS = { musicSongId: 0, momentId: 1, name: 2, title: 3, notes: 4, createdAt: 5, updatedAt: 6 };
-const MUSIC_MOMENTS_HEADERS = ["momentId", "label", "description", "icon", "createdAt", "updatedAt"];
-const MUSIC_MOMENTS_COLUMNS = { momentId: 0, label: 1, description: 2, icon: 3, createdAt: 4, updatedAt: 5 };
+const MUSIC_MOMENTS_HEADERS = ["momentId", "label", "description", "createdAt", "updatedAt"];
+const MUSIC_MOMENTS_COLUMNS = { momentId: 0, label: 1, description: 2, createdAt: 3, updatedAt: 4 };
+const MUSIC_BLOCKS_HEADERS = ["musicBlockId", "momentId", "name", "style", "duration", "createdAt", "updatedAt"];
+const MUSIC_BLOCKS_COLUMNS = { musicBlockId: 0, momentId: 1, name: 2, style: 3, duration: 4, createdAt: 5, updatedAt: 6 };
 const MUSIC_MOMENT_TEMPLATES = [
   ["guest-arrival", "Llegada de los invitados", "Música ambiental", "UsersRound"], ["groom-entrance", "Entrada del novio", "Canción elegida", "LogIn"], ["bride-entrance", "Entrada de la novia", "Canción principal", "Heart"], ["readings", "Lecturas", "Música suave (opcional)", "BookOpen"], ["rings", "Intercambio de alianzas", "Música instrumental", "Gem"], ["signing", "Firma de los documentos", "Canción elegida", "PenLine"], ["newlyweds-exit", "Salida de los novios", "Canción alegre", "DoorOpen"], ["cocktail", "Cóctel", "Playlist relajada", "GlassWater"], ["banquet-entrance", "Entrada al banquete", "Canción de presentación", "UtensilsCrossed"], ["salon-entrance", "Entrada de los novios al salón", "Canción especial", "Music"], ["cake", "Corte de la tarta", "Canción elegida", "CakeSlice"], ["first-dance", "Primer baile", "Canción de apertura", "Disc3"], ["open-bar", "Apertura de la barra libre", "Canción potente para arrancar la fiesta", "PartyPopper"], ["special-moments", "Momentos especiales (ramo, regalos, etc.)", "Canciones específicas", "Gift"], ["end-party", "Fin de la fiesta", "Última canción", "Flag"],
 ].map(([id, label, description, icon]) => ({ id, label, description, icon }));
@@ -368,6 +370,7 @@ function getMusicMomentsSheet() {
   if (!alreadyExists) sheet.getRange(2, 1, MUSIC_MOMENT_TEMPLATES.length, MUSIC_MOMENTS_HEADERS.length).setValues(MUSIC_MOMENT_TEMPLATES.map(buildMusicMomentRow));
   return sheet;
 }
+function getMusicBlocksSheet() { return getOrCreateSheet(MUSIC_BLOCKS_SHEET_NAME, MUSIC_BLOCKS_HEADERS); }
 
 function validateRequestContract(data) {
   const version = data && data.contractVersion;
@@ -1027,8 +1030,10 @@ function buildMusicSongRow(song) {
   return [musicSongId, String(song.momentId || "").trim(), String(song.name || "").trim(), String(song.title || "").trim(), String(song.notes || song.link || "").trim(), song.createdAt || now, now];
 }
 
-function buildMusicMomentFromRow(row) { const momentId = row[MUSIC_MOMENTS_COLUMNS.momentId] || ""; return { id: momentId, momentId, label: row[MUSIC_MOMENTS_COLUMNS.label] || "", description: row[MUSIC_MOMENTS_COLUMNS.description] || "", icon: row[MUSIC_MOMENTS_COLUMNS.icon] || "Music" }; }
-function buildMusicMomentRow(moment) { const now = getCurrentTimestamp(); const momentId = String(moment.momentId || moment.id || "").trim() || createEntityId("moment"); return [momentId, String(moment.label || "").trim(), String(moment.description || "").trim(), String(moment.icon || "Music").trim(), moment.createdAt || now, now]; }
+function buildMusicMomentFromRow(row) { const momentId = row[MUSIC_MOMENTS_COLUMNS.momentId] || ""; return { id: momentId, momentId, label: row[MUSIC_MOMENTS_COLUMNS.label] || "", description: row[MUSIC_MOMENTS_COLUMNS.description] || "" }; }
+function buildMusicMomentRow(moment) { const now = getCurrentTimestamp(); const momentId = String(moment.momentId || moment.id || "").trim() || createEntityId("moment"); return [momentId, String(moment.label || "").trim(), String(moment.description || "").trim(), moment.createdAt || now, now]; }
+function buildMusicBlockFromRow(row) { const musicBlockId = row[MUSIC_BLOCKS_COLUMNS.musicBlockId] || ""; return { id: musicBlockId, musicBlockId, momentId: row[MUSIC_BLOCKS_COLUMNS.momentId] || "", name: row[MUSIC_BLOCKS_COLUMNS.name] || "", style: row[MUSIC_BLOCKS_COLUMNS.style] || "", duration: row[MUSIC_BLOCKS_COLUMNS.duration] || "" }; }
+function buildMusicBlockRow(block) { const now = getCurrentTimestamp(); const id = String(block.musicBlockId || block.id || "").trim() || createEntityId("block"); return [id, String(block.momentId || "").trim(), String(block.name || "").trim(), String(block.style || "").trim(), String(block.duration || "").trim(), block.createdAt || now, now]; }
 
 function buildAssignmentRowsForGuests(confirmation, guests, context) {
   const rows = [];

@@ -19,6 +19,7 @@ VITE_ENABLE_MENU_MODULE=false
 - `VITE_APP_STORAGE_PREFIX`: prefijo para claves locales de navegador.
 - `VITE_ENABLE_MENU_MODULE`: activa o desactiva el modulo de menu.
 - `VITE_BYPASS_ADMIN_AUTH`: permite omitir el login exclusivamente en desarrollo local. Déjalo en `false` salvo que lo necesites.
+- `VITE_IMPORT_DATA_ON_START`: si es `true`, reemplaza al arrancar todas las hojas administrables con los CSV de `data`.
 
 En desarrollo, la app avisa por consola si falta configuracion critica. Las operaciones contra Apps Script fallan con un error explicito si la URL no esta configurada.
 

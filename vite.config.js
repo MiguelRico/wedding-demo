@@ -47,6 +47,7 @@ function localAdminApiPlugin() {
     "/api/admin/login": () => import("./api/admin/login.js"),
     "/api/admin/logout": () => import("./api/admin/logout.js"),
     "/api/admin/proxy": () => import("./api/admin/proxy.js"),
+    "/api/admin/seed": () => import("./api/admin/seed.js"),
     "/api/rsvp/proxy": () => import("./api/rsvp/proxy.js"),
   };
 

@@ -1,4 +1,4 @@
-import { MusicMoment, MusicSong } from "../models";
+import { MusicBlock, MusicMoment, MusicSong } from "../models";
 import { musicRepository } from "../repositories/musicRepository";
 export const createEmptyMusicSong = MusicSong.create;
 export const normalizeMusicSongs = MusicSong.normalizeList;
@@ -6,9 +6,13 @@ export const validateMusicSong = MusicSong.validate;
 export const createEmptyMusicMoment = MusicMoment.create;
 export const normalizeMusicMoments = MusicMoment.normalizeList;
 export const validateMusicMoment = MusicMoment.validate;
-export const persistMusicSongs = async ({ password, music, moments }) => {
+export const createEmptyMusicBlock = MusicBlock.create;
+export const normalizeMusicBlocks = MusicBlock.normalizeList;
+export const validateMusicBlock = MusicBlock.validate;
+export const persistMusicSongs = async ({ password, music, moments, blocks }) => {
   const normalized = MusicSong.normalizeList(music);
   const normalizedMoments = MusicMoment.normalizeList(moments);
-  await musicRepository.saveAdmin({ password, music: normalized, moments: normalizedMoments });
-  return { music: normalized, moments: normalizedMoments };
+  const normalizedBlocks = MusicBlock.normalizeList(blocks);
+  await musicRepository.saveAdmin({ password, music: normalized, moments: normalizedMoments, blocks: normalizedBlocks });
+  return { music: normalized, moments: normalizedMoments, blocks: normalizedBlocks };
 };

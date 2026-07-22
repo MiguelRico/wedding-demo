@@ -8,10 +8,38 @@ function routePut(data) {
   if (entity === "notifications") return saveNotifications(data);
   if (entity === "tasks") return saveTasks(data);
   if (entity === "music") return saveMusic(data);
+  if (entity === "seed") return seedDemoData(data);
   if (entity === "tablePlan") return saveTablePlan(data);
   if (entity === "notificationRead") return updateNotificationRead(data);
 
   throw new Error("Resource not supported");
+}
+
+function seedDemoData(data) {
+  requireAdmin(data);
+  const input = data.sheets || {};
+  const sheetConfigs = {
+    Confirmaciones: [getConfirmationsSheet, CONFIRMATIONS_HEADERS],
+    Invitados: [getSheet, GUESTS_HEADERS],
+    Mesas: [getTablesSheet, TABLES_HEADERS],
+    Asientos: [getSeatsSheet, SEATS_HEADERS],
+    AsignacionesMesa: [getTableAssignmentsSheet, TABLE_ASSIGNMENTS_HEADERS],
+    Proveedores: [getProvidersSheet, PROVIDERS_HEADERS],
+    Servicios: [getProviderServicesSheet, PROVIDER_SERVICES_HEADERS],
+    PagosServicios: [getProviderPaymentsSheet, PROVIDER_PAYMENTS_HEADERS],
+    Notificaciones: [getNotificationsSheet, NOTIFICATIONS_HEADERS],
+    Tareas: [getTasksSheet, TASKS_HEADERS],
+    MomentosMusicales: [getMusicMomentsSheet, MUSIC_MOMENTS_HEADERS],
+    EscaleraMusical: [getMusicSongsSheet, MUSIC_SONGS_HEADERS],
+    BloquesMusicales: [getMusicBlocksSheet, MUSIC_BLOCKS_HEADERS],
+  };
+  Object.keys(sheetConfigs).forEach((name) => {
+    const entry = input[name];
+    if (!entry || !Array.isArray(entry.rows)) return;
+    const [getSheet, headers] = sheetConfigs[name];
+    replaceSheetData(getSheet(), headers, entry.rows.map((row) => Array.isArray(row) ? row : []));
+  });
+  return jsonResponse({ success: true, importedSheets: Object.keys(input) });
 }
 
 function saveTablePlan(data) {
@@ -236,7 +264,11 @@ function saveMusic(data) {
     return buildMusicMomentRow({ ...moment, createdAt: previousMoments[id]?.[MUSIC_MOMENTS_COLUMNS.createdAt] || moment.createdAt });
   });
   replaceSheetData(momentsSheet, MUSIC_MOMENTS_HEADERS, momentRows);
-  return jsonResponse({ success: true, music: rows.length, moments: momentRows.length });
+  const blocksSheet = getMusicBlocksSheet();
+  const previousBlocks = getSheetRowsById(blocksSheet, MUSIC_BLOCKS_COLUMNS.musicBlockId);
+  const blockRows = (Array.isArray(data.blocks) ? data.blocks : []).map((block) => { const id = String(block.musicBlockId || block.id || "").trim(); return buildMusicBlockRow({ ...block, createdAt: previousBlocks[id]?.[MUSIC_BLOCKS_COLUMNS.createdAt] || block.createdAt }); });
+  replaceSheetData(blocksSheet, MUSIC_BLOCKS_HEADERS, blockRows);
+  return jsonResponse({ success: true, music: rows.length, moments: momentRows.length, blocks: blockRows.length });
 }
 
 function updateNotificationRead(data) {

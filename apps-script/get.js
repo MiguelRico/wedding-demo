@@ -384,5 +384,6 @@ function listMusic(e) {
   const rows = getMusicSongsSheet().getDataRange().getDisplayValues();
   const music = rows.slice(1).map(buildMusicSongFromRow).filter((song) => song.id || song.title);
   const moments = getMusicMomentsSheet().getDataRange().getDisplayValues().slice(1).map(buildMusicMomentFromRow).filter((moment) => moment.id || moment.label);
-  return jsonResponse({ success: true, music, moments }, e);
+  const blocks = getMusicBlocksSheet().getDataRange().getDisplayValues().slice(1).map(buildMusicBlockFromRow).filter((block) => block.id || block.name);
+  return jsonResponse({ success: true, music, moments, blocks }, e);
 }

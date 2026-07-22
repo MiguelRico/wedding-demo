@@ -1,0 +1,16 @@
+musicSongId,momentId,name,title,notes,createdAt,updatedAt
+music-001,moment-001,Norah Jones,Sunrise,Ambiental y suave para recibir invitados,2026-06-02T10:00:00Z,2026-07-18T10:00:00Z
+music-002,moment-002,Coldplay,Adventure of a Lifetime,Entrada del novio,2026-06-02T10:01:00Z,2026-07-18T10:00:00Z
+music-003,moment-003,Christina Perri,A Thousand Years,Entrada principal de la novia,2026-06-02T10:02:00Z,2026-07-18T10:00:00Z
+music-004,moment-004,Yiruma,River Flows in You,Bajar volumen durante las lecturas,2026-06-02T10:03:00Z,2026-07-18T10:00:00Z
+music-005,moment-005,Ludovico Einaudi,Nuvole Bianche,Versión instrumental,2026-06-02T10:04:00Z,2026-07-18T10:00:00Z
+music-006,moment-006,Jason Mraz,I'm Yours,Durante la firma de documentos,2026-06-02T10:05:00Z,2026-07-18T10:00:00Z
+music-007,moment-007,Katrina and the Waves,Walking on Sunshine,Salida alegre de la ceremonia,2026-06-02T10:06:00Z,2026-07-18T10:00:00Z
+music-008,moment-008,Jack Johnson,Better Together,Inicio de la playlist relajada,2026-06-02T10:07:00Z,2026-07-18T10:00:00Z
+music-009,moment-009,The Black Eyed Peas,I Gotta Feeling,Presentación al banquete,2026-06-02T10:08:00Z,2026-07-18T10:00:00Z
+music-010,moment-010,Bruno Mars,Marry You,Entrada de los novios al salón,2026-06-02T10:09:00Z,2026-07-18T10:00:00Z
+music-011,moment-011,OneRepublic,I Lived,Para el corte de la tarta,2026-06-02T10:10:00Z,2026-07-18T10:00:00Z
+music-012,moment-012,John Legend,All of Me,Primer baile,2026-06-02T10:11:00Z,2026-07-18T10:00:00Z
+music-013,moment-013,Bruno Mars,Uptown Funk,Arranque de la barra libre,2026-06-02T10:12:00Z,2026-07-18T10:00:00Z
+music-014,moment-014,Beyoncé,Single Ladies,Lanzamiento del ramo,2026-06-02T10:13:00Z,2026-07-18T10:00:00Z
+music-015,moment-015,Queen,Don't Stop Me Now,Última canción de la fiesta,2026-06-02T10:14:00Z,2026-07-18T10:00:00Z

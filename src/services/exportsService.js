@@ -187,6 +187,14 @@ const getAdminExportSheets = (snapshot) => {
         return [moment?.label || song.momentId, moment?.description || "", song.name, song.title, song.notes];
       }),
     },
+    {
+      name: "Bloques musicales",
+      columns: ["Momento", "Bloque", "Estilo", "Duración"],
+      rows: (snapshot.musicBlocks || []).map((block) => {
+        const moment = musicMoments.find((item) => item.id === block.momentId);
+        return [moment?.label || block.momentId, block.name, block.style, block.duration];
+      }),
+    },
   ];
 };
 
@@ -706,12 +714,13 @@ export const downloadMusicPdf = ({ fileName, snapshot }) =>
     content: buildPdf(
       (snapshot.musicMoments?.length ? snapshot.musicMoments : MUSIC_MOMENTS).map((moment) => {
         const songs = (snapshot.music || []).filter((song) => song.momentId === moment.id);
+        const blocks = (snapshot.musicBlocks || []).filter((block) => block.momentId === moment.id);
         return {
           name: `${moment.label} (${moment.description})`,
           columns: ["Nombre", "Título", "Notas"],
           columnWidths: [150, 170, 191],
           wrapFirstColumn: true,
-          rows: songs.length ? songs.map((song) => [song.name || "—", song.title || "—", song.notes || "—"]) : [["Sin canciones", "—", "—"]],
+          rows: [...blocks.map((block) => [`Bloque: ${block.name || "—"}`, block.style || "—", block.duration || "—"]), ...(songs.length ? songs.map((song) => [song.name || "—", song.title || "—", song.notes || "—"]) : [["Sin canciones", "—", "—"]])],
         };
       }),
       { title: "Escalera musical" },

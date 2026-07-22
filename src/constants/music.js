@@ -14,6 +14,6 @@ export const MUSIC_MOMENTS = [
   ["open-bar", "Apertura de la barra libre", "Canción potente para arrancar la fiesta", "PartyPopper"],
   ["special-moments", "Momentos especiales (ramo, regalos, etc.)", "Canciones específicas", "Gift"],
   ["end-party", "Fin de la fiesta", "Última canción", "Flag"],
-].map(([id, label, description, icon]) => ({ id, label, description, icon }));
+].map(([id, label, description]) => ({ id, label, description }));
 
 export const getMusicMoment = (id) => MUSIC_MOMENTS.find((moment) => moment.id === id);

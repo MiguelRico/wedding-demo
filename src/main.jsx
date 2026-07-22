@@ -7,4 +7,16 @@ if ("scrollRestoration" in window.history) {
   window.history.scrollRestoration = "manual";
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+async function startApplication() {
+  if (import.meta.env.VITE_IMPORT_DATA_ON_START === "true") {
+    try {
+      await fetch("/api/admin/seed", { method: "POST" });
+    } catch (error) {
+      console.error("No se pudieron importar los datos iniciales:", error);
+    }
+  }
+
+  ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+}
+
+startApplication();

@@ -8,3 +8,4 @@ export { Table } from "./Table";
 export { Task } from "./Task";
 export { MusicSong } from "./MusicSong";
 export { MusicMoment } from "./MusicMoment";
+export { MusicBlock } from "./MusicBlock";

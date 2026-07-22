@@ -33,8 +33,8 @@ export function validateAdminRequest(request) {
       return `La lista ${entity} contiene elementos no válidos.`;
     }
   }
-  if (method === "PUT" && entity === "music" && (!Array.isArray(request.moments) || !request.moments.every(isRecord))) {
-    return "El campo moments debe ser una lista.";
+  if (method === "PUT" && entity === "music" && (!Array.isArray(request.moments) || !request.moments.every(isRecord) || !Array.isArray(request.blocks) || !request.blocks.every(isRecord))) {
+    return "Los campos moments y blocks deben ser listas.";
   }
 
   if (method === "PUT" && entity === "tablePlan") {

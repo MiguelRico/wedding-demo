@@ -29,7 +29,7 @@ export default function Card({
       )}
 
       {hasActions && actionsPlacement === "overlay" && (
-        <div className="absolute right-5 top-4 z-20">{actions}</div>
+        <div className="absolute right-5 top-[3.25rem] z-20">{actions}</div>
       )}
 
       <div className="relative flex h-full flex-col">
@@ -42,9 +42,13 @@ export default function Card({
             {eyebrow}
           </p>
           <div
-            className={`flex gap-3 ${hasInlineActions ? "items-start justify-between" : "flex-col"}`}
+            className={`flex gap-3 ${hasInlineActions ? "items-center justify-between md:min-h-10" : "flex-col"}`}
           >
-            <div className="min-w-0 flex-1">
+            <div
+              className={`min-w-0 flex-1 ${
+                actionsPlacement === "overlay" ? "pr-24" : ""
+              }`}
+            >
               <h3
                 className="break-words font-serif text-2xl leading-none text-[var(--color-text)]"
                 ref={titleRef}
