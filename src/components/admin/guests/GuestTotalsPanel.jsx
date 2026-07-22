@@ -60,7 +60,7 @@ function GuestCharts({ chartStats }) {
   const content = adminContent.stats.confirmations.charts;
 
   return (
-    <div className="mt-3 grid gap-2 md:grid-cols-2">
+    <div className="mt-3 grid gap-2 md:grid-cols-2 md:items-start">
       <CollapsiblePanel
         className="border-[var(--color-border)] bg-white/35"
         compact
