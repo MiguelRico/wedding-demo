@@ -45,14 +45,14 @@ export default function AdminExports() {
           content={adminContent.exports.workbook}
           disabled={!hasData}
           icon={<FileSpreadsheet size={20} strokeWidth={1.8} />}
+          actionIcon={<Download size={16} strokeWidth={1.8} />}
+          tone="primary"
           onDownload={() =>
             downloadAdminWorkbook({
               fileName: adminContent.exports.workbook.fileName,
               snapshot,
             })
           }
-          actionIcon={<Download size={16} strokeWidth={1.8} />}
-          tone="primary"
         />
       ),
     },
@@ -64,6 +64,8 @@ export default function AdminExports() {
           content={adminContent.exports.confirmationsPdf}
           disabled={!snapshot.confirmations.length}
           icon={<Users size={20} strokeWidth={1.8} />}
+          actionIcon={<Download size={16} strokeWidth={1.8} />}
+          tone="primary"
           onDownload={() =>
             downloadAdminPdf({
               fileName: adminContent.exports.confirmationsPdf.fileName,
@@ -81,6 +83,8 @@ export default function AdminExports() {
           content={adminContent.exports.providers}
           disabled={!snapshot.providers.length}
           icon={<ReceiptText size={20} strokeWidth={1.8} />}
+          actionIcon={<Download size={16} strokeWidth={1.8} />}
+          tone="primary"
           onDownload={() =>
             downloadProvidersPdf({
               fileName: adminContent.exports.providers.fileName,
@@ -98,6 +102,8 @@ export default function AdminExports() {
           content={adminContent.exports.seating}
           disabled={!snapshot.tables.length && !snapshot.confirmations.length}
           icon={<Armchair size={20} strokeWidth={1.8} />}
+          actionIcon={<Download size={16} strokeWidth={1.8} />}
+          tone="primary"
           onDownload={() =>
             downloadSeatingPlanPdf({
               fileName: adminContent.exports.seating.fileName,
@@ -115,6 +121,8 @@ export default function AdminExports() {
           content={adminContent.exports.tasks}
           disabled={!snapshot.tasks.length}
           icon={<ListChecks size={20} strokeWidth={1.8} />}
+          actionIcon={<Download size={16} strokeWidth={1.8} />}
+          tone="primary"
           onDownload={() =>
             downloadTasksPdf({
               fileName: adminContent.exports.tasks.fileName,

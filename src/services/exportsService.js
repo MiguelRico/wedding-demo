@@ -187,13 +187,39 @@ const escapePdfText = (value) =>
     .replace(/\)/g, "\\)")
     .replace(/[\r\n]+/g, " ");
 
+const wrapPdfText = (value, maxLength) => {
+  const words = String(value ?? "").split(/\s+/).filter(Boolean);
+  const wrappedLines = [];
+  let currentLine = "";
+
+  words.forEach((word) => {
+    if (!currentLine || `${currentLine} ${word}`.length <= maxLength) {
+      currentLine = currentLine ? `${currentLine} ${word}` : word;
+      return;
+    }
+
+    wrappedLines.push(currentLine);
+
+    if (word.length <= maxLength) {
+      currentLine = word;
+      return;
+    }
+
+    const chunks = word.match(new RegExp(`.{1,${maxLength}}`, "g")) || [];
+    wrappedLines.push(...chunks.slice(0, -1));
+    currentLine = chunks.at(-1) || "";
+  });
+
+  return currentLine ? [...wrappedLines, currentLine] : wrappedLines;
+};
+
 const toPdfBytes = (value) => Uint8Array.from(value, (character) => {
   const code = character.codePointAt(0);
 
   return code > 255 ? 63 : code;
 });
 
-const buildPdf = (sheets) => {
+const buildPdf = (sheets, { title = "Exportación del evento" } = {}) => {
   const pageWidth = 595;
   const pageHeight = 842;
   const margin = 42;
@@ -214,8 +240,22 @@ const buildPdf = (sheets) => {
     lines.push(`BT /F1 ${size} Tf ${color} rg ${margin} ${y} Td (${escapePdfText(text)}) Tj ET`);
     y -= lineHeight;
   };
-  const addTableRow = (values, { header = false } = {}) => {
-    const rowHeight = header ? 24 : 28;
+  const addTableRow = (values, { header = false, wrapFirstColumn = false } = {}) => {
+    const columns = wrapFirstColumn ? [190, 80, 85, 75, 81] : tableColumns;
+    const cellLines = values.map((value, index) => {
+      const width = columns[index];
+      const text = String(value ?? "—");
+
+      if (!header && wrapFirstColumn && index === 0) {
+        return wrapPdfText(text, Math.max(Math.floor(width / 4.2), 16));
+      }
+
+      const maxLength = Math.max(Math.floor(width / 5.5), 8);
+      return [text.length > maxLength ? `${text.slice(0, maxLength - 1)}…` : text];
+    });
+    const rowHeight = header
+      ? 24
+      : Math.max(28, Math.max(...cellLines.map((lines) => lines.length)) * 10 + 10);
 
     if (y - rowHeight < margin) addPage();
 
@@ -226,22 +266,24 @@ const buildPdf = (sheets) => {
 
     lines.push(`q ${background} rg ${margin} ${rowY} ${tableWidth} ${rowHeight} re f Q`);
     lines.push(`q 0.78 0.84 0.75 RG 0.5 w ${margin} ${rowY} ${tableWidth} ${rowHeight} re S Q`);
-    values.forEach((value, index) => {
-      const width = tableColumns[index];
-      const maxLength = Math.max(Math.floor(width / 5.5), 8);
-      const text = String(value ?? "—");
-      const cellText = text.length > maxLength ? `${text.slice(0, maxLength - 1)}…` : text;
+    cellLines.forEach((textLines, index) => {
+      const width = columns[index];
 
       if (index > 0) {
         lines.push(`q 0.78 0.84 0.75 RG 0.5 w ${x} ${rowY} m ${x} ${y} l S Q`);
       }
-      lines.push(`BT /F1 ${header ? 7 : 7.5} Tf ${textColor} rg ${x + 5} ${rowY + rowHeight / 2 - 3} Td (${escapePdfText(cellText)}) Tj ET`);
+      textLines.forEach((line, lineIndex) => {
+        const textY =
+          rowY + rowHeight / 2 + ((textLines.length - 1) * 10) / 2 - 3 - lineIndex * 10;
+
+        lines.push(`BT /F1 ${header ? 7 : 7.5} Tf ${textColor} rg ${x + 5} ${textY} Td (${escapePdfText(line)}) Tj ET`);
+      });
       x += width;
     });
     y = rowY;
   };
 
-  addLine("Exportación del evento", { color: "0.33 0.42 0.32", size: 19 });
+  addLine(title, { color: "0.33 0.42 0.32", size: 19 });
   addLine(`Generado el ${new Date().toLocaleString("es-ES")}`, {
     color: "0.43 0.46 0.41",
   });
@@ -257,7 +299,7 @@ const buildPdf = (sheets) => {
       addLine(sheet.detail, { color: "0.43 0.46 0.41", size: 8 });
     }
     addTableRow(sheet.columns, { header: true });
-    sheet.rows.forEach((row) => addTableRow(row));
+    sheet.rows.forEach((row) => addTableRow(row, { wrapFirstColumn: sheet.wrapFirstColumn }));
     y -= 24;
   });
   addPage();
@@ -488,8 +530,7 @@ const drawTableLegend = (legend, panelX, panelY, panelWidth) =>
         "1 1 1",
         "0.78 0.84 0.75",
       ),
-      pdfLegendIcon(item.label, x + 8, y + 11),
-      pdfText(`${item.label}:`, x + 16, y + 7, 6, "0.33 0.42 0.32"),
+      pdfText(`${item.label}:`, x + 8, y + 7, 6, "0.33 0.42 0.32"),
       pdfCenteredText(item.value, x + 53, y + 6, 9, "0.18 0.20 0.17"),
     ];
   });
@@ -529,24 +570,6 @@ const pdfCircle = (x, y, radius, fill, stroke) => {
   return `q ${fill} rg ${stroke} RG 0.8 w ${x} ${y + radius} m ${x + control} ${y + radius} ${x + radius} ${y + control} ${x + radius} ${y} c ${x + radius} ${y - control} ${x + control} ${y - radius} ${x} ${y - radius} c ${x - control} ${y - radius} ${x - radius} ${y - control} ${x - radius} ${y} c ${x - radius} ${y + control} ${x - control} ${y + radius} ${x} ${y + radius} c B Q`;
 };
 
-const pdfLegendIcon = (label, x, y) => {
-  const color = "0.33 0.42 0.32";
-
-  if (label === "Pescado") {
-    return `q ${color} RG 0.8 w ${x - 4} ${y} m ${x - 2} ${y + 3} ${x + 3} ${y + 3} ${x + 4} ${y} c ${x + 3} ${y - 3} ${x - 2} ${y - 3} ${x - 4} ${y} c S ${x + 4} ${y} m ${x + 7} ${y + 3} l ${x + 7} ${y - 3} l h S Q`;
-  }
-
-  if (label === "Carne") {
-    return `q ${color} RG 0.8 w ${x - 4} ${y - 2} m ${x - 2} ${y + 4} ${x + 4} ${y + 4} ${x + 5} ${y} c ${x + 5} ${y - 4} ${x - 2} ${y - 4} ${x - 4} ${y - 2} c S Q ${pdfCircle(x, y, 1.3, "1 1 1", color)}`;
-  }
-
-  if (label === "Alergias") {
-    return `q ${color} RG 0.8 w ${x} ${y + 5} m ${x + 5} ${y - 4} l ${x - 5} ${y - 4} l h S ${x} ${y - 1} m ${x} ${y + 1} l S ${x} ${y - 3} m ${x} ${y - 3.5} l S Q`;
-  }
-
-  return `q ${color} RG 0.8 w ${x - 5} ${y - 3} m ${x - 5} ${y + 3} ${x - 2} ${y + 5} ${x + 4} ${y + 5} c ${x + 6} ${y + 5} ${x + 6} ${y - 3} ${x + 4} ${y - 3} c ${x} ${y - 3} l ${x - 2} ${y - 5} l ${x - 2} ${y - 3} l h S Q`;
-};
-
 const pdfRoundedRect = (x, y, width, height, radius, fill, stroke) => {
   const control = radius * 0.55228475;
   const right = x + width;
@@ -559,6 +582,12 @@ const truncatePdfText = (value, maxLength) => {
   const text = String(value || "");
 
   return text.length > maxLength ? `${text.slice(0, maxLength - 3)}...` : text;
+};
+
+const capitalizePdfLabel = (value) => {
+  const text = String(value || "").trim();
+
+  return text ? `${text.charAt(0).toUpperCase()}${text.slice(1)}` : "Sin categoría";
 };
 
 const getGroupedConfirmationPdfSheets = (snapshot) => {
@@ -578,8 +607,7 @@ const getGroupedConfirmationPdfSheets = (snapshot) => {
   );
 
   return (snapshot.confirmations || []).map((confirmation) => ({
-    name: confirmation.confirmationName || "Confirmación",
-    detail: `${confirmation.email || "Sin email"} · ${confirmation.phone || "Sin teléfono"}`,
+    name: `${confirmation.confirmationName || "Confirmación"} (${confirmation.phone || "Sin teléfono"} · ${confirmation.email || "Sin email"})`,
     columns: ["Invitado", "Menú", "Alergias", "Transporte", "Mesa / asiento"],
     rows: (confirmation.guests || []).map((guest, index) => [
       getGuestName(guest, index),
@@ -603,7 +631,9 @@ export const downloadAdminWorkbook = ({ fileName, snapshot }) => {
 
 export const downloadAdminPdf = ({ fileName, snapshot }) =>
   downloadFile({
-    content: buildPdf(getGroupedConfirmationPdfSheets(snapshot)),
+    content: buildPdf(getGroupedConfirmationPdfSheets(snapshot), {
+      title: "Invitados confirmados",
+    }),
     fileName: `${fileName}-${getDateStamp()}.pdf`,
     type: "application/pdf",
   });
@@ -612,9 +642,9 @@ export const downloadProvidersPdf = ({ fileName, snapshot }) =>
   downloadFile({
     content: buildPdf(
       (snapshot.providers || []).map((provider) => ({
-        name: provider.name || "Proveedor sin nombre",
-        detail: `${provider.category || "Sin categoría"} · ${provider.email || provider.phone || "Sin contacto"}`,
+        name: `${provider.name || "Proveedor sin nombre"} (${capitalizePdfLabel(provider.category || "Sin categoría")} · ${provider.email || "Sin email"})`,
         columns: ["Servicio", "Precio", "Pagado", "Pendiente", "Estado"],
+        wrapFirstColumn: true,
         rows: (provider.services || []).map((service) => {
           const payments = service.payments || [];
           const paid = payments.filter((payment) => payment.paid).reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
@@ -623,6 +653,7 @@ export const downloadProvidersPdf = ({ fileName, snapshot }) =>
           return [service.name, service.price, paid, pending, pending ? "Pendiente" : "Pagado"];
         }),
       })),
+      { title: "Proveedores y servicios" },
     ),
     fileName: `${fileName}-${getDateStamp()}.pdf`,
     type: "application/pdf",
@@ -642,9 +673,9 @@ export const downloadTasksPdf = ({ fileName, snapshot }) => {
   return downloadFile({
     content: buildPdf(
       [...categories.entries()].map(([category, tasks]) => ({
-        name: category,
-        detail: `${tasks.length} ${tasks.length === 1 ? "tarea" : "tareas"}`,
+        name: `${capitalizePdfLabel(category)} (${tasks.length} ${tasks.length === 1 ? "tarea" : "tareas"})`,
         columns: ["Tarea", "Responsable", "Fecha límite", "Prioridad", "Estado"],
+        wrapFirstColumn: true,
         rows: tasks.map((task) => [
           task.title || "Sin título",
           task.responsible || "Sin asignar",
@@ -653,6 +684,7 @@ export const downloadTasksPdf = ({ fileName, snapshot }) => {
           task.status || "Pendiente",
         ]),
       })),
+      { title: "Tareas por categoría" },
     ),
     fileName: `${fileName}-${getDateStamp()}.pdf`,
     type: "application/pdf",
