@@ -1,4 +1,4 @@
-import { ChevronsUpDown, Plus } from "lucide-react";
+import { ChevronsDown, ChevronsUp, Plus } from "lucide-react";
 
 import IconButton from "@/components/ui/IconButton";
 import { adminContent } from "@/constants/adminContent";
@@ -20,7 +20,13 @@ export default function TaskTableActions({
       <IconButton
         className={compact ? "h-10 w-10 !px-0" : "w-full"}
         disabled={loading}
-        icon={<ChevronsUpDown size={16} strokeWidth={1.8} />}
+        icon={
+          allCategoriesOpen ? (
+            <ChevronsUp size={16} strokeWidth={1.8} />
+          ) : (
+            <ChevronsDown size={16} strokeWidth={1.8} />
+          )
+        }
         label={toggleLabel}
         onClick={onToggleCategories}
         showText={showText ? "always" : undefined}

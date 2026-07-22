@@ -1,6 +1,6 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
-import { X } from "lucide-react";
+import { ChevronDown, X } from "lucide-react";
 
 export default function CollapsiblePanel({
   activeFilters = [],
@@ -18,6 +18,7 @@ export default function CollapsiblePanel({
   const panelVisible = reduceMotion
     ? { opacity: 1, height: "auto" }
     : { opacity: 1, height: "auto", y: 0, filter: "blur(0px)" };
+  const accessibleTitle = title || "panel";
 
   return (
     <div
@@ -59,22 +60,19 @@ export default function CollapsiblePanel({
             </h3>
           )}
 
-          <label className="relative inline-flex shrink-0 cursor-pointer items-center">
-            <input
-              checked={open}
-              className="peer sr-only"
-              onChange={(event) => setOpen(event.target.checked)}
-              type="checkbox"
+          <button
+            aria-expanded={open}
+            aria-label={open ? `Cerrar ${accessibleTitle}` : `Abrir ${accessibleTitle}`}
+            className="flex h-[1.875rem] w-[1.875rem] shrink-0 items-center justify-center rounded-full bg-[var(--color-border-strong)] text-white transition hover:bg-[var(--color-accent-dark)]"
+            onClick={() => setOpen((current) => !current)}
+            type="button"
+          >
+            <ChevronDown
+              className={`transition-transform ${open ? "rotate-180" : ""}`}
+              size={16}
+              strokeWidth={1.8}
             />
-
-            <div
-              className={`peer rounded-full bg-[var(--color-border-strong)] transition after:absolute after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-[var(--color-accent-dark)] ${
-                compact
-                  ? "h-[1.125rem] w-8 after:left-[2px] after:top-[2px] after:h-3.5 after:w-3.5 peer-checked:after:translate-x-3.5"
-                  : "h-5 w-9 after:left-[2px] after:top-[2px] after:h-4 after:w-4 peer-checked:after:translate-x-4"
-              }`}
-            />
-          </label>
+          </button>
         </div>
       </div>
 
