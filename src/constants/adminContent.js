@@ -413,8 +413,8 @@ const defaultAdminContent = {
       metrics: {
         tableCount: "Mesas",
         tables: "Mesas",
-        rectangularTables: "Rectangulares",
-        roundTables: "Redondas",
+        rectangularTables: "Rectangular",
+        roundTables: "Redonda",
         seatCount: "Asientos",
         seats: "Asientos",
         assignedSeats: "Asignados",
