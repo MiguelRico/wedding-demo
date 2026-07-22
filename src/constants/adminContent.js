@@ -118,8 +118,8 @@ const defaultAdminContent = {
     },
     providers: {
       eyebrow: "Red de servicios",
-      title: "Servicios",
-      text: "Servicios agrupados por proveedor",
+      title: "Servicios del evento",
+      text: "Agrupados por proveedor",
       action: "Descargar PDF",
       fileName: "servicios",
     },
