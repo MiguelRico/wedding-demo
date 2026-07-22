@@ -117,15 +117,15 @@ const defaultAdminContent = {
       text: "Descarga la información del evento",
     },
     providers: {
-      eyebrow: "Red de servicios",
+      eyebrow: "Logística",
       title: "Servicios del evento",
       text: "Agrupados por proveedor",
       action: "Descargar PDF",
       fileName: "servicios",
     },
     seating: {
-      eyebrow: "Plano de mesas",
-      title: "Mesas del evento",
+      eyebrow: "Organización",
+      title: "Plano de mesas",
       text: "Organización de asientos",
       action: "Descargar PDF",
       fileName: "mesas",
@@ -138,7 +138,7 @@ const defaultAdminContent = {
       fileName: "boda",
     },
     confirmationsPdf: {
-      eyebrow: "Lista de asistencia",
+      eyebrow: "Asistencia",
       title: "Invitados del evento",
       text: "Agrupados por confirmación",
       action: "Descargar PDF",
