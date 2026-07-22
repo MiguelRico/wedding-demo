@@ -298,7 +298,10 @@ const buildPdf = (sheets, { title = "Exportación del evento" } = {}) => {
     if (sheet.detail) {
       addLine(sheet.detail, { color: "0.43 0.46 0.41", size: 8 });
     }
-    addTableRow(sheet.columns, { header: true });
+    addTableRow(sheet.columns, {
+      header: true,
+      wrapFirstColumn: sheet.wrapFirstColumn,
+    });
     sheet.rows.forEach((row) => addTableRow(row, { wrapFirstColumn: sheet.wrapFirstColumn }));
     y -= 24;
   });
