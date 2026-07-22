@@ -5,6 +5,7 @@ import {
   ReceiptText,
   Armchair,
   ListChecks,
+  Music,
   Users,
 } from "lucide-react";
 import { Navigate } from "react-router-dom";
@@ -21,6 +22,7 @@ import {
   downloadProvidersPdf,
   downloadSeatingPlanPdf,
   downloadTasksPdf,
+  downloadMusicPdf,
 } from "../services/exportsService";
 
 export default function AdminExports() {
@@ -32,6 +34,7 @@ export default function AdminExports() {
     snapshot.providers,
     snapshot.tables,
     snapshot.tasks,
+    snapshot.music,
   ].some((items) => items.length > 0);
 
   if (!isAuthenticated) return <Navigate replace to="/admin" />;
@@ -110,6 +113,20 @@ export default function AdminExports() {
               snapshot,
             })
           }
+        />
+      ),
+    },
+    {
+      id: "music",
+      label: "Música",
+      content: (
+        <ExportSection
+          content={{ eyebrow: "PDF", title: "Escalera musical", text: "Descarga las canciones organizadas por cada momento de la boda.", action: "Descargar PDF", fileName: "escalera-musical" }}
+          disabled={!snapshot.music.length}
+          icon={<Music size={20} strokeWidth={1.8} />}
+          actionIcon={<Download size={16} strokeWidth={1.8} />}
+          tone="primary"
+          onDownload={() => downloadMusicPdf({ fileName: "escalera-musical", snapshot })}
         />
       ),
     },

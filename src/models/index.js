@@ -6,3 +6,4 @@ export { ProviderPayment } from "./ProviderPayment";
 export { ProviderService } from "./ProviderService";
 export { Table } from "./Table";
 export { Task } from "./Task";
+export { MusicSong } from "./MusicSong";

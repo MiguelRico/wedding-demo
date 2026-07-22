@@ -6,6 +6,7 @@ const listFieldsByEntity = {
   providers: "providers",
   tables: "tables",
   tasks: "tasks",
+  music: "music",
 };
 
 const isRecord = (value) =>
@@ -24,7 +25,7 @@ export function validateAdminRequest(request) {
   const entity = String(request.entity || "");
   const method = String(request.method || "").toUpperCase();
 
-  if (method === "PUT" && ["tables", "providers", "notifications", "tasks"].includes(entity)) {
+  if (method === "PUT" && ["tables", "providers", "notifications", "tasks", "music"].includes(entity)) {
     if (!Array.isArray(request[entity])) {
       return `El campo ${entity} debe ser una lista.`;
     }

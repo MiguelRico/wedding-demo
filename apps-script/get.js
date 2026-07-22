@@ -65,6 +65,11 @@ function routeGet(e) {
 
     return listTasks(e);
   }
+  if (entity === "music") {
+    const authError = validateAdmin(e);
+    if (authError) return authError;
+    return listMusic(e);
+  }
 
   return jsonResponse(
     {
@@ -373,4 +378,10 @@ function listTasks(e) {
     },
     e,
   );
+}
+
+function listMusic(e) {
+  const rows = getMusicSongsSheet().getDataRange().getDisplayValues();
+  const music = rows.slice(1).map(buildMusicSongFromRow).filter((song) => song.id || song.title);
+  return jsonResponse({ success: true, music }, e);
 }

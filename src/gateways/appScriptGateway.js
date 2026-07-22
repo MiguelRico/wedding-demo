@@ -150,6 +150,11 @@ export const findAllTasks = async ({ password } = {}) => {
   return assertAdminListResponse("tasks", response);
 };
 
+export const findAllMusic = async ({ password } = {}) => {
+  const response = await requestAdminApi({ entity: "music", method: "GET", password });
+  return assertAdminListResponse("music", response);
+};
+
 export const sendGuestEmail = async ({ message, password, recipients, subject }) => {
   const response = await requestAdminApi({
     entity: "guestEmail",
@@ -332,6 +337,12 @@ export const saveAdminTasks = async ({ password, tasks }) => {
     success: true,
     tasks,
   };
+};
+
+export const saveAdminMusic = async ({ password, music }) => {
+  const response = await requestAdminApi({ entity: "music", method: "PUT", password, music });
+  if (response?.success === false) throw new Error(response.error);
+  return { success: true, music };
 };
 
 export const updateAdminNotificationRead = async ({

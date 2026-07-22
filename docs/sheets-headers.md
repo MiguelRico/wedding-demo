@@ -111,4 +111,14 @@ notificationId,title,detail,date,type,read,createdAt,updatedAt
 - `date`: texto en formato `YYYY-MM-DD`.
 - `type`: texto, `Aviso`, `Pago` o `Invitados`.
 - `read`: texto booleano recomendado `TRUE`/`FALSE`.
+
+## EscaleraMusical
+
+```csv
+musicSongId,momentId,name,title,link,createdAt,updatedAt
+```
+
+- `momentId`: referencia al momento definido en `src/constants/music.js`.
+- `name`, `title` y `link`: intérprete/nombre, título de canción y enlace opcional.
+- Al crear la hoja por primera vez, Apps Script carga canciones de ejemplo editables.
 - `createdAt`, `updatedAt`: texto ISO 8601.

@@ -6,6 +6,7 @@ import {
   FileSpreadsheet,
   Mail,
   ListTodo,
+  Music,
   ReceiptText,
 } from "lucide-react";
 
@@ -100,6 +101,13 @@ export const adminModules = [
       icon: "file-spreadsheet",
     },
     load: () => import("../pages/AdminExports"),
+  },
+  {
+    id: "music",
+    path: "music",
+    icon: Music,
+    card: { title: "Música", subtitle: "Escalera musical", description: "Organizar las canciones de cada momento de la celebración.", icon: "music" },
+    load: () => import("../pages/AdminMusic"),
   },
   {
     id: "tasks",

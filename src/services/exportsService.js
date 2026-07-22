@@ -2,6 +2,7 @@ import { Guest } from "../models";
 import { isMenuModuleEnabled } from "../config/features";
 import { buildTables } from "./tablesService";
 import { getTableSeatPositions } from "../utils/tableSeatPositions";
+import { MUSIC_MOMENTS } from "../constants/music";
 
 const escapeXml = (value) =>
   String(value ?? "")
@@ -177,6 +178,14 @@ const getAdminExportSheets = (snapshot) => {
         task.description,
       ]),
     },
+    {
+      name: "Escalera musical",
+      columns: ["Momento", "Descripción", "Nombre", "Título", "Enlace"],
+      rows: (snapshot.music || []).map((song) => {
+        const moment = MUSIC_MOMENTS.find((item) => item.id === song.momentId);
+        return [moment?.label || song.momentId, moment?.description || "", song.name, song.title, song.link];
+      }),
+    },
   ];
 };
 
@@ -240,8 +249,8 @@ const buildPdf = (sheets, { title = "Exportación del evento" } = {}) => {
     lines.push(`BT /F1 ${size} Tf ${color} rg ${margin} ${y} Td (${escapePdfText(text)}) Tj ET`);
     y -= lineHeight;
   };
-  const addTableRow = (values, { header = false, wrapFirstColumn = false } = {}) => {
-    const columns = wrapFirstColumn ? [190, 80, 85, 75, 81] : tableColumns;
+  const addTableRow = (values, { header = false, wrapFirstColumn = false, columnWidths } = {}) => {
+    const columns = columnWidths || (wrapFirstColumn ? [190, 80, 85, 75, 81] : tableColumns);
     const cellLines = values.map((value, index) => {
       const width = columns[index];
       const text = String(value ?? "—");
@@ -298,11 +307,8 @@ const buildPdf = (sheets, { title = "Exportación del evento" } = {}) => {
     if (sheet.detail) {
       addLine(sheet.detail, { color: "0.43 0.46 0.41", size: 8 });
     }
-    addTableRow(sheet.columns, {
-      header: true,
-      wrapFirstColumn: sheet.wrapFirstColumn,
-    });
-    sheet.rows.forEach((row) => addTableRow(row, { wrapFirstColumn: sheet.wrapFirstColumn }));
+    addTableRow(sheet.columns, { header: true, wrapFirstColumn: sheet.wrapFirstColumn, columnWidths: sheet.columnWidths });
+    sheet.rows.forEach((row) => addTableRow(row, { wrapFirstColumn: sheet.wrapFirstColumn, columnWidths: sheet.columnWidths }));
     y -= 24;
   });
   addPage();
@@ -693,6 +699,25 @@ export const downloadTasksPdf = ({ fileName, snapshot }) => {
     type: "application/pdf",
   });
 };
+
+export const downloadMusicPdf = ({ fileName, snapshot }) =>
+  downloadFile({
+    content: buildPdf(
+      MUSIC_MOMENTS.map((moment) => {
+        const songs = (snapshot.music || []).filter((song) => song.momentId === moment.id);
+        return {
+          name: `${moment.label} (${moment.description})`,
+          columns: ["Nombre", "Título", "Enlace"],
+          columnWidths: [150, 170, 191],
+          wrapFirstColumn: true,
+          rows: songs.length ? songs.map((song) => [song.name || "—", song.title || "—", song.link || "—"]) : [["Sin canciones", "—", "—"]],
+        };
+      }),
+      { title: "Escalera musical" },
+    ),
+    fileName: `${fileName}-${getDateStamp()}.pdf`,
+    type: "application/pdf",
+  });
 
 export const downloadSeatingPlanPdf = ({ fileName, snapshot }) => {
   const tables = buildTables({

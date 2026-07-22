@@ -262,6 +262,18 @@ const TASKS_COLUMNS = {
   updatedAt: 9,
 };
 
+const MUSIC_SONGS_HEADERS = ["musicSongId", "momentId", "name", "title", "link", "createdAt", "updatedAt"];
+const MUSIC_SONGS_COLUMNS = { musicSongId: 0, momentId: 1, name: 2, title: 3, link: 4, createdAt: 5, updatedAt: 6 };
+
+const MUSIC_SAMPLE_SONGS = [
+  { momentId: "guest-arrival", name: "Norah Jones", title: "Sunrise", link: "https://open.spotify.com/" },
+  { momentId: "bride-entrance", name: "Christina Perri", title: "A Thousand Years", link: "https://open.spotify.com/" },
+  { momentId: "cocktail", name: "Jack Johnson", title: "Better Together", link: "https://open.spotify.com/" },
+  { momentId: "first-dance", name: "John Legend", title: "All of Me", link: "https://open.spotify.com/" },
+  { momentId: "open-bar", name: "Bruno Mars", title: "Uptown Funk", link: "https://open.spotify.com/" },
+  { momentId: "end-party", name: "Queen", title: "Don't Stop Me Now", link: "https://open.spotify.com/" },
+];
+
 function ensureHeader(sheet, headers) {
   const currentHeaders = sheet.getRange(1, 1, 1, headers.length).getValues()[0];
   const needsHeader = headers.some(
@@ -334,6 +346,19 @@ function jsonResponse(obj, e) {
 
 function readParam(value) {
   return decodeURIComponent(value || "").trim();
+}
+
+function getMusicSongsSheet() {
+  const spreadsheet = getSpreadsheet();
+  const alreadyExists = Boolean(spreadsheet.getSheetByName(MUSIC_SONGS_SHEET_NAME));
+  const sheet = getOrCreateSheet(MUSIC_SONGS_SHEET_NAME, MUSIC_SONGS_HEADERS);
+
+  if (!alreadyExists) {
+    sheet.getRange(2, 1, MUSIC_SAMPLE_SONGS.length, MUSIC_SONGS_HEADERS.length)
+      .setValues(MUSIC_SAMPLE_SONGS.map(buildMusicSongRow));
+  }
+
+  return sheet;
 }
 
 function validateRequestContract(data) {
@@ -981,6 +1006,17 @@ function appendAssignmentRowsForGuests(sheet, confirmation, guests) {
       )
       .setValues(rows);
   }
+}
+
+function buildMusicSongFromRow(row) {
+  const musicSongId = row[MUSIC_SONGS_COLUMNS.musicSongId] || "";
+  return { id: musicSongId, musicSongId, momentId: row[MUSIC_SONGS_COLUMNS.momentId] || "", name: row[MUSIC_SONGS_COLUMNS.name] || "", title: row[MUSIC_SONGS_COLUMNS.title] || "", link: row[MUSIC_SONGS_COLUMNS.link] || "" };
+}
+
+function buildMusicSongRow(song) {
+  const now = getCurrentTimestamp();
+  const musicSongId = String(song.musicSongId || song.id || "").trim() || createEntityId("music");
+  return [musicSongId, String(song.momentId || "").trim(), String(song.name || "").trim(), String(song.title || "").trim(), String(song.link || "").trim(), song.createdAt || now, now];
 }
 
 function buildAssignmentRowsForGuests(confirmation, guests, context) {

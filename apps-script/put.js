@@ -7,6 +7,7 @@ function routePut(data) {
   if (entity === "providers") return saveProviders(data);
   if (entity === "notifications") return saveNotifications(data);
   if (entity === "tasks") return saveTasks(data);
+  if (entity === "music") return saveMusic(data);
   if (entity === "tablePlan") return saveTablePlan(data);
   if (entity === "notificationRead") return updateNotificationRead(data);
 
@@ -217,6 +218,18 @@ function saveTasks(data) {
   });
   replaceSheetData(sheet, TASKS_HEADERS, rows);
   return jsonResponse({ success: true, tasks: rows.length });
+}
+
+function saveMusic(data) {
+  requireAdmin(data);
+  const sheet = getMusicSongsSheet();
+  const previous = getSheetRowsById(sheet, MUSIC_SONGS_COLUMNS.musicSongId);
+  const rows = (Array.isArray(data.music) ? data.music : []).map((song) => {
+    const id = String(song.musicSongId || song.id || "").trim();
+    return buildMusicSongRow({ ...song, createdAt: previous[id]?.[MUSIC_SONGS_COLUMNS.createdAt] || song.createdAt });
+  });
+  replaceSheetData(sheet, MUSIC_SONGS_HEADERS, rows);
+  return jsonResponse({ success: true, music: rows.length });
 }
 
 function updateNotificationRead(data) {

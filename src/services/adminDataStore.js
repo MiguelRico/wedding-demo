@@ -1,6 +1,6 @@
 import { ADMIN_PASSWORD } from "../constants/admin";
 import { adminContent } from "../constants/adminContent";
-import { AdminNotification, Table, Task } from "../models";
+import { AdminNotification, MusicSong, Table, Task } from "../models";
 import { mapAdminConfirmations } from "../mappers/confirmationMapper";
 import { mapAdminProviders } from "../mappers/providerMapper";
 import { mapAdminTables } from "../mappers/tableMapper";
@@ -9,6 +9,7 @@ import { notificationRepository } from "../repositories/notificationRepository";
 import { providerRepository } from "../repositories/providerRepository";
 import { tableRepository } from "../repositories/tableRepository";
 import { taskRepository } from "../repositories/taskRepository";
+import { musicRepository } from "../repositories/musicRepository";
 import {
   cloneJson,
   hasJsonChanged,
@@ -19,9 +20,11 @@ const emptySnapshot = {
   loaded: false,
   loadingPromise: null,
   notifications: [],
+  music: [],
   providers: [],
   savedConfirmations: [],
   savedNotifications: [],
+  savedMusic: [],
   savedProviders: [],
   savedTables: [],
   savedTasks: [],
@@ -58,9 +61,11 @@ export const clearAdminDataStore = () => {
   store.loaded = false;
   store.loadingPromise = null;
   store.notifications = [];
+  store.music = [];
   store.providers = [];
   store.savedConfirmations = [];
   store.savedNotifications = [];
+  store.savedMusic = [];
   store.savedProviders = [];
   store.savedTables = [];
   store.savedTasks = [];
@@ -120,6 +125,10 @@ export const loadAdminDataOnce = async ({ password = ADMIN_PASSWORD } = {}) => {
       console.error("Error al cargar tareas:", error);
       return { tasks: [] };
     }),
+    musicRepository.findAll({ password }).catch((error) => {
+      console.error("Error al cargar escalera musical:", error);
+      return { music: [] };
+    }),
   ])
     .then(
       ([
@@ -127,7 +136,7 @@ export const loadAdminDataOnce = async ({ password = ADMIN_PASSWORD } = {}) => {
         tablesResponse,
         providersResponse,
         notificationsResponse,
-        tasksResponse,
+        tasksResponse, musicResponse,
       ]) => {
         store.confirmations = mapAdminConfirmations(confirmationsResponse);
         store.tables = Table.normalizeList(
@@ -138,6 +147,7 @@ export const loadAdminDataOnce = async ({ password = ADMIN_PASSWORD } = {}) => {
           notificationsResponse?.notifications || notificationsResponse || [],
         );
         store.tasks = Task.normalizeList(tasksResponse?.tasks || []);
+        store.music = MusicSong.normalizeList(musicResponse?.music || []);
         markAdminDataSaved();
         store.loaded = true;
 
@@ -154,9 +164,11 @@ export const loadAdminDataOnce = async ({ password = ADMIN_PASSWORD } = {}) => {
 const createAdminDataSnapshot = () => ({
   confirmations: cloneJson(store.confirmations),
   notifications: cloneJson(store.notifications),
+  music: cloneJson(store.music),
   providers: cloneJson(store.providers),
   savedConfirmations: cloneJson(store.savedConfirmations),
   savedNotifications: cloneJson(store.savedNotifications),
+  savedMusic: cloneJson(store.savedMusic),
   savedProviders: cloneJson(store.savedProviders),
   savedTables: cloneJson(store.savedTables),
   savedTasks: cloneJson(store.savedTasks),
@@ -177,7 +189,8 @@ export const hasAdminPendingChanges = () =>
   hasJsonChanged(store.tables, store.savedTables) ||
   hasJsonChanged(store.providers, store.savedProviders) ||
   hasJsonChanged(store.notifications, store.savedNotifications) ||
-  hasJsonChanged(store.tasks, store.savedTasks);
+  hasJsonChanged(store.tasks, store.savedTasks) ||
+  hasJsonChanged(store.music, store.savedMusic);
 
 export const getAdminPendingChangesSummary = () =>
   dedupeChanges([
@@ -226,6 +239,7 @@ export const getAdminPendingChangesSummary = () =>
       savedItems: store.savedNotifications,
     }),
     ...getAdminTaskChangesSummary(),
+    ...getAdminMusicChangesSummary(),
   ]);
 
 export const getAdminNotificationChangesSummary = () =>
@@ -254,15 +268,27 @@ export const getAdminTaskChangesSummary = () =>
     savedItems: store.savedTasks,
   });
 
+export const getAdminMusicChangesSummary = () =>
+  buildEntityChanges({
+    createdLabel: (item) => `Canción añadida: ${item.title || getUnnamedFallback()}`,
+    currentItems: store.music,
+    deletedLabel: (item) => `Canción eliminada: ${item.title || getUnnamedFallback()}`,
+    getKey: (item) => item.id,
+    modifiedLabel: (item) => `Canción modificada: ${item.title || getUnnamedFallback()}`,
+    savedItems: store.savedMusic,
+  });
+
 export const markAdminDataSaved = ({
   confirmations = store.confirmations,
   notifications = store.notifications,
+  music = store.music,
   providers = store.providers,
   tables = store.tables,
   tasks = store.tasks,
 } = {}) => {
   store.savedConfirmations = mapAdminConfirmations(confirmations);
   store.savedNotifications = AdminNotification.normalizeList(notifications);
+  store.savedMusic = MusicSong.normalizeList(music);
   store.savedProviders = mapAdminProviders(providers);
   store.savedTables = Table.normalizeList(tables);
   store.savedTasks = Task.normalizeList(tasks);
@@ -279,6 +305,7 @@ export const discardAdminPendingChanges = () => {
   store.providers = mapAdminProviders(store.savedProviders);
   store.tables = Table.normalizeList(store.savedTables);
   store.tasks = Task.normalizeList(store.savedTasks);
+  store.music = MusicSong.normalizeList(store.savedMusic);
 
   notifyAdminDataChange();
   return getAdminDataSnapshot();
@@ -288,7 +315,6 @@ export const discardAdminNotificationChanges = () => {
   store.notifications = AdminNotification.normalizeList(
     store.savedNotifications,
   );
-
   notifyAdminDataChange();
   return store.notifications;
 };
@@ -374,6 +400,9 @@ export const saveAdminPendingChanges = async ({
       taskRepository.saveAdmin({ password, tasks: store.tasks }),
     );
   }
+  if (hasJsonChanged(store.music, store.savedMusic)) {
+    persistenceRequests.push(musicRepository.saveAdmin({ password, music: store.music }));
+  }
 
   await Promise.all(persistenceRequests);
 
@@ -441,6 +470,12 @@ export const setAdminTasks = (tasks) => {
 
   notifyAdminDataChange();
   return store.tasks;
+};
+
+export const setAdminMusic = (music) => {
+  store.music = MusicSong.normalizeList(music);
+  notifyAdminDataChange();
+  return store.music;
 };
 
 export const upsertAdminNotification = (notification) => {
@@ -530,6 +565,27 @@ export const removeAdminTask = (taskId) => {
 
   notifyAdminDataChange();
   return store.tasks;
+};
+
+export const upsertAdminMusicSong = (song) => {
+  const normalized = MusicSong.normalize(song);
+  store.music = MusicSong.normalizeList([
+    ...store.music.filter((item) => item.id !== normalized.id), normalized,
+  ]);
+  notifyAdminDataChange();
+  return store.music;
+};
+
+export const removeAdminMusicSong = (songId) => {
+  store.music = MusicSong.normalizeList(store.music.filter((song) => song.id !== songId));
+  notifyAdminDataChange();
+  return store.music;
+};
+
+export const discardAdminMusicChanges = () => {
+  store.music = MusicSong.normalizeList(store.savedMusic);
+  notifyAdminDataChange();
+  return store.music;
 };
 
 function buildEntityChanges({
