@@ -138,7 +138,7 @@ const defaultAdminContent = {
       fileName: "boda",
     },
     confirmationsPdf: {
-      eyebrow: "Asistenciaaaa",
+      eyebrow: "Asistencia",
       title: "Invitados del evento",
       text: "Agrupados por confirmación",
       action: "Descargar PDF",
