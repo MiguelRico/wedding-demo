@@ -61,6 +61,7 @@ const downloadFile = ({ content, fileName, type }) => {
 };
 
 const getAdminExportSheets = (snapshot) => {
+  const musicMoments = snapshot.musicMoments?.length ? snapshot.musicMoments : MUSIC_MOMENTS;
   const confirmations = snapshot.confirmations || [];
   const tables = buildTables({
     confirmations,
@@ -180,10 +181,10 @@ const getAdminExportSheets = (snapshot) => {
     },
     {
       name: "Escalera musical",
-      columns: ["Momento", "Descripción", "Nombre", "Título", "Enlace"],
+      columns: ["Momento", "Descripción", "Nombre", "Título", "Notas"],
       rows: (snapshot.music || []).map((song) => {
-        const moment = MUSIC_MOMENTS.find((item) => item.id === song.momentId);
-        return [moment?.label || song.momentId, moment?.description || "", song.name, song.title, song.link];
+        const moment = musicMoments.find((item) => item.id === song.momentId);
+        return [moment?.label || song.momentId, moment?.description || "", song.name, song.title, song.notes];
       }),
     },
   ];
@@ -703,14 +704,14 @@ export const downloadTasksPdf = ({ fileName, snapshot }) => {
 export const downloadMusicPdf = ({ fileName, snapshot }) =>
   downloadFile({
     content: buildPdf(
-      MUSIC_MOMENTS.map((moment) => {
+      (snapshot.musicMoments?.length ? snapshot.musicMoments : MUSIC_MOMENTS).map((moment) => {
         const songs = (snapshot.music || []).filter((song) => song.momentId === moment.id);
         return {
           name: `${moment.label} (${moment.description})`,
-          columns: ["Nombre", "Título", "Enlace"],
+          columns: ["Nombre", "Título", "Notas"],
           columnWidths: [150, 170, 191],
           wrapFirstColumn: true,
-          rows: songs.length ? songs.map((song) => [song.name || "—", song.title || "—", song.link || "—"]) : [["Sin canciones", "—", "—"]],
+          rows: songs.length ? songs.map((song) => [song.name || "—", song.title || "—", song.notes || "—"]) : [["Sin canciones", "—", "—"]],
         };
       }),
       { title: "Escalera musical" },

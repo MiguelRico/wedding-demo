@@ -115,10 +115,18 @@ notificationId,title,detail,date,type,read,createdAt,updatedAt
 ## EscaleraMusical
 
 ```csv
-musicSongId,momentId,name,title,link,createdAt,updatedAt
+musicSongId,momentId,name,title,notes,createdAt,updatedAt
 ```
 
 - `momentId`: referencia al momento definido en `src/constants/music.js`.
-- `name`, `title` y `link`: intérprete/nombre, título de canción y enlace opcional.
+- `name`, `title` y `notes`: intérprete/nombre, título de canción y notas libres.
 - Al crear la hoja por primera vez, Apps Script carga canciones de ejemplo editables.
+
+## MomentosMusicales
+
+```csv
+momentId,label,description,icon,createdAt,updatedAt
+```
+
+- Contiene los momentos editables de la escalera musical y se crea con la plantilla inicial.
 - `createdAt`, `updatedAt`: texto ISO 8601.

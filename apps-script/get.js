@@ -383,5 +383,6 @@ function listTasks(e) {
 function listMusic(e) {
   const rows = getMusicSongsSheet().getDataRange().getDisplayValues();
   const music = rows.slice(1).map(buildMusicSongFromRow).filter((song) => song.id || song.title);
-  return jsonResponse({ success: true, music }, e);
+  const moments = getMusicMomentsSheet().getDataRange().getDisplayValues().slice(1).map(buildMusicMomentFromRow).filter((moment) => moment.id || moment.label);
+  return jsonResponse({ success: true, music, moments }, e);
 }

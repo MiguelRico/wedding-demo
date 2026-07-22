@@ -1,6 +1,6 @@
 import { ADMIN_PASSWORD } from "../constants/admin";
 import { adminContent } from "../constants/adminContent";
-import { AdminNotification, MusicSong, Table, Task } from "../models";
+import { AdminNotification, MusicMoment, MusicSong, Table, Task } from "../models";
 import { mapAdminConfirmations } from "../mappers/confirmationMapper";
 import { mapAdminProviders } from "../mappers/providerMapper";
 import { mapAdminTables } from "../mappers/tableMapper";
@@ -21,10 +21,12 @@ const emptySnapshot = {
   loadingPromise: null,
   notifications: [],
   music: [],
+  musicMoments: [],
   providers: [],
   savedConfirmations: [],
   savedNotifications: [],
   savedMusic: [],
+  savedMusicMoments: [],
   savedProviders: [],
   savedTables: [],
   savedTasks: [],
@@ -62,10 +64,12 @@ export const clearAdminDataStore = () => {
   store.loadingPromise = null;
   store.notifications = [];
   store.music = [];
+  store.musicMoments = [];
   store.providers = [];
   store.savedConfirmations = [];
   store.savedNotifications = [];
   store.savedMusic = [];
+  store.savedMusicMoments = [];
   store.savedProviders = [];
   store.savedTables = [];
   store.savedTasks = [];
@@ -148,6 +152,7 @@ export const loadAdminDataOnce = async ({ password = ADMIN_PASSWORD } = {}) => {
         );
         store.tasks = Task.normalizeList(tasksResponse?.tasks || []);
         store.music = MusicSong.normalizeList(musicResponse?.music || []);
+        store.musicMoments = MusicMoment.normalizeList(musicResponse?.moments || []);
         markAdminDataSaved();
         store.loaded = true;
 
@@ -165,10 +170,12 @@ const createAdminDataSnapshot = () => ({
   confirmations: cloneJson(store.confirmations),
   notifications: cloneJson(store.notifications),
   music: cloneJson(store.music),
+  musicMoments: cloneJson(store.musicMoments),
   providers: cloneJson(store.providers),
   savedConfirmations: cloneJson(store.savedConfirmations),
   savedNotifications: cloneJson(store.savedNotifications),
   savedMusic: cloneJson(store.savedMusic),
+  savedMusicMoments: cloneJson(store.savedMusicMoments),
   savedProviders: cloneJson(store.savedProviders),
   savedTables: cloneJson(store.savedTables),
   savedTasks: cloneJson(store.savedTasks),
@@ -190,7 +197,8 @@ export const hasAdminPendingChanges = () =>
   hasJsonChanged(store.providers, store.savedProviders) ||
   hasJsonChanged(store.notifications, store.savedNotifications) ||
   hasJsonChanged(store.tasks, store.savedTasks) ||
-  hasJsonChanged(store.music, store.savedMusic);
+  hasJsonChanged(store.music, store.savedMusic) ||
+  hasJsonChanged(store.musicMoments, store.savedMusicMoments);
 
 export const getAdminPendingChangesSummary = () =>
   dedupeChanges([
@@ -269,19 +277,20 @@ export const getAdminTaskChangesSummary = () =>
   });
 
 export const getAdminMusicChangesSummary = () =>
-  buildEntityChanges({
+  [...buildEntityChanges({
     createdLabel: (item) => `Canción añadida: ${item.title || getUnnamedFallback()}`,
     currentItems: store.music,
     deletedLabel: (item) => `Canción eliminada: ${item.title || getUnnamedFallback()}`,
     getKey: (item) => item.id,
     modifiedLabel: (item) => `Canción modificada: ${item.title || getUnnamedFallback()}`,
     savedItems: store.savedMusic,
-  });
+  }), ...buildEntityChanges({ createdLabel: (item) => `Momento creado: ${item.label || getUnnamedFallback()}`, currentItems: store.musicMoments, deletedLabel: (item) => `Momento eliminado: ${item.label || getUnnamedFallback()}`, getKey: (item) => item.id, modifiedLabel: (item) => `Momento modificado: ${item.label || getUnnamedFallback()}`, savedItems: store.savedMusicMoments })];
 
 export const markAdminDataSaved = ({
   confirmations = store.confirmations,
   notifications = store.notifications,
   music = store.music,
+  musicMoments = store.musicMoments,
   providers = store.providers,
   tables = store.tables,
   tasks = store.tasks,
@@ -289,6 +298,7 @@ export const markAdminDataSaved = ({
   store.savedConfirmations = mapAdminConfirmations(confirmations);
   store.savedNotifications = AdminNotification.normalizeList(notifications);
   store.savedMusic = MusicSong.normalizeList(music);
+  store.savedMusicMoments = MusicMoment.normalizeList(musicMoments);
   store.savedProviders = mapAdminProviders(providers);
   store.savedTables = Table.normalizeList(tables);
   store.savedTasks = Task.normalizeList(tasks);
@@ -306,6 +316,7 @@ export const discardAdminPendingChanges = () => {
   store.tables = Table.normalizeList(store.savedTables);
   store.tasks = Task.normalizeList(store.savedTasks);
   store.music = MusicSong.normalizeList(store.savedMusic);
+  store.musicMoments = MusicMoment.normalizeList(store.savedMusicMoments);
 
   notifyAdminDataChange();
   return getAdminDataSnapshot();
@@ -400,8 +411,8 @@ export const saveAdminPendingChanges = async ({
       taskRepository.saveAdmin({ password, tasks: store.tasks }),
     );
   }
-  if (hasJsonChanged(store.music, store.savedMusic)) {
-    persistenceRequests.push(musicRepository.saveAdmin({ password, music: store.music }));
+  if (hasJsonChanged(store.music, store.savedMusic) || hasJsonChanged(store.musicMoments, store.savedMusicMoments)) {
+    persistenceRequests.push(musicRepository.saveAdmin({ password, music: store.music, moments: store.musicMoments }));
   }
 
   await Promise.all(persistenceRequests);
@@ -476,6 +487,12 @@ export const setAdminMusic = (music) => {
   store.music = MusicSong.normalizeList(music);
   notifyAdminDataChange();
   return store.music;
+};
+
+export const setAdminMusicMoments = (moments) => {
+  store.musicMoments = MusicMoment.normalizeList(moments);
+  notifyAdminDataChange();
+  return store.musicMoments;
 };
 
 export const upsertAdminNotification = (notification) => {
@@ -584,6 +601,7 @@ export const removeAdminMusicSong = (songId) => {
 
 export const discardAdminMusicChanges = () => {
   store.music = MusicSong.normalizeList(store.savedMusic);
+  store.musicMoments = MusicMoment.normalizeList(store.savedMusicMoments);
   notifyAdminDataChange();
   return store.music;
 };

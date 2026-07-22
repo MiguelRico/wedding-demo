@@ -10,6 +10,7 @@ const PROVIDER_PAYMENTS_SHEET_NAME = "PagosServicios";
 const NOTIFICATIONS_SHEET_NAME = "Notificaciones";
 const TASKS_SHEET_NAME = "Tareas";
 const MUSIC_SONGS_SHEET_NAME = "EscaleraMusical";
+const MUSIC_MOMENTS_SHEET_NAME = "MomentosMusicales";
 const SPREADSHEET_ID = "1g6ILX7_Q_-EQdNY6ZlahMCXOWX77K9JdvQCv2hdXoFU";
 const ADMIN_EMAIL = "miguel.rico.vazquez@gmail.com";
 const APP_BASE_URL = "https://wedding-demo-eosin.vercel.app/";

@@ -33,6 +33,9 @@ export function validateAdminRequest(request) {
       return `La lista ${entity} contiene elementos no válidos.`;
     }
   }
+  if (method === "PUT" && entity === "music" && (!Array.isArray(request.moments) || !request.moments.every(isRecord))) {
+    return "El campo moments debe ser una lista.";
+  }
 
   if (method === "PUT" && entity === "tablePlan") {
     if (!Array.isArray(request.tables) || !Array.isArray(request.confirmations)) {

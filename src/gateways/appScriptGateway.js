@@ -339,10 +339,10 @@ export const saveAdminTasks = async ({ password, tasks }) => {
   };
 };
 
-export const saveAdminMusic = async ({ password, music }) => {
-  const response = await requestAdminApi({ entity: "music", method: "PUT", password, music });
+export const saveAdminMusic = async ({ password, music, moments }) => {
+  const response = await requestAdminApi({ entity: "music", method: "PUT", password, music, moments });
   if (response?.success === false) throw new Error(response.error);
-  return { success: true, music };
+  return { success: true, music, moments };
 };
 
 export const updateAdminNotificationRead = async ({

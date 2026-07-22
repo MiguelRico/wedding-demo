@@ -1,51 +1,44 @@
 import { useEffect, useMemo, useState } from "react";
 import * as Icons from "lucide-react";
-import { Plus, Save, Trash2, ExternalLink } from "lucide-react";
+import { Pencil, Plus, Trash2 } from "lucide-react";
 import { Navigate } from "react-router-dom";
-
 import { ADMIN_PASSWORD } from "../constants/admin";
-import { MUSIC_MOMENTS } from "../constants/music";
 import { isAdminSessionAuthenticated } from "../utils/adminSession";
-import { createEmptyMusicSong, normalizeMusicSongs, persistMusicSongs, validateMusicSong } from "../services/musicService";
-import { loadAdminDataOnce, markAdminDataSaved, setAdminMusic } from "../services/adminDataStore";
-import { AdminPage, AdminTableSection, EditorDialog } from "../components/admin/common";
+import { createEmptyMusicMoment, createEmptyMusicSong, normalizeMusicMoments, normalizeMusicSongs, persistMusicSongs, validateMusicMoment, validateMusicSong } from "../services/musicService";
+import { discardAdminMusicChanges, getAdminDataSnapshot, getAdminMusicChangesSummary, loadAdminDataOnce, markAdminDataSaved, setAdminMusic, setAdminMusicMoments } from "../services/adminDataStore";
+import { AdminPage, AdminPendingChangesActions, AdminTableSection, EditorDialog, UnsavedChangesDialog } from "../components/admin/common";
 import IconButton from "../components/ui/IconButton";
+import DeleteDialog from "../components/ui/DeleteDialog";
 import Spinner from "../components/ui/Spinner";
+import useSpinner from "../hooks/useSpinner";
+import useIsMobileView from "../hooks/useIsMobileView";
+import useAdminLocalChanges from "../hooks/useAdminLocalChanges";
 
-const header = { eyebrow: "Organización", title: "Escalera musical", text: "Define la banda sonora de cada momento de vuestra boda." };
-
+const header = { eyebrow: "Organización", title: "Escalera musical", text: "Organiza momentos y canciones de vuestra boda." };
 export default function AdminMusic() {
-  const authenticated = isAdminSessionAuthenticated();
-  const [loading, setLoading] = useState(true);
-  const [music, setMusic] = useState([]);
-  const [editing, setEditing] = useState(null);
-  const [errors, setErrors] = useState({});
-  const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    if (!authenticated) return;
-    loadAdminDataOnce({ password: ADMIN_PASSWORD }).then((snapshot) => setMusic(normalizeMusicSongs(snapshot.music))).catch(console.error).finally(() => setLoading(false));
-  }, [authenticated]);
-  const songsByMoment = useMemo(() => new Map(MUSIC_MOMENTS.map((moment) => [moment.id, music.filter((song) => song.momentId === moment.id)])), [music]);
+  const authenticated = isAdminSessionAuthenticated(); const spinner = useSpinner(); const mobile = useIsMobileView();
+  const [loading, setLoading] = useState(true); const [music, setMusic] = useState([]); const [moments, setMoments] = useState([]); const [editing, setEditing] = useState(null); const [editingType, setEditingType] = useState(""); const [errors, setErrors] = useState({}); const [deleteTarget, setDeleteTarget] = useState(null);
+  useEffect(() => { if (!authenticated) return; loadAdminDataOnce({ password: ADMIN_PASSWORD }).then((snapshot) => { setMusic(normalizeMusicSongs(snapshot.music)); setMoments(normalizeMusicMoments(snapshot.musicMoments)); }).catch(console.error).finally(() => setLoading(false)); }, [authenticated]);
+  const changes = getAdminMusicChangesSummary(); const pending = changes.length > 0;
+  const apply = (nextMusic, nextMoments) => { const songs = normalizeMusicSongs(nextMusic); const normalizedMoments = normalizeMusicMoments(nextMoments); setMusic(songs); setMoments(normalizedMoments); setAdminMusic(songs); setAdminMusicMoments(normalizedMoments); };
+  const save = async () => { if (!pending) return true; try { spinner.show("Guardando escalera musical..."); const saved = await persistMusicSongs({ password: ADMIN_PASSWORD, music, moments }); apply(saved.music, saved.moments); markAdminDataSaved({ music: saved.music, musicMoments: saved.moments }); return true; } catch (error) { console.error(error); return false; } finally { spinner.hide(); } };
+  const discard = () => { const restored = discardAdminMusicChanges(); setMusic(restored); setMoments(normalizeMusicMoments(getAdminDataSnapshot().musicMoments)); setEditing(null); setDeleteTarget(null); };
+  const submit = (event) => { event.preventDefault(); const validation = editingType === "moment" ? validateMusicMoment(editing) : validateMusicSong(editing); setErrors(validation); if (Object.keys(validation).length) return; if (editingType === "moment") apply(music, [...moments.filter((item) => item.id !== editing.id), editing]); else apply([...music.filter((item) => item.id !== editing.id), editing], moments); setEditing(null); };
+  const confirmDelete = () => { if (deleteTarget.type === "moment") apply(music.filter((song) => song.momentId !== deleteTarget.item.id), moments.filter((moment) => moment.id !== deleteTarget.item.id)); else apply(music.filter((song) => song.id !== deleteTarget.item.id), moments); setDeleteTarget(null); };
+  const { blocker, cancelBlockedNavigation, discardAndContinueNavigation, saveAndContinueNavigation } = useAdminLocalChanges({ hasPendingChanges: pending, onDiscard: discard, onSave: save });
+  const grouped = useMemo(() => moments.map((moment) => ({ moment, songs: music.filter((song) => song.momentId === moment.id) })), [music, moments]);
   if (!authenticated) return <Navigate to="/admin" replace />;
-  const apply = (next) => { const normalized = normalizeMusicSongs(next); setMusic(normalized); setAdminMusic(normalized); };
-  const save = async () => { setSaving(true); try { const saved = await persistMusicSongs({ password: ADMIN_PASSWORD, music }); apply(saved); markAdminDataSaved({ music: saved }); } finally { setSaving(false); } };
-  const submit = (event) => { event.preventDefault(); const nextErrors = validateMusicSong(editing); setErrors(nextErrors); if (Object.keys(nextErrors).length) return; apply([...music.filter((song) => song.id !== editing.id), editing]); setEditing(null); };
-
-  return <AdminPage header={header}>{() => <>
-    <AdminTableSection loading={loading} title="Momentos de la boda" count={`${music.length} canciones`} headerActions={<IconButton icon={<Save size={17} />} label="Guardar cambios" onClick={save} showText="always" disabled={saving}>{saving ? "Guardando" : "Guardar"}</IconButton>}>
-      {loading ? <Spinner /> : <div className="grid gap-4 md:grid-cols-2">
-        {MUSIC_MOMENTS.map((moment) => {
-          const MomentIcon = Icons[moment.icon] || Icons.Music;
-          const songs = songsByMoment.get(moment.id) || [];
-          return <article key={moment.id} className="rounded-[1.5rem] border border-[var(--color-border)] bg-white/55 p-5 shadow-sm">
-            <div className="flex items-start gap-3"><span className="rounded-full bg-[var(--color-bg-soft)] p-3 text-[var(--color-accent-dark)]"><MomentIcon size={21} /></span><div className="min-w-0"><h2 className="font-serif text-2xl text-[var(--color-accent-dark)]">{moment.label}</h2><p className="mt-1 text-sm text-[var(--color-muted)]">{moment.description}</p></div></div>
-            <div className="mt-4 space-y-2">{songs.map((song) => <div key={song.id} className="flex items-center gap-2 rounded-xl border border-[var(--color-border)] bg-white/70 px-3 py-2"><button className="min-w-0 flex-1 text-left" onClick={() => { setErrors({}); setEditing(song); }} type="button"><span className="block truncate text-sm font-semibold text-[var(--color-text)]">{song.title}</span><span className="block truncate text-xs text-[var(--color-muted)]">{song.name}</span></button>{song.link && <IconButton href={song.link} target="_blank" icon={<ExternalLink size={15} />} label="Abrir enlace" tone="terciary" />}{<IconButton icon={<Trash2 size={15} />} label="Eliminar canción" tone="danger" onClick={() => apply(music.filter((item) => item.id !== song.id))} />}</div>)}</div>
-            <IconButton className="mt-4" icon={<Plus size={16} />} label={`Añadir canción a ${moment.label}`} showText="always" onClick={() => { setErrors({}); setEditing(createEmptyMusicSong({ momentId: moment.id })); }}>Añadir canción</IconButton>
-          </article>;
-        })}
-      </div>}
+  return <AdminPage header={header} innerClassName="max-w-7xl py-6">{() => <>
+    {spinner.loading && <Spinner text={spinner.text} />}
+    <AdminPendingChangesActions changes={changes} hasPendingChanges={pending} loading={loading} onDiscard={discard} onSave={save} saving={spinner.loading} showText={!mobile} />
+    <AdminTableSection className="mt-4" loading={loading} title="Momentos de la boda" count={`${music.length} canciones`} actions={<MusicActions onMoment={() => { setEditingType("moment"); setEditing(createEmptyMusicMoment()); setErrors({}); }} />} actionsFullWidth headerActions={<MusicActions compact onMoment={() => { setEditingType("moment"); setEditing(createEmptyMusicMoment()); setErrors({}); }} />}>
+      <div className="grid gap-4 md:grid-cols-2">{grouped.map(({ moment, songs }) => { const MomentIcon = Icons[moment.icon] || Icons.Music; return <article key={moment.id} className="rounded-[1.5rem] border border-[var(--color-border)] bg-white/55 p-5"><div className="flex items-start gap-3"><span className="rounded-full bg-[var(--color-bg-soft)] p-3 text-[var(--color-accent-dark)]"><MomentIcon size={21} /></span><div className="min-w-0 flex-1"><h2 className="font-serif text-2xl text-[var(--color-accent-dark)]">{moment.label}</h2><p className="text-sm text-[var(--color-muted)]">{moment.description}</p></div><IconButton icon={<Pencil size={15}/>} label="Editar momento" tone="terciary" onClick={() => { setEditingType("moment"); setEditing(moment); setErrors({}); }}/><IconButton icon={<Trash2 size={15}/>} label="Eliminar momento" tone="danger" onClick={() => setDeleteTarget({ type: "moment", item: moment })}/></div><div className="mt-4 space-y-2">{songs.map((song) => <div key={song.id} className="flex items-center gap-2 rounded-xl border border-[var(--color-border)] bg-white/70 px-3 py-2"><button className="min-w-0 flex-1 text-left" onClick={() => { setEditingType("song"); setEditing(song); setErrors({}); }} type="button"><b className="block truncate text-sm">{song.title}</b><span className="block truncate text-xs text-[var(--color-muted)]">{song.name}{song.notes ? ` · ${song.notes}` : ""}</span></button><IconButton icon={<Trash2 size={15}/>} label="Eliminar canción" tone="danger" onClick={() => setDeleteTarget({ type: "song", item: song })}/></div>)}</div><IconButton className="mt-4" icon={<Plus size={16}/>} label="Añadir canción" showText="always" onClick={() => { setEditingType("song"); setEditing(createEmptyMusicSong({ momentId: moment.id })); setErrors({}); }}>Añadir canción</IconButton></article>; })}</div>
     </AdminTableSection>
-    {editing && <EditorDialog title={editing.id && music.some((song) => song.id === editing.id) ? "Editar canción" : "Añadir canción"} titleId="music-editor" onClose={() => setEditing(null)}><form className="space-y-4" onSubmit={submit}><label className="block text-sm">Nombre / intérprete<input className="mt-1 w-full rounded-xl border p-3" value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} />{errors.name && <span className="text-xs text-red-500">{errors.name}</span>}</label><label className="block text-sm">Título<input className="mt-1 w-full rounded-xl border p-3" value={editing.title} onChange={(e) => setEditing({ ...editing, title: e.target.value })} />{errors.title && <span className="text-xs text-red-500">{errors.title}</span>}</label><label className="block text-sm">Enlace<input className="mt-1 w-full rounded-xl border p-3" placeholder="https://…" value={editing.link} onChange={(e) => setEditing({ ...editing, link: e.target.value })} />{errors.link && <span className="text-xs text-red-500">{errors.link}</span>}</label><IconButton icon={<Save size={16} />} showText="always" type="submit" label="Guardar canción">Guardar canción</IconButton></form></EditorDialog>}
-  </>}</AdminPage>;
+    {editing && <EditorDialog title={editingType === "moment" ? "Momento musical" : "Canción"} onClose={() => setEditing(null)}>{editingType === "moment" ? <MomentForm form={editing} errors={errors} onChange={(field, value) => setEditing({ ...editing, [field]: value })} onSubmit={submit}/> : <SongForm form={editing} errors={errors} onChange={(field, value) => setEditing({ ...editing, [field]: value })} onSubmit={submit}/>}</EditorDialog>}
+    {deleteTarget && <DeleteDialog title={`Eliminar ${deleteTarget.type === "moment" ? "momento" : "canción"}`} message={deleteTarget.type === "moment" ? "También se eliminarán sus canciones asociadas." : "Esta canción se eliminará de la escalera musical."} onCancel={() => setDeleteTarget(null)} onConfirm={confirmDelete}/>} {blocker.state === "blocked" && <UnsavedChangesDialog changes={changes} labels={{ eyebrow: "Cambios pendientes", exitWithoutSaving: "Salir sin guardar", keepEditing: "Seguir editando", saveAndExit: "Guardar y salir", text: "Hay cambios en la escalera musical que todavía no se han guardado.", title: "¿Guardar cambios?" }} onCancel={cancelBlockedNavigation} onConfirm={discardAndContinueNavigation} onSaveAndExit={saveAndContinueNavigation}/>}</>}</AdminPage>;
 }
+function MusicActions({ compact, onMoment }) { return <div className={compact ? "flex gap-2" : "grid w-full gap-3"}><IconButton className={compact ? "h-10 w-10 !px-0" : "w-full"} icon={<Plus size={16}/>} label="Añadir momento" onClick={onMoment} showText={compact ? false : "always"}>Añadir momento</IconButton></div>; }
+function MomentForm({ form, errors, onChange, onSubmit }) { return <form className="mt-5 space-y-4" onSubmit={onSubmit}><Field label="Nombre del momento" value={form.label} error={errors.label} onChange={(value) => onChange("label", value)}/><Field label="Descripción" value={form.description} onChange={(value) => onChange("description", value)}/><Field label="Icono Lucide" value={form.icon} onChange={(value) => onChange("icon", value)}/><Submit/></form>; }
+function SongForm({ form, errors, onChange, onSubmit }) { return <form className="mt-5 space-y-4" onSubmit={onSubmit}><Field label="Nombre / intérprete" value={form.name} error={errors.name} onChange={(value) => onChange("name", value)}/><Field label="Título" value={form.title} error={errors.title} onChange={(value) => onChange("title", value)}/><Field label="Notas" value={form.notes} onChange={(value) => onChange("notes", value)}/><Submit/></form>; }
+function Field({ label, value, error, onChange }) { return <label className="block text-sm">{label}<input className="mt-1 w-full rounded-xl border border-[var(--color-border)] bg-white p-3" value={value || ""} onChange={(event) => onChange(event.target.value)}/>{error && <span className="text-xs text-red-500">{error}</span>}</label>; }
+function Submit() { return <IconButton icon={<Pencil size={16}/>} label="Guardar cambios" showText="always" type="submit">Guardar cambios</IconButton>; }

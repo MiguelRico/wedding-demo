@@ -262,16 +262,16 @@ const TASKS_COLUMNS = {
   updatedAt: 9,
 };
 
-const MUSIC_SONGS_HEADERS = ["musicSongId", "momentId", "name", "title", "link", "createdAt", "updatedAt"];
-const MUSIC_SONGS_COLUMNS = { musicSongId: 0, momentId: 1, name: 2, title: 3, link: 4, createdAt: 5, updatedAt: 6 };
+const MUSIC_SONGS_HEADERS = ["musicSongId", "momentId", "name", "title", "notes", "createdAt", "updatedAt"];
+const MUSIC_SONGS_COLUMNS = { musicSongId: 0, momentId: 1, name: 2, title: 3, notes: 4, createdAt: 5, updatedAt: 6 };
+const MUSIC_MOMENTS_HEADERS = ["momentId", "label", "description", "icon", "createdAt", "updatedAt"];
+const MUSIC_MOMENTS_COLUMNS = { momentId: 0, label: 1, description: 2, icon: 3, createdAt: 4, updatedAt: 5 };
+const MUSIC_MOMENT_TEMPLATES = [
+  ["guest-arrival", "Llegada de los invitados", "Música ambiental", "UsersRound"], ["groom-entrance", "Entrada del novio", "Canción elegida", "LogIn"], ["bride-entrance", "Entrada de la novia", "Canción principal", "Heart"], ["readings", "Lecturas", "Música suave (opcional)", "BookOpen"], ["rings", "Intercambio de alianzas", "Música instrumental", "Gem"], ["signing", "Firma de los documentos", "Canción elegida", "PenLine"], ["newlyweds-exit", "Salida de los novios", "Canción alegre", "DoorOpen"], ["cocktail", "Cóctel", "Playlist relajada", "GlassWater"], ["banquet-entrance", "Entrada al banquete", "Canción de presentación", "UtensilsCrossed"], ["salon-entrance", "Entrada de los novios al salón", "Canción especial", "Music"], ["cake", "Corte de la tarta", "Canción elegida", "CakeSlice"], ["first-dance", "Primer baile", "Canción de apertura", "Disc3"], ["open-bar", "Apertura de la barra libre", "Canción potente para arrancar la fiesta", "PartyPopper"], ["special-moments", "Momentos especiales (ramo, regalos, etc.)", "Canciones específicas", "Gift"], ["end-party", "Fin de la fiesta", "Última canción", "Flag"],
+].map(([id, label, description, icon]) => ({ id, label, description, icon }));
 
 const MUSIC_SAMPLE_SONGS = [
-  { momentId: "guest-arrival", name: "Norah Jones", title: "Sunrise", link: "https://open.spotify.com/" },
-  { momentId: "bride-entrance", name: "Christina Perri", title: "A Thousand Years", link: "https://open.spotify.com/" },
-  { momentId: "cocktail", name: "Jack Johnson", title: "Better Together", link: "https://open.spotify.com/" },
-  { momentId: "first-dance", name: "John Legend", title: "All of Me", link: "https://open.spotify.com/" },
-  { momentId: "open-bar", name: "Bruno Mars", title: "Uptown Funk", link: "https://open.spotify.com/" },
-  { momentId: "end-party", name: "Queen", title: "Don't Stop Me Now", link: "https://open.spotify.com/" },
+  { momentId: "guest-arrival", name: "Norah Jones", title: "Sunrise", notes: "Ambiental y suave" }, { momentId: "groom-entrance", name: "Coldplay", title: "Adventure of a Lifetime", notes: "Entrada del novio" }, { momentId: "bride-entrance", name: "Christina Perri", title: "A Thousand Years", notes: "Entrada principal" }, { momentId: "readings", name: "Yiruma", title: "River Flows in You", notes: "Bajar volumen durante las lecturas" }, { momentId: "rings", name: "Ludovico Einaudi", title: "Nuvole Bianche", notes: "Instrumental" }, { momentId: "signing", name: "Jason Mraz", title: "I'm Yours", notes: "Durante la firma" }, { momentId: "newlyweds-exit", name: "Katrina and the Waves", title: "Walking on Sunshine", notes: "Salida alegre" }, { momentId: "cocktail", name: "Jack Johnson", title: "Better Together", notes: "Inicio de la playlist" }, { momentId: "banquet-entrance", name: "The Black Eyed Peas", title: "I Gotta Feeling", notes: "Presentación al banquete" }, { momentId: "salon-entrance", name: "Bruno Mars", title: "Marry You", notes: "Entrada de los novios" }, { momentId: "cake", name: "OneRepublic", title: "I Lived", notes: "Corte de tarta" }, { momentId: "first-dance", name: "John Legend", title: "All of Me", notes: "Primer baile" }, { momentId: "open-bar", name: "Bruno Mars", title: "Uptown Funk", notes: "Arranque de fiesta" }, { momentId: "special-moments", name: "Beyoncé", title: "Single Ladies", notes: "Lanzamiento del ramo" }, { momentId: "end-party", name: "Queen", title: "Don't Stop Me Now", notes: "Última canción" },
 ];
 
 function ensureHeader(sheet, headers) {
@@ -358,6 +358,14 @@ function getMusicSongsSheet() {
       .setValues(MUSIC_SAMPLE_SONGS.map(buildMusicSongRow));
   }
 
+  return sheet;
+}
+
+function getMusicMomentsSheet() {
+  const spreadsheet = getSpreadsheet();
+  const alreadyExists = Boolean(spreadsheet.getSheetByName(MUSIC_MOMENTS_SHEET_NAME));
+  const sheet = getOrCreateSheet(MUSIC_MOMENTS_SHEET_NAME, MUSIC_MOMENTS_HEADERS);
+  if (!alreadyExists) sheet.getRange(2, 1, MUSIC_MOMENT_TEMPLATES.length, MUSIC_MOMENTS_HEADERS.length).setValues(MUSIC_MOMENT_TEMPLATES.map(buildMusicMomentRow));
   return sheet;
 }
 
@@ -1010,14 +1018,17 @@ function appendAssignmentRowsForGuests(sheet, confirmation, guests) {
 
 function buildMusicSongFromRow(row) {
   const musicSongId = row[MUSIC_SONGS_COLUMNS.musicSongId] || "";
-  return { id: musicSongId, musicSongId, momentId: row[MUSIC_SONGS_COLUMNS.momentId] || "", name: row[MUSIC_SONGS_COLUMNS.name] || "", title: row[MUSIC_SONGS_COLUMNS.title] || "", link: row[MUSIC_SONGS_COLUMNS.link] || "" };
+  return { id: musicSongId, musicSongId, momentId: row[MUSIC_SONGS_COLUMNS.momentId] || "", name: row[MUSIC_SONGS_COLUMNS.name] || "", title: row[MUSIC_SONGS_COLUMNS.title] || "", notes: row[MUSIC_SONGS_COLUMNS.notes] || "" };
 }
 
 function buildMusicSongRow(song) {
   const now = getCurrentTimestamp();
   const musicSongId = String(song.musicSongId || song.id || "").trim() || createEntityId("music");
-  return [musicSongId, String(song.momentId || "").trim(), String(song.name || "").trim(), String(song.title || "").trim(), String(song.link || "").trim(), song.createdAt || now, now];
+  return [musicSongId, String(song.momentId || "").trim(), String(song.name || "").trim(), String(song.title || "").trim(), String(song.notes || song.link || "").trim(), song.createdAt || now, now];
 }
+
+function buildMusicMomentFromRow(row) { const momentId = row[MUSIC_MOMENTS_COLUMNS.momentId] || ""; return { id: momentId, momentId, label: row[MUSIC_MOMENTS_COLUMNS.label] || "", description: row[MUSIC_MOMENTS_COLUMNS.description] || "", icon: row[MUSIC_MOMENTS_COLUMNS.icon] || "Music" }; }
+function buildMusicMomentRow(moment) { const now = getCurrentTimestamp(); const momentId = String(moment.momentId || moment.id || "").trim() || createEntityId("moment"); return [momentId, String(moment.label || "").trim(), String(moment.description || "").trim(), String(moment.icon || "Music").trim(), moment.createdAt || now, now]; }
 
 function buildAssignmentRowsForGuests(confirmation, guests, context) {
   const rows = [];

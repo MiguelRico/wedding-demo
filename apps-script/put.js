@@ -229,7 +229,14 @@ function saveMusic(data) {
     return buildMusicSongRow({ ...song, createdAt: previous[id]?.[MUSIC_SONGS_COLUMNS.createdAt] || song.createdAt });
   });
   replaceSheetData(sheet, MUSIC_SONGS_HEADERS, rows);
-  return jsonResponse({ success: true, music: rows.length });
+  const momentsSheet = getMusicMomentsSheet();
+  const previousMoments = getSheetRowsById(momentsSheet, MUSIC_MOMENTS_COLUMNS.momentId);
+  const momentRows = (Array.isArray(data.moments) ? data.moments : []).map((moment) => {
+    const id = String(moment.momentId || moment.id || "").trim();
+    return buildMusicMomentRow({ ...moment, createdAt: previousMoments[id]?.[MUSIC_MOMENTS_COLUMNS.createdAt] || moment.createdAt });
+  });
+  replaceSheetData(momentsSheet, MUSIC_MOMENTS_HEADERS, momentRows);
+  return jsonResponse({ success: true, music: rows.length, moments: momentRows.length });
 }
 
 function updateNotificationRead(data) {
