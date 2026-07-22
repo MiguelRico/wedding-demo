@@ -20,6 +20,7 @@ export default function AdminPageShell({
           <HeaderSection
             eyebrow={header.eyebrow}
             text={header.text}
+            showTitleAndTextOnMobile
             title={header.title}
             titleAs="h1"
           />
