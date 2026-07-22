@@ -114,7 +114,7 @@ const defaultAdminContent = {
     header: {
       eyebrow: "Panel privado",
       title: "Exportaciones",
-      text: "Descarga la información disponible en memoria sin realizar nuevas consultas.",
+      text: "Descarga la información del evento",
     },
     providers: {
       eyebrow: "Red de servicios",
