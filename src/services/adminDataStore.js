@@ -173,6 +173,7 @@ export const loadAdminDataOnce = async ({ password = ADMIN_PASSWORD } = {}) => {
 
 const createAdminDataSnapshot = () => ({
   confirmations: cloneJson(store.confirmations),
+  loaded: store.loaded,
   notifications: cloneJson(store.notifications),
   music: cloneJson(store.music),
   musicMoments: cloneJson(store.musicMoments),

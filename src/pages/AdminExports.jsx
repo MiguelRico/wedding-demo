@@ -9,13 +9,17 @@ import {
   Users,
 } from "lucide-react";
 import { Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import { AdminPage, AdminTableSection } from "../components/admin/common";
 import CinematicStaggeredRevealItem from "../components/cinematic/CinematicStaggeredRevealItem";
 import IconButton from "../components/ui/IconButton";
+import { SkeletonBlock } from "../components/ui/TableSectionSkeleton";
 import { adminContent } from "../constants/adminContent";
 import useAdminDataSnapshot from "../hooks/useAdminDataSnapshot";
 import { isAdminSessionAuthenticated } from "../utils/adminSession";
+import { loadAdminDataOnce } from "../services/adminDataStore";
+import { ADMIN_PASSWORD } from "../constants/admin";
 import {
   downloadAdminPdf,
   downloadAdminWorkbook,
@@ -28,6 +32,12 @@ import {
 export default function AdminExports() {
   const isAuthenticated = isAdminSessionAuthenticated();
   const snapshot = useAdminDataSnapshot();
+  const [loading, setLoading] = useState(!snapshot.loaded);
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    loadAdminDataOnce({ password: ADMIN_PASSWORD }).finally(() => setLoading(false));
+  }, [isAuthenticated]);
   const hasData = [
     snapshot.confirmations,
     snapshot.notifications,
@@ -46,6 +56,7 @@ export default function AdminExports() {
       content: (
         <ExportSection
           content={adminContent.exports.workbook}
+          loading={loading}
           disabled={!hasData}
           icon={<FileSpreadsheet size={20} strokeWidth={1.8} />}
           actionIcon={<Download size={16} strokeWidth={1.8} />}
@@ -65,6 +76,7 @@ export default function AdminExports() {
       content: (
         <ExportSection
           content={adminContent.exports.confirmationsPdf}
+          loading={loading}
           disabled={!snapshot.confirmations.length}
           icon={<Users size={20} strokeWidth={1.8} />}
           actionIcon={<Download size={16} strokeWidth={1.8} />}
@@ -84,6 +96,7 @@ export default function AdminExports() {
       content: (
         <ExportSection
           content={adminContent.exports.providers}
+          loading={loading}
           disabled={!snapshot.providers.length}
           icon={<ReceiptText size={20} strokeWidth={1.8} />}
           actionIcon={<Download size={16} strokeWidth={1.8} />}
@@ -103,6 +116,7 @@ export default function AdminExports() {
       content: (
         <ExportSection
           content={adminContent.exports.seating}
+          loading={loading}
           disabled={!snapshot.tables.length && !snapshot.confirmations.length}
           icon={<Armchair size={20} strokeWidth={1.8} />}
           actionIcon={<Download size={16} strokeWidth={1.8} />}
@@ -118,22 +132,17 @@ export default function AdminExports() {
     },
     {
       id: "music",
-      label: "Música",
+      label: adminContent.exports.music.title,
       content: (
         <ExportSection
-          content={{
-            eyebrow: "PDF",
-            title: "Escaleta musical",
-            text: "Descarga las canciones organizadas por cada momento de la boda.",
-            action: "Descargar PDF",
-            fileName: "escaleta-musical",
-          }}
+          content={adminContent.exports.music}
+          loading={loading}
           disabled={!snapshot.music.length}
           icon={<Music size={20} strokeWidth={1.8} />}
           actionIcon={<Download size={16} strokeWidth={1.8} />}
           tone="primary"
           onDownload={() =>
-            downloadMusicPdf({ fileName: "escaleta-musical", snapshot })
+            downloadMusicPdf({ fileName: adminContent.exports.music.fileName, snapshot })
           }
         />
       ),
@@ -144,6 +153,7 @@ export default function AdminExports() {
       content: (
         <ExportSection
           content={adminContent.exports.tasks}
+          loading={loading}
           disabled={!snapshot.tasks.length}
           icon={<ListChecks size={20} strokeWidth={1.8} />}
           actionIcon={<Download size={16} strokeWidth={1.8} />}
@@ -184,13 +194,14 @@ function ExportSection({
   content,
   disabled,
   icon,
+  loading = false,
   onDownload,
   tone = "primary",
 }) {
   return (
     <AdminTableSection
       eyebrow={content.eyebrow}
-      headerActions={
+      headerActions={loading ? <SkeletonBlock className="h-10 w-10 rounded-full" /> : (
         <IconButton
           disabled={disabled}
           icon={actionIcon}
@@ -202,17 +213,33 @@ function ExportSection({
         >
           {content.action}
         </IconButton>
-      }
+      )}
+      headerLoading={loading}
+      skeletonHeader
       title={content.title}
     >
-      <div className="flex items-center gap-4 rounded-[1.5rem] border border-[var(--color-border)] bg-white/45 p-4">
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[var(--color-border-strong)] bg-white/60 text-[var(--color-accent-dark)]">
-          {icon}
-        </span>
-        <p className="line-clamp-2 text-sm leading-relaxed text-[var(--color-muted)]">
-          {content.text}
-        </p>
-      </div>
+      {loading ? <ExportSectionSkeleton /> : (
+        <div className="flex items-center gap-4 rounded-[1.5rem] border border-[var(--color-border)] bg-white/45 p-4">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[var(--color-border-strong)] bg-white/60 text-[var(--color-accent-dark)]">
+            {icon}
+          </span>
+          <p className="line-clamp-2 text-sm leading-relaxed text-[var(--color-muted)]">
+            {content.text}
+          </p>
+        </div>
+      )}
     </AdminTableSection>
+  );
+}
+
+function ExportSectionSkeleton() {
+  return (
+    <div className="flex items-center gap-4 rounded-[1.5rem] border border-[var(--color-border)] bg-white/45 p-4">
+      <SkeletonBlock className="h-11 w-11 shrink-0 rounded-full" />
+      <div className="min-w-0 flex-1 space-y-2">
+        <SkeletonBlock className="h-4 w-full max-w-64 rounded-full" />
+        <SkeletonBlock className="h-4 w-3/4 max-w-48 rounded-full" />
+      </div>
+    </div>
   );
 }

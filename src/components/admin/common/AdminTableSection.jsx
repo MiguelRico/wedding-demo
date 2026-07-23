@@ -1,6 +1,6 @@
 import PaginatedContent from "../../ui/PaginatedContent";
 import Pagination from "../../ui/Pagination";
-import TableSectionSkeleton from "../../ui/TableSectionSkeleton";
+import TableSectionSkeleton, { SkeletonBlock } from "../../ui/TableSectionSkeleton";
 import { getPaginationState } from "../../../utils/paginationState";
 
 function AdminTableSectionHeader({
@@ -9,12 +9,26 @@ function AdminTableSectionHeader({
   count,
   eyebrow,
   headerActions,
+  headerActionCount = 1,
   loading,
+  skeletonHeader = false,
   title,
 }) {
   const hasHeaderContent = Boolean(eyebrow || title || count || actions);
 
   if (!hasHeaderContent) return null;
+
+  if (loading && skeletonHeader) {
+    return (
+      <div className="mb-4">
+        <SkeletonBlock className="mb-2 h-3 w-24 rounded-full" />
+        <div className="flex items-center justify-between gap-3 md:min-h-10">
+          <SkeletonBlock className="h-8 w-44 max-w-[70%] rounded-full" />
+          {headerActions && <SkeletonBlock className="h-10 w-10 shrink-0 rounded-full" />}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mb-4">
@@ -26,7 +40,17 @@ function AdminTableSectionHeader({
               {title}
             </h2>
           )}
-          {headerActions && <div className="shrink-0">{headerActions}</div>}
+          {headerActions && (
+            <div className="shrink-0">
+              {loading ? (
+                <div className="flex gap-2">
+                  {Array.from({ length: headerActionCount }).map((_, index) => (
+                    <SkeletonBlock className="h-10 w-10 rounded-full" key={index} />
+                  ))}
+                </div>
+              ) : headerActions}
+            </div>
+          )}
         </div>
       )}
       {!loading && (count || actions) && actions && !headerActions && (
@@ -55,6 +79,7 @@ export default function AdminTableSection({
   filters,
   getKey,
   headerActions,
+  headerLoading,
   loading = false,
   lockPageHeight = false,
   mobilePageLabel,
@@ -70,6 +95,7 @@ export default function AdminTableSection({
   renderPage,
   sectionRef,
   skeletonConfig = {},
+  skeletonHeader = false,
   summary,
   title,
   totalPages,
@@ -106,16 +132,19 @@ export default function AdminTableSection({
         count={count}
         eyebrow={eyebrow}
         headerActions={headerActions}
-        loading={loading}
+        headerActionCount={skeletonConfig.headerActionCount}
+        loading={headerLoading ?? loading}
+        skeletonHeader={skeletonHeader}
         title={title}
       />
 
       {loading ? (
         <TableSectionSkeleton
           actionCount={skeletonConfig.actionCount}
-          actions={skeletonConfig.actions ?? Boolean(actions)}
+          actions={skeletonConfig.actions ?? (Boolean(actions) && !headerActions)}
           cardCount={contentSkeletonConfig.count ?? skeletonConfig.cardCount}
           columnsClassName={contentSkeletonConfig.columnsClassName}
+          decorative={contentSkeletonConfig.decorative}
           count={skeletonConfig.count ?? Boolean(count)}
           filters={skeletonConfig.filters ?? Boolean(filters && hasFilterSlot)}
           itemClassName={contentSkeletonConfig.itemClassName}

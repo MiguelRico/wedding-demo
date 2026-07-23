@@ -3,6 +3,7 @@ export default function TableSectionSkeleton({
   actionCount = 3,
   cardCount = 1,
   columnsClassName = "",
+  decorative = false,
   count = true,
   filters = false,
   itemClassName = "min-h-24",
@@ -28,6 +29,7 @@ export default function TableSectionSkeleton({
       <TableCardsSkeleton
         columnsClassName={columnsClassName}
         count={cardCount}
+        decorative={decorative}
         itemClassName={itemClassName}
         lines={lines}
       />
@@ -76,6 +78,7 @@ export function TablePaginationSkeleton() {
 export function TableCardsSkeleton({
   columnsClassName = "",
   count = 4,
+  decorative = false,
   itemClassName = "min-h-24",
   lines = 2,
 }) {
@@ -86,8 +89,8 @@ export function TableCardsSkeleton({
           className={`${itemClassName} relative overflow-hidden rounded-[2rem] border border-[var(--color-border-strong)] bg-white/55 p-5 shadow-[0_24px_70px_rgba(77,56,40,0.08)]`}
           key={index}
         >
-          <SkeletonBlock className="absolute right-6 top-6 h-14 w-14 rounded-full opacity-50" />
-          <div className="absolute right-5 top-4 z-10 grid grid-cols-2 gap-2">
+          {decorative && <SkeletonBlock className="absolute right-6 top-6 h-14 w-14 rounded-full opacity-50" />}
+          <div className="absolute right-5 top-[3.25rem] z-10 grid grid-cols-2 gap-2">
             <SkeletonBlock className="h-9 w-9 rounded-full" />
             <SkeletonBlock className="h-9 w-9 rounded-full" />
           </div>
