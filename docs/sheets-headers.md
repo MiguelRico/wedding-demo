@@ -112,7 +112,7 @@ notificationId,title,detail,date,type,read,createdAt,updatedAt
 - `type`: texto, `Aviso`, `Pago` o `Invitados`.
 - `read`: texto booleano recomendado `TRUE`/`FALSE`.
 
-## EscaleraMusical
+## EscaletaMusical
 
 ```csv
 musicSongId,momentId,name,title,notes,createdAt,updatedAt
@@ -128,7 +128,7 @@ musicSongId,momentId,name,title,notes,createdAt,updatedAt
 momentId,label,description,createdAt,updatedAt
 ```
 
-- Contiene los momentos editables de la escalera musical y se crea con la plantilla inicial.
+- Contiene los momentos editables de la escaleta musical y se crea con la plantilla inicial.
 
 ## BloquesMusicales
 
@@ -136,7 +136,7 @@ momentId,label,description,createdAt,updatedAt
 musicBlockId,momentId,name,style,duration,createdAt,updatedAt
 ```
 
-- `momentId`: referencia al momento de la escalera musical.
+- `momentId`: referencia al momento de la escaleta musical.
 - `style`: estilo musical del bloque.
 - `duration`: duración total en texto libre, por ejemplo `01:30`.
 - `createdAt`, `updatedAt`: texto ISO 8601.

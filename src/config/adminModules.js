@@ -106,7 +106,7 @@ export const adminModules = [
     id: "music",
     path: "music",
     icon: Music,
-    card: { title: "Música", subtitle: "Escalera musical", description: "Organizar las canciones de cada momento de la celebración.", icon: "music" },
+    card: { title: "Música", subtitle: "Escaleta musical", description: "Organizar las canciones de cada momento de la celebración.", icon: "music" },
     load: () => import("../pages/AdminMusic"),
   },
   {

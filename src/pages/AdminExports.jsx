@@ -121,12 +121,20 @@ export default function AdminExports() {
       label: "Música",
       content: (
         <ExportSection
-          content={{ eyebrow: "PDF", title: "Escalera musical", text: "Descarga las canciones organizadas por cada momento de la boda.", action: "Descargar PDF", fileName: "escalera-musical" }}
+          content={{
+            eyebrow: "PDF",
+            title: "Escaleta musical",
+            text: "Descarga las canciones organizadas por cada momento de la boda.",
+            action: "Descargar PDF",
+            fileName: "escaleta-musical",
+          }}
           disabled={!snapshot.music.length}
           icon={<Music size={20} strokeWidth={1.8} />}
           actionIcon={<Download size={16} strokeWidth={1.8} />}
           tone="primary"
-          onDownload={() => downloadMusicPdf({ fileName: "escalera-musical", snapshot })}
+          onDownload={() =>
+            downloadMusicPdf({ fileName: "escaleta-musical", snapshot })
+          }
         />
       ),
     },

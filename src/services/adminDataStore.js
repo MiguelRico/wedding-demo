@@ -134,7 +134,7 @@ export const loadAdminDataOnce = async ({ password = ADMIN_PASSWORD } = {}) => {
       return { tasks: [] };
     }),
     musicRepository.findAll({ password }).catch((error) => {
-      console.error("Error al cargar escalera musical:", error);
+      console.error("Error al cargar escaleta musical:", error);
       return { music: [] };
     }),
   ])

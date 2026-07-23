@@ -15,7 +15,8 @@ const escapeXml = (value) =>
 const getDateStamp = () => new Date().toISOString().slice(0, 10);
 
 const getGuestName = (guest, index) => Guest.getDisplayName(guest, index);
-const getListValue = (value) => (Array.isArray(value) ? value.join(", ") : value || "");
+const getListValue = (value) =>
+  Array.isArray(value) ? value.join(", ") : value || "";
 
 const toSheetXml = ({ columns, name, rows }) => `
   <Worksheet ss:Name="${escapeXml(name.slice(0, 31))}">
@@ -61,7 +62,9 @@ const downloadFile = ({ content, fileName, type }) => {
 };
 
 const getAdminExportSheets = (snapshot) => {
-  const musicMoments = snapshot.musicMoments?.length ? snapshot.musicMoments : MUSIC_MOMENTS;
+  const musicMoments = snapshot.musicMoments?.length
+    ? snapshot.musicMoments
+    : MUSIC_MOMENTS;
   const confirmations = snapshot.confirmations || [];
   const tables = buildTables({
     confirmations,
@@ -81,7 +84,17 @@ const getAdminExportSheets = (snapshot) => {
     },
     {
       name: "Invitados",
-      columns: ["Confirmación ID", "Confirmación", "Invitado", "Alergias", "Otras alergias", "Menú", "Bus ida", "Bus vuelta", "Notas"],
+      columns: [
+        "Confirmación ID",
+        "Confirmación",
+        "Invitado",
+        "Alergias",
+        "Otras alergias",
+        "Menú",
+        "Bus ida",
+        "Bus vuelta",
+        "Notas",
+      ],
       rows: confirmations.flatMap((confirmation) =>
         (confirmation.guests || []).map((guest, index) => [
           confirmation.confirmationId || confirmation.id,
@@ -124,7 +137,15 @@ const getAdminExportSheets = (snapshot) => {
     },
     {
       name: "Proveedores",
-      columns: ["ID", "Proveedor", "Categoría", "Teléfono", "Email", "Web", "Activo"],
+      columns: [
+        "ID",
+        "Proveedor",
+        "Categoría",
+        "Teléfono",
+        "Email",
+        "Web",
+        "Activo",
+      ],
       rows: (snapshot.providers || []).map((provider) => [
         provider.providerId || provider.id,
         provider.name,
@@ -137,7 +158,14 @@ const getAdminExportSheets = (snapshot) => {
     },
     {
       name: "Servicios",
-      columns: ["Proveedor", "Servicio", "Precio", "Pagado", "Pendiente", "Notas"],
+      columns: [
+        "Proveedor",
+        "Servicio",
+        "Precio",
+        "Pagado",
+        "Pendiente",
+        "Notas",
+      ],
       rows: (snapshot.providers || []).flatMap((provider) =>
         (provider.services || []).map((service) => [
           provider.name,
@@ -167,7 +195,16 @@ const getAdminExportSheets = (snapshot) => {
     },
     {
       name: "Tareas",
-      columns: ["ID", "Título", "Categoría", "Responsable", "Fecha límite", "Prioridad", "Estado", "Descripción"],
+      columns: [
+        "ID",
+        "Título",
+        "Categoría",
+        "Responsable",
+        "Fecha límite",
+        "Prioridad",
+        "Estado",
+        "Descripción",
+      ],
       rows: (snapshot.tasks || []).map((task) => [
         task.id,
         task.title,
@@ -180,11 +217,17 @@ const getAdminExportSheets = (snapshot) => {
       ]),
     },
     {
-      name: "Escalera musical",
+      name: "Escaleta musical",
       columns: ["Momento", "Descripción", "Nombre", "Título", "Notas"],
       rows: (snapshot.music || []).map((song) => {
         const moment = musicMoments.find((item) => item.id === song.momentId);
-        return [moment?.label || song.momentId, moment?.description || "", song.name, song.title, song.notes];
+        return [
+          moment?.label || song.momentId,
+          moment?.description || "",
+          song.name,
+          song.title,
+          song.notes,
+        ];
       }),
     },
     {
@@ -192,7 +235,12 @@ const getAdminExportSheets = (snapshot) => {
       columns: ["Momento", "Bloque", "Estilo", "Duración"],
       rows: (snapshot.musicBlocks || []).map((block) => {
         const moment = musicMoments.find((item) => item.id === block.momentId);
-        return [moment?.label || block.momentId, block.name, block.style, block.duration];
+        return [
+          moment?.label || block.momentId,
+          block.name,
+          block.style,
+          block.duration,
+        ];
       }),
     },
   ];
@@ -206,7 +254,9 @@ const escapePdfText = (value) =>
     .replace(/[\r\n]+/g, " ");
 
 const wrapPdfText = (value, maxLength) => {
-  const words = String(value ?? "").split(/\s+/).filter(Boolean);
+  const words = String(value ?? "")
+    .split(/\s+/)
+    .filter(Boolean);
   const wrappedLines = [];
   let currentLine = "";
 
@@ -231,11 +281,12 @@ const wrapPdfText = (value, maxLength) => {
   return currentLine ? [...wrappedLines, currentLine] : wrappedLines;
 };
 
-const toPdfBytes = (value) => Uint8Array.from(value, (character) => {
-  const code = character.codePointAt(0);
+const toPdfBytes = (value) =>
+  Uint8Array.from(value, (character) => {
+    const code = character.codePointAt(0);
 
-  return code > 255 ? 63 : code;
-});
+    return code > 255 ? 63 : code;
+  });
 
 const buildPdf = (sheets, { title = "Exportación del evento" } = {}) => {
   const pageWidth = 595;
@@ -255,11 +306,17 @@ const buildPdf = (sheets, { title = "Exportación del evento" } = {}) => {
   };
   const addLine = (text, { color = "0.18 0.20 0.17", size = 9 } = {}) => {
     if (y < margin + lineHeight) addPage();
-    lines.push(`BT /F1 ${size} Tf ${color} rg ${margin} ${y} Td (${escapePdfText(text)}) Tj ET`);
+    lines.push(
+      `BT /F1 ${size} Tf ${color} rg ${margin} ${y} Td (${escapePdfText(text)}) Tj ET`,
+    );
     y -= lineHeight;
   };
-  const addTableRow = (values, { header = false, wrapFirstColumn = false, columnWidths } = {}) => {
-    const columns = columnWidths || (wrapFirstColumn ? [190, 80, 85, 75, 81] : tableColumns);
+  const addTableRow = (
+    values,
+    { header = false, wrapFirstColumn = false, columnWidths } = {},
+  ) => {
+    const columns =
+      columnWidths || (wrapFirstColumn ? [190, 80, 85, 75, 81] : tableColumns);
     const cellLines = values.map((value, index) => {
       const width = columns[index];
       const text = String(value ?? "—");
@@ -269,11 +326,16 @@ const buildPdf = (sheets, { title = "Exportación del evento" } = {}) => {
       }
 
       const maxLength = Math.max(Math.floor(width / 5.5), 8);
-      return [text.length > maxLength ? `${text.slice(0, maxLength - 1)}…` : text];
+      return [
+        text.length > maxLength ? `${text.slice(0, maxLength - 1)}…` : text,
+      ];
     });
     const rowHeight = header
       ? 24
-      : Math.max(28, Math.max(...cellLines.map((lines) => lines.length)) * 10 + 10);
+      : Math.max(
+          28,
+          Math.max(...cellLines.map((lines) => lines.length)) * 10 + 10,
+        );
 
     if (y - rowHeight < margin) addPage();
 
@@ -282,8 +344,12 @@ const buildPdf = (sheets, { title = "Exportación del evento" } = {}) => {
     const textColor = header ? "1 1 1" : "0.18 0.20 0.17";
     let x = margin;
 
-    lines.push(`q ${background} rg ${margin} ${rowY} ${tableWidth} ${rowHeight} re f Q`);
-    lines.push(`q 0.78 0.84 0.75 RG 0.5 w ${margin} ${rowY} ${tableWidth} ${rowHeight} re S Q`);
+    lines.push(
+      `q ${background} rg ${margin} ${rowY} ${tableWidth} ${rowHeight} re f Q`,
+    );
+    lines.push(
+      `q 0.78 0.84 0.75 RG 0.5 w ${margin} ${rowY} ${tableWidth} ${rowHeight} re S Q`,
+    );
     cellLines.forEach((textLines, index) => {
       const width = columns[index];
 
@@ -292,9 +358,15 @@ const buildPdf = (sheets, { title = "Exportación del evento" } = {}) => {
       }
       textLines.forEach((line, lineIndex) => {
         const textY =
-          rowY + rowHeight / 2 + ((textLines.length - 1) * 10) / 2 - 3 - lineIndex * 10;
+          rowY +
+          rowHeight / 2 +
+          ((textLines.length - 1) * 10) / 2 -
+          3 -
+          lineIndex * 10;
 
-        lines.push(`BT /F1 ${header ? 7 : 7.5} Tf ${textColor} rg ${x + 5} ${textY} Td (${escapePdfText(line)}) Tj ET`);
+        lines.push(
+          `BT /F1 ${header ? 7 : 7.5} Tf ${textColor} rg ${x + 5} ${textY} Td (${escapePdfText(line)}) Tj ET`,
+        );
       });
       x += width;
     });
@@ -316,8 +388,17 @@ const buildPdf = (sheets, { title = "Exportación del evento" } = {}) => {
     if (sheet.detail) {
       addLine(sheet.detail, { color: "0.43 0.46 0.41", size: 8 });
     }
-    addTableRow(sheet.columns, { header: true, wrapFirstColumn: sheet.wrapFirstColumn, columnWidths: sheet.columnWidths });
-    sheet.rows.forEach((row) => addTableRow(row, { wrapFirstColumn: sheet.wrapFirstColumn, columnWidths: sheet.columnWidths }));
+    addTableRow(sheet.columns, {
+      header: true,
+      wrapFirstColumn: sheet.wrapFirstColumn,
+      columnWidths: sheet.columnWidths,
+    });
+    sheet.rows.forEach((row) =>
+      addTableRow(row, {
+        wrapFirstColumn: sheet.wrapFirstColumn,
+        columnWidths: sheet.columnWidths,
+      }),
+    );
     y -= 24;
   });
   addPage();
@@ -330,8 +411,10 @@ const buildPdf = (sheets, { title = "Exportación del evento" } = {}) => {
     const contentId = pageId + 1;
     const stream = page.join("\n");
 
-    objects[pageId - 1] = `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageWidth} ${pageHeight}] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >> >> >> /Contents ${contentId} 0 R >>`;
-    objects[contentId - 1] = `<< /Length ${toPdfBytes(stream).length} >>\nstream\n${stream}\nendstream`;
+    objects[pageId - 1] =
+      `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageWidth} ${pageHeight}] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >> >> >> /Contents ${contentId} 0 R >>`;
+    objects[contentId - 1] =
+      `<< /Length ${toPdfBytes(stream).length} >>\nstream\n${stream}\nendstream`;
   });
 
   let pdf = "%PDF-1.4\n";
@@ -391,8 +474,10 @@ const buildSeatingPlanPdf = (tables) => {
     const contentId = pageId + 1;
     const stream = page.join("\n");
 
-    objects[pageId - 1] = `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageWidth} ${pageHeight}] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >> >> >> /Contents ${contentId} 0 R >>`;
-    objects[contentId - 1] = `<< /Length ${toPdfBytes(stream).length} >>\nstream\n${stream}\nendstream`;
+    objects[pageId - 1] =
+      `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageWidth} ${pageHeight}] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >> >> >> /Contents ${contentId} 0 R >>`;
+    objects[contentId - 1] =
+      `<< /Length ${toPdfBytes(stream).length} >>\nstream\n${stream}\nendstream`;
   });
 
   let pdf = "%PDF-1.4\n";
@@ -423,7 +508,13 @@ const drawSeatingTable = (table, panelY) => {
   const commands = [
     `q 1 1 1 rg ${panelX} ${panelY} ${panelWidth} ${panelHeight} re f Q`,
     `q 0.78 0.84 0.75 RG 0.8 w ${panelX} ${panelY} ${panelWidth} ${panelHeight} re S Q`,
-    pdfText(table.name || "Mesa sin nombre", panelX + 18, panelY + 310, 14, "0.33 0.42 0.32"),
+    pdfText(
+      table.name || "Mesa sin nombre",
+      panelX + 18,
+      panelY + 310,
+      14,
+      "0.33 0.42 0.32",
+    ),
     pdfText(
       `${table.shape === "round" ? "Mesa redonda" : "Mesa rectangular"} - ${assigned}/${table.seats.length} asignados`,
       panelX + 18,
@@ -434,19 +525,25 @@ const drawSeatingTable = (table, panelY) => {
   ];
 
   if (table.shape === "round") {
-    commands.push(pdfCircle(centerX, centerY, 52, "0.95 0.97 0.93", "0.58 0.66 0.55"));
+    commands.push(
+      pdfCircle(centerX, centerY, 52, "0.95 0.97 0.93", "0.58 0.66 0.55"),
+    );
   } else {
-    commands.push(`q 0.95 0.97 0.93 rg 0.58 0.66 0.55 RG 1 w 170 ${centerY - 28} 255 56 re B Q`);
+    commands.push(
+      `q 0.95 0.97 0.93 rg 0.58 0.66 0.55 RG 1 w 170 ${centerY - 28} 255 56 re B Q`,
+    );
   }
   commands.push(...drawTableLegend(legend, panelX, panelY, panelWidth));
 
   getTableSeatPositions(table).forEach((position, index) => {
-    const x = position.angle === undefined
-      ? panelX + panelWidth * (position.x / 100)
-      : centerX + Math.cos(position.angle) * 108;
-    const y = position.angle === undefined
-      ? centerY + (50 - position.y) * 2.4
-      : centerY - Math.sin(position.angle) * 108;
+    const x =
+      position.angle === undefined
+        ? panelX + panelWidth * (position.x / 100)
+        : centerX + Math.cos(position.angle) * 108;
+    const y =
+      position.angle === undefined
+        ? centerY + (50 - position.y) * 2.4
+        : centerY - Math.sin(position.angle) * 108;
     const assignedSeat = Boolean(position.seat.guest);
 
     commands.push(
@@ -502,23 +599,76 @@ const PDF_HELVETICA_WIDTHS = {
   "-": 333,
   ".": 278,
   "?": 556,
-  A: 667, B: 667, C: 722, D: 722, E: 667, F: 611, G: 778, H: 722,
-  I: 278, J: 500, K: 667, L: 556, M: 833, N: 722, O: 778, P: 667,
-  Q: 778, R: 722, S: 667, T: 611, U: 722, V: 667, W: 944, X: 667,
-  Y: 667, Z: 611,
-  a: 556, b: 556, c: 500, d: 556, e: 556, f: 278, g: 556, h: 556,
-  i: 222, j: 222, k: 500, l: 222, m: 833, n: 556, o: 556, p: 556,
-  q: 556, r: 333, s: 500, t: 278, u: 556, v: 500, w: 722, x: 500,
-  y: 500, z: 500,
-  0: 556, 1: 556, 2: 556, 3: 556, 4: 556, 5: 556, 6: 556, 7: 556,
-  8: 556, 9: 556,
+  A: 667,
+  B: 667,
+  C: 722,
+  D: 722,
+  E: 667,
+  F: 611,
+  G: 778,
+  H: 722,
+  I: 278,
+  J: 500,
+  K: 667,
+  L: 556,
+  M: 833,
+  N: 722,
+  O: 778,
+  P: 667,
+  Q: 778,
+  R: 722,
+  S: 667,
+  T: 611,
+  U: 722,
+  V: 667,
+  W: 944,
+  X: 667,
+  Y: 667,
+  Z: 611,
+  a: 556,
+  b: 556,
+  c: 500,
+  d: 556,
+  e: 556,
+  f: 278,
+  g: 556,
+  h: 556,
+  i: 222,
+  j: 222,
+  k: 500,
+  l: 222,
+  m: 833,
+  n: 556,
+  o: 556,
+  p: 556,
+  q: 556,
+  r: 333,
+  s: 500,
+  t: 278,
+  u: 556,
+  v: 500,
+  w: 722,
+  x: 500,
+  y: 500,
+  z: 500,
+  0: 556,
+  1: 556,
+  2: 556,
+  3: 556,
+  4: 556,
+  5: 556,
+  6: 556,
+  7: 556,
+  8: 556,
+  9: 556,
 };
 
 const getPdfTextWidth = (value, size) =>
   [...String(value ?? "")].reduce(
     (width, character) => width + (PDF_HELVETICA_WIDTHS[character] || 556),
     0,
-  ) * (size / 1000);
+  ) *
+  (size / 1000);
 
 const getGuestInitials = (guest) => {
   const words = getGuestName(guest, 0).trim().split(/\s+/).filter(Boolean);
@@ -539,15 +689,7 @@ const drawTableLegend = (legend, panelX, panelY, panelWidth) =>
     const y = panelY + 300 - row * 24;
 
     return [
-      pdfRoundedRect(
-        x,
-        y,
-        chipWidth,
-        chipHeight,
-        7,
-        "1 1 1",
-        "0.78 0.84 0.75",
-      ),
+      pdfRoundedRect(x, y, chipWidth, chipHeight, 7, "1 1 1", "0.78 0.84 0.75"),
       pdfText(`${item.label}:`, x + 8, y + 7, 6, "0.33 0.42 0.32"),
       pdfCenteredText(item.value, x + 53, y + 6, 9, "0.18 0.20 0.17"),
     ];
@@ -563,11 +705,13 @@ const getTableLegend = (table) => {
       ? [
           {
             label: "Pescado",
-            value: assignedGuests.filter((guest) => guest.menu === "Pescado").length,
+            value: assignedGuests.filter((guest) => guest.menu === "Pescado")
+              .length,
           },
           {
             label: "Carne",
-            value: assignedGuests.filter((guest) => guest.menu === "Carne").length,
+            value: assignedGuests.filter((guest) => guest.menu === "Carne")
+              .length,
           },
         ]
       : []),
@@ -605,7 +749,9 @@ const truncatePdfText = (value, maxLength) => {
 const capitalizePdfLabel = (value) => {
   const text = String(value || "").trim();
 
-  return text ? `${text.charAt(0).toUpperCase()}${text.slice(1)}` : "Sin categoría";
+  return text
+    ? `${text.charAt(0).toUpperCase()}${text.slice(1)}`
+    : "Sin categoría";
 };
 
 const getGroupedConfirmationPdfSheets = (snapshot) => {
@@ -665,10 +811,20 @@ export const downloadProvidersPdf = ({ fileName, snapshot }) =>
         wrapFirstColumn: true,
         rows: (provider.services || []).map((service) => {
           const payments = service.payments || [];
-          const paid = payments.filter((payment) => payment.paid).reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
-          const pending = payments.filter((payment) => !payment.paid).reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
+          const paid = payments
+            .filter((payment) => payment.paid)
+            .reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
+          const pending = payments
+            .filter((payment) => !payment.paid)
+            .reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
 
-          return [service.name, service.price, paid, pending, pending ? "Pendiente" : "Pagado"];
+          return [
+            service.name,
+            service.price,
+            paid,
+            pending,
+            pending ? "Pendiente" : "Pagado",
+          ];
         }),
       })),
       { title: "Proveedores y servicios" },
@@ -692,7 +848,13 @@ export const downloadTasksPdf = ({ fileName, snapshot }) => {
     content: buildPdf(
       [...categories.entries()].map(([category, tasks]) => ({
         name: `${capitalizePdfLabel(category)} (${tasks.length} ${tasks.length === 1 ? "tarea" : "tareas"})`,
-        columns: ["Tarea", "Responsable", "Fecha límite", "Prioridad", "Estado"],
+        columns: [
+          "Tarea",
+          "Responsable",
+          "Fecha límite",
+          "Prioridad",
+          "Estado",
+        ],
         wrapFirstColumn: true,
         rows: tasks.map((task) => [
           task.title || "Sin título",
@@ -712,18 +874,38 @@ export const downloadTasksPdf = ({ fileName, snapshot }) => {
 export const downloadMusicPdf = ({ fileName, snapshot }) =>
   downloadFile({
     content: buildPdf(
-      (snapshot.musicMoments?.length ? snapshot.musicMoments : MUSIC_MOMENTS).map((moment) => {
-        const songs = (snapshot.music || []).filter((song) => song.momentId === moment.id);
-        const blocks = (snapshot.musicBlocks || []).filter((block) => block.momentId === moment.id);
+      (snapshot.musicMoments?.length
+        ? snapshot.musicMoments
+        : MUSIC_MOMENTS
+      ).map((moment) => {
+        const songs = (snapshot.music || []).filter(
+          (song) => song.momentId === moment.id,
+        );
+        const blocks = (snapshot.musicBlocks || []).filter(
+          (block) => block.momentId === moment.id,
+        );
         return {
           name: `${moment.label} (${moment.description})`,
           columns: ["Nombre", "Título", "Notas"],
           columnWidths: [150, 170, 191],
           wrapFirstColumn: true,
-          rows: [...blocks.map((block) => [`Bloque: ${block.name || "—"}`, block.style || "—", block.duration || "—"]), ...(songs.length ? songs.map((song) => [song.name || "—", song.title || "—", song.notes || "—"]) : [["Sin canciones", "—", "—"]])],
+          rows: [
+            ...blocks.map((block) => [
+              `Bloque: ${block.name || "—"}`,
+              block.style || "—",
+              block.duration || "—",
+            ]),
+            ...(songs.length
+              ? songs.map((song) => [
+                  song.name || "—",
+                  song.title || "—",
+                  song.notes || "—",
+                ])
+              : [["Sin canciones", "—", "—"]]),
+          ],
         };
       }),
-      { title: "Escalera musical" },
+      { title: "Escaleta musical" },
     ),
     fileName: `${fileName}-${getDateStamp()}.pdf`,
     type: "application/pdf",
@@ -740,5 +922,4 @@ export const downloadSeatingPlanPdf = ({ fileName, snapshot }) => {
     fileName: `${fileName}-${getDateStamp()}.pdf`,
     type: "application/pdf",
   });
-
 };

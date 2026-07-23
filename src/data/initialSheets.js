@@ -13,22 +13,50 @@ import music from "../../data/Canciones.csv?raw";
 import blocks from "../../data/BloquesMusicales.csv?raw";
 
 const parseCsv = (text) => {
-  const rows = []; let row = []; let value = ""; let quoted = false;
+  const rows = [];
+  let row = [];
+  let value = "";
+  let quoted = false;
   for (let index = 0; index < text.length; index += 1) {
     const char = text[index];
-    if (char === '"') { if (quoted && text[index + 1] === '"') { value += char; index += 1; } else quoted = !quoted; }
-    else if (char === "," && !quoted) { row.push(value); value = ""; }
-    else if ((char === "\n" || char === "\r") && !quoted) { if (char === "\r" && text[index + 1] === "\n") index += 1; row.push(value); if (row.some(Boolean)) rows.push(row); row = []; value = ""; }
-    else value += char;
+    if (char === '"') {
+      if (quoted && text[index + 1] === '"') {
+        value += char;
+        index += 1;
+      } else quoted = !quoted;
+    } else if (char === "," && !quoted) {
+      row.push(value);
+      value = "";
+    } else if ((char === "\n" || char === "\r") && !quoted) {
+      if (char === "\r" && text[index + 1] === "\n") index += 1;
+      row.push(value);
+      if (row.some(Boolean)) rows.push(row);
+      row = [];
+      value = "";
+    } else value += char;
   }
-  if (value || row.length) { row.push(value); rows.push(row); }
+  if (value || row.length) {
+    row.push(value);
+    rows.push(row);
+  }
   const [headers = [], ...data] = rows;
   return { headers, rows: data };
 };
 
-export const initialSheets = Object.fromEntries(Object.entries({
-  Confirmaciones: confirmations, Invitados: guests, Mesas: tables, Asientos: seats,
-  AsignacionesMesa: assignments, Proveedores: providers, Servicios: services,
-  PagosServicios: payments, Notificaciones: notifications, Tareas: tasks,
-  MomentosMusicales: moments, EscaleraMusical: music, BloquesMusicales: blocks,
-}).map(([name, csv]) => [name, parseCsv(csv)]));
+export const initialSheets = Object.fromEntries(
+  Object.entries({
+    Confirmaciones: confirmations,
+    Invitados: guests,
+    Mesas: tables,
+    Asientos: seats,
+    AsignacionesMesa: assignments,
+    Proveedores: providers,
+    Servicios: services,
+    PagosServicios: payments,
+    Notificaciones: notifications,
+    Tareas: tasks,
+    MomentosMusicales: moments,
+    EscaletaMusical: music,
+    BloquesMusicales: blocks,
+  }).map(([name, csv]) => [name, parseCsv(csv)]),
+);
