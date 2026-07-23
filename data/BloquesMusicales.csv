@@ -2,3 +2,15 @@ musicBlockId,momentId,name,style,duration,createdAt,updatedAt
 block-001,moment-001,Recepción inicial,Acústico y soul,00:45,2026-06-02T11:00:00Z,2026-07-18T10:00:00Z
 block-002,moment-008,Cóctel relajado,Indie y bossa nova,01:30,2026-06-02T11:01:00Z,2026-07-18T10:00:00Z
 block-003,moment-013,Primer bloque de fiesta,Pop y funk,01:00,2026-06-02T11:02:00Z,2026-07-18T10:00:00Z
+block-004,moment-002,Entrada del novio,Pop épico,00:04,2026-06-02T11:03:00Z,2026-07-18T10:00:00Z
+block-005,moment-003,Entrada de la novia,Balada romántica,00:05,2026-06-02T11:04:00Z,2026-07-18T10:00:00Z
+block-006,moment-004,Acompañamiento de lecturas,Piano instrumental,00:12,2026-06-02T11:05:00Z,2026-07-18T10:00:00Z
+block-007,moment-005,Intercambio de alianzas,Clásica instrumental,00:06,2026-06-02T11:06:00Z,2026-07-18T10:00:00Z
+block-008,moment-006,Firma de documentos,Acústico suave,00:10,2026-06-02T11:07:00Z,2026-07-18T10:00:00Z
+block-009,moment-007,Salida de ceremonia,Pop alegre,00:08,2026-06-02T11:08:00Z,2026-07-18T10:00:00Z
+block-010,moment-009,Entrada al banquete,Pop festivo,00:05,2026-06-02T11:09:00Z,2026-07-18T10:00:00Z
+block-011,moment-010,Entrada al salón,Funk y disco,00:06,2026-06-02T11:10:00Z,2026-07-18T10:00:00Z
+block-012,moment-011,Corte de tarta,Pop inspirador,00:05,2026-06-02T11:11:00Z,2026-07-18T10:00:00Z
+block-013,moment-012,Primer baile,Balada soul,00:04,2026-06-02T11:12:00Z,2026-07-18T10:00:00Z
+block-014,moment-014,Lanzamiento del ramo,Pop bailable,00:10,2026-06-02T11:13:00Z,2026-07-18T10:00:00Z
+block-015,moment-015,Despedida final,Himnos de fiesta,00:12,2026-06-02T11:14:00Z,2026-07-18T10:00:00Z

@@ -351,24 +351,11 @@ function readParam(value) {
 }
 
 function getMusicSongsSheet() {
-  const spreadsheet = getSpreadsheet();
-  const alreadyExists = Boolean(spreadsheet.getSheetByName(MUSIC_SONGS_SHEET_NAME));
-  const sheet = getOrCreateSheet(MUSIC_SONGS_SHEET_NAME, MUSIC_SONGS_HEADERS);
-
-  if (!alreadyExists) {
-    sheet.getRange(2, 1, MUSIC_SAMPLE_SONGS.length, MUSIC_SONGS_HEADERS.length)
-      .setValues(MUSIC_SAMPLE_SONGS.map(buildMusicSongRow));
-  }
-
-  return sheet;
+  return getOrCreateSheet(MUSIC_SONGS_SHEET_NAME, MUSIC_SONGS_HEADERS);
 }
 
 function getMusicMomentsSheet() {
-  const spreadsheet = getSpreadsheet();
-  const alreadyExists = Boolean(spreadsheet.getSheetByName(MUSIC_MOMENTS_SHEET_NAME));
-  const sheet = getOrCreateSheet(MUSIC_MOMENTS_SHEET_NAME, MUSIC_MOMENTS_HEADERS);
-  if (!alreadyExists) sheet.getRange(2, 1, MUSIC_MOMENT_TEMPLATES.length, MUSIC_MOMENTS_HEADERS.length).setValues(MUSIC_MOMENT_TEMPLATES.map(buildMusicMomentRow));
-  return sheet;
+  return getOrCreateSheet(MUSIC_MOMENTS_SHEET_NAME, MUSIC_MOMENTS_HEADERS);
 }
 function getMusicBlocksSheet() { return getOrCreateSheet(MUSIC_BLOCKS_SHEET_NAME, MUSIC_BLOCKS_HEADERS); }
 
